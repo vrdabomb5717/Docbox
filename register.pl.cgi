@@ -5,26 +5,79 @@
 # Currently uses a simple password.txt flat file db
 # February 26, 2011
 
-## Input data will be via POST and the keys will be 'user' and 'pass'
+### Still TO DO
+# * Validate user input; if invalid, stop registration
+# * Handle case when user tries to double register or chooses a username, that's already taken.
+
+## Input data will be via POST
 
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
+use HTML; # generate docbox specific HTML
+use userDB; # connects to user Database
 
 my $q = CGI->new();
 
-my $user = $q->param('user'); #username
-my $pass = $q->param('pass'); #password
-my $passhex = sha1_hex($pass); # encrypted password
+my $user = $q->param('username'); #username
+my $pass = $q->param('password'); #password
+my $email = $q->param('email'); #email
+my $firstname = $q->param('firstname'); #first name
+my $lastname = $q->param('lastname'); #last name
 
-&register(); # register user
-&gotoLogin(); # return to login page
+
+# Password hash will be hash of username concatenated with cleartext password without any spaces
+# NB: This will also be used as the user ID and passed around as user browses site.  
+my $passhex = sha1_hex("user"."$pass"); # encrypt  password
+
+if($ENV{REQUEST_METHOD} eq 'POST'){
+	&register(); # register user
+	&gotoLogin(); # return to login page	
+}
+else {
+	HTML->start('Register Page');
+	&register_form();
+	HTML->end(); 
+}
 
 
-# Registers User
+
+# Generates Register HTML Form
+sub register_form{
+	print <<EOF;
+<h1> DocBox Account Registration </h1>
+<h2>Please fill out the information below to register your account</h2>
+
+<p> After you register, you will be automatically redirected back to the login page</p>
+<form action = "register.pl.cgi" method="POST">
+First Name: <input type="text" name="firstname">
+<br>
+Last Name: <input type="text" name="lastname">
+<br>
+Username: <input type="text" name="username">
+<br>
+Email: <input type="text" name="email">
+<br>
+Password: <input type="password" name="password">
+<input type="submit" value="Register">
+EOF
+}
+
+
+# Registers User to UserDB SQLite database
+sub register{
+	
+	#Arguments for UserDB Registers are as follows: 
+	# $username, $password, $email, $firstname, $middlename, $lastname
+	UserDB->register($user,$passhex,$email,$firstname,"",$lastname); 
+}
+
+
+# Registers User to password file. 
+# Deprecated.
 # Currently uses a simple password file. 
-sub register{ # add user login data to passwords.txt file
+sub registertofile{ # add user login data to passwords.txt file
 	
 	open (FILE, ">>passwords.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
 	flock(FILE, LOCK_EX); # get file lock handle  
