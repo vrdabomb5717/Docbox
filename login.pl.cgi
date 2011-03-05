@@ -13,10 +13,11 @@
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
-use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
+use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
+use UserDB; 
 
 my $user; # username
-my $passhex; # encrpted password
+my $passhex; # encrpted password. This is a hash of username concatenated with password w/o spaces. 
 my $uid;
 my $q = CGI->new(); # get new CGI object for parsing input data
 
@@ -61,15 +62,21 @@ Content-type: text/html
 EOF
 }
 
-sub getlogin{ # get login from POST/GET data
-	$user = $q->param('user'); # get username
-	my $pass = $q->param('pass'); # get password
-	$passhex = sha1_hex($pass); # encrypt password
-	
-	
+sub getlogin{ # get login from POST/GET data and do the necessary hashing. 
+	$user = $q->param('username'); # get username
+	my $pass = $q->param('password'); # get cleartext password
+	$passhex = sha1_hex($user.$pass); # encrypt password. This is a hash of username concatenated with password w/o spaces.
 }
 
-sub validlogin{ # Validate login by using password file
+
+
+sub validlogin{ # Validate login using SQL database.  
+	 
+	my $login = UserDB->authenticate($user,$passhex);
+	return $login;
+}
+
+sub validLoginFile{ # Validate login by using password file. Deprecated
 	
 	my $uid = "$user = " . $passhex; # get hashed user login
 

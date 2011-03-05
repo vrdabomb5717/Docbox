@@ -6,15 +6,27 @@
 # Authors: Jervis and Varun
 # February 26, 2011
 
+### Currently Incomplete. Methods still need to be fully implemented. ###
+
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
+use HTML;
 
 my $q = CGI->new();
 
-### Currently Incomplete. Methods still need to be fully implemented. ###
+HTML->start();
+successLogin();
+HTML->end();
 
+
+sub successLogin{
+	
+	print <<EOF;
+<h2> Success Login !</h2>
+EOF
+}
 
 sub listFiles{ # Should Produce HTML output of user's current files
 	
