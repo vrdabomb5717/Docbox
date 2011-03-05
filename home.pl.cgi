@@ -8,6 +8,9 @@
 
 ### Currently Incomplete. Methods still need to be fully implemented. ###
 
+# Still to Do:
+# * Add a hidden form that will be used to maintain user state. 
+
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
@@ -18,6 +21,8 @@ my $q = CGI->new();
 
 HTML->start();
 successLogin();
+
+print "<br> <a href=upload_page.pl.cgi> Click to upload </a>";
 HTML->end();
 
 

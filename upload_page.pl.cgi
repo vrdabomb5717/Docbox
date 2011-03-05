@@ -7,7 +7,9 @@
 
 ### Test Upload Page ###
 
-##TBD - still need to add user id when calling upload.pl.cgi script. 
+## Still to do 
+# * still need to add user id when calling upload.pl.cgi script.
+# * Need to do User authentication.  
 
 use strict;
 use CGI qw/:all/;

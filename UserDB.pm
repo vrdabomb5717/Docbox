@@ -7,6 +7,9 @@
 
 #Note: First argument in a static method call in perl is always the class name. This is what $self refers to. 
 
+## Still to DO:
+# * Determine User given user id token.  
+
 package UserDB;
 
 use strict;
@@ -42,6 +45,12 @@ sub authenticate
 	{
 		return 0;
 	}
+}
+
+# returns username whose has the given user id token.
+# Still to be implemented. 
+sub getUser{ 
+	
 }
 
 sub register

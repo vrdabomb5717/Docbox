@@ -8,6 +8,7 @@
 ### Still TO DO
 # * Validate user input; if invalid, stop registration
 # * Handle case when user tries to double register or chooses a username, that's already taken.
+# * Create new directory for new User. 
 
 ## Input data will be via POST
 

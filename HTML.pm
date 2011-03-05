@@ -2,8 +2,11 @@
 
 # HTML
 # Contains static method for generating commonly used HTML code specific to DocBox.
-# February 26, 2011
+# March 04, 2011
+# Author: Jervis
 
+## Still to do 
+# * Write HTML Code for passing hidden form containing user id. 
 
 package HTML;
 
@@ -17,6 +20,10 @@ sub start{
 	</head>
 	<body bgcolor="orange"> 
 EOF
+}
+
+sub h1{
+	print "<h1> $_[1] </h1>";
 }
 
 sub end{
