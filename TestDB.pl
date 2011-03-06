@@ -8,6 +8,7 @@
  
 use DBI;
 use UserDB;
+use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 
 #print "Hello";
 
@@ -40,3 +41,9 @@ my $valid = UserDB->authenticate($u,"hkjhjk");
 
 print "\nSuccessful Authentication" if($valid);
 print "\nAuthentication failure" if(!$valid);
+
+# Test User ID retrieval
+
+my $passhex = sha1_hex("user"."user");
+my $result = UserDB->getUser($passhex);
+print "Output of Username for given ID is below\n".$result;
