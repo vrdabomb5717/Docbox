@@ -5,6 +5,8 @@
 # March 04, 2011
 # Author: Jervis 
 
+## Currently Expects User ID in through the query String in a GET Request. 
+
 ## Still to do:
 # Handle cases when duplicate file are uploaded.
 # Add user authentication verification and Save File to users' directory only. 
@@ -13,9 +15,14 @@
 use strict;
 use CGI qw/:standard/;
 use HTML; 
+use UserDB;
 
 my $q = CGI->new(); # make CGI object
-my $homepath = "files"; # Path to home root directory for the current user 
+my $uid = $q->url_param('uid'); # because uid is passed over query string. 
+UserDB->validateUser($uid); # Check if valid user logged in. 
+
+my $user = UserDB->getUser($uid); # get userame
+my $homepath = "Files/$user"; # Path to home root directory for the current user 
 my $path =  $homepath; # path that file is to saved. Default is home directory. 
 my $filename; 
 savefile(); # Save Uploaded  file. 
@@ -29,9 +36,9 @@ sub printLinks{
 	
 	print <<EOF;
 <br>
-<a href="upload_page.pl.cgi"> Upload Another file </a>
+<a href="upload_page.pl.cgi?uid=$uid"> Upload Another file </a>
 <br>
-<a href="home.pl.cgi"> Go to Home Page </a>
+<a href="home.pl.cgi?uid=$uid"> Go to Home Page </a>
 EOF
 }
 

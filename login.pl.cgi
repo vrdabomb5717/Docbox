@@ -5,9 +5,10 @@
 # Authors: Jervis and Varun. 
 # February 26, 2011
 
-### TBD
+### Still To Do 
 # Need to use SQLite DB. 
 # Currently reads password.txt
+# Post User ID in a hidden form field
 
 
 use strict;
@@ -46,7 +47,7 @@ sub redirectHome{ # go to homepage
 	
 	print <<EOF;
 Status: 302 Relocate status
-Location: home.pl.cgi?u=$passhex
+Location: home.pl.cgi?uid=$passhex
 Content-type: text/html
 
 <HTML>

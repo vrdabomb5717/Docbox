@@ -15,6 +15,8 @@ package UserDB;
 use strict;
 use warnings;
 use DBI;
+use HTML;
+#use diagnostics; # Outputs detailed error msgs
 
 my $dbfile = "userpass.db";
 
@@ -26,7 +28,7 @@ sub authenticate
 {
 	my ($self, $username, $password) = @_;
 	
-	# SELECT * FROM userpass WHERE username='$user' AND pass='$password'
+	# SELECT * FROM userpass WHERE username='$user' AND password='$password'
 	my $sth = $dbh->prepare("SELECT * FROM userpass WHERE username=:1 AND password=:2");
 	$sth->execute("$username", "$password");
 
@@ -51,6 +53,35 @@ sub authenticate
 # Still to be implemented. 
 sub getUser{ 
 	
+	my ($self, $passwordhex) = @_;
+	
+	# SELECT * FROM userpass WHERE password='$passwordhex'
+	my $sth = $dbh->prepare("SELECT * FROM userpass WHERE password=:1");
+	$sth->execute("$passwordhex");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href->{username}; #need to use deference operator '->' since we've a hash ref 
+	}
+	else
+	{
+		return undef; # there is no user with that id. 
+	}
+}
+
+sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects to homepage. 
+	
+	my ($self, $uid) = @_; 
+	
+	my $user = UserDB->getUser($uid);	# should return user name of currently logged in user. 
+	
+	if(!defined($user)){ # if user Not found
+		HTML->redirectLogin(); # redirect to login page. 
+	}
 }
 
 sub register
