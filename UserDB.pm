@@ -15,6 +15,7 @@ package UserDB;
 use strict;
 use warnings;
 use DBI;
+use HTML;
 #use diagnostics; # Outputs detailed error msgs
 
 my $dbfile = "userpass.db";
@@ -69,6 +70,17 @@ sub getUser{
 	else
 	{
 		return undef; # there is no user with that id. 
+	}
+}
+
+sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects to homepage. 
+	
+	my ($self, $uid) = @_; 
+	
+	my $user = UserDB->getUser($uid);	# should return user name of currently logged in user. 
+	
+	if(!defined($user)){ # if user Not found
+		HTML->redirectLogin(); # redirect to login page. 
 	}
 }
 

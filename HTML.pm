@@ -31,7 +31,18 @@ sub end{
 	print $s; 
 }
 
-sub redirectHome{
+## To be implemented
+sub hiddenForm{ # Makes a hidden form. 
+
+	print<<EOF;
+<form>
+</form>
+
+EOF
+	
+}
+
+sub redirectLogin{
 	print <<EOF;
 Status: 302 Relocate status
 Location: index.html

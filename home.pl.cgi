@@ -20,20 +20,21 @@ use UserDB; # use for validating user.
 use File::Find;
 
 my $user; # store current user
+my $uid; # user id (token) of current user. 
 
 my $q = CGI->new();
 
 if(validUser()){
 	HTML->start("$user - DocBox");
 	listFiles();
-	print "<br> <a href=upload_page.pl.cgi> Upload a File </a>";
+	print "<br> <a href=upload_page.pl.cgi?uid=$uid> Upload a File </a>"; # uid is defined in validUser routine. 
 	HTML->end();
 	
 	#successLogin();
 	
 } else{
 	
-	HTML->redirectHome(); # redirect user to login page
+	HTML->redirectLogin(); # redirect user to login page
 }
 
 
@@ -93,7 +94,7 @@ sub validUser{
 }
 
 sub getUser{ # should return user name of currently logged in user. 
-	my $uid = $q->param('uid'); # gets the UID being passed along. UID is a SHA1 hash of the string "UseranmePasswordHEX"
+	$uid = $q->param('uid'); # gets the UID being passed along. UID is a SHA1 hash of the string "UseranmePasswordHEX"
 	$user = UserDB->getUser($uid);
 	return $user;
 }

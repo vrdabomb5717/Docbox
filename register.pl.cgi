@@ -76,8 +76,7 @@ sub register{
 
 
 # Registers User to password file. 
-# Deprecated.
-# Currently uses a simple password file. 
+# Deprecated. 
 sub registertofile{ # add user login data to passwords.txt file
 	
 	open (FILE, ">>passwords.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
