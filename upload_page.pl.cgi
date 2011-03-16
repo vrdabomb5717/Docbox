@@ -14,7 +14,7 @@
 use strict;
 use CGI qw/:all/;
 use UserDB; 
-
+use HTML;
 my $q = CGI->new(); # cgi object
 
 
@@ -22,14 +22,16 @@ my $uid = $q->param('uid');
 UserDB->validateUser($uid); # Check if valid user logged in. 
 my $user = UserDB->getUser($uid);
 
-&start();
+start();
 &uploadForm();
 print &end_html;
 
 sub start{
 	print header;
-	print start_html("Upload Your File");
+	print start_html(-Title=>"Upload Your File", -BGCOLOR=>'orange');
 	print h1('Upload File');
+	#HTML->start('Upload File'); 
+	#HTMl->h1('Upload a File');
 }
 
 sub uploadForm{

@@ -8,6 +8,7 @@
  
 use DBI;
 use UserDB;
+use HTML::Template;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 
 #print "Hello";

@@ -1,0 +1,28 @@
+	<html>
+	<head>
+	<title> <TMPL_VAR NAME="user">'s DocBox </title>
+	<link href="../css/main.css" rel="stylesheet" type="text/css">
+	</head>
+	<body bgcolor="orange"> 
+<h2 align="center"> user's DocBox </h2>
+	<p align="center"><a href=upload_page.pl.cgi?uid=<TMPL_VAR NAME="userid">> Upload a New File to DocBox</a></p>
+	<table border="0" align="center" cellpadding="2" cellspacing="4">
+  <tr>
+    <th>File Name</th>
+    <th>Date Modified</th>
+    <th>File Size (KB)</th>
+  </tr>
+<!-- File Loop only-->  
+<TMPL_LOOP NAME="list_loop">
+    <tr >
+        <td > <img alt="" height="24" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
+        <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
+        <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
+    </tr>
+</TMPL_LOOP>
+
+</table>
+
+	<br>
+	<footer><p align="center">Docbox &copy 2011. All Rights Reserved.  </p></footer>
+	 </body></html>
