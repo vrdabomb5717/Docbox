@@ -56,7 +56,9 @@ sub getUser{
 	my ($self, $passwordhex) = @_;
 	
 	# SELECT * FROM userpass WHERE password='$passwordhex'
-	my $sth = $dbh->prepare("SELECT * FROM userpass WHERE password=:1");
+	my $query = "SELECT * FROM userpass WHERE password=:1";
+	
+	my $sth = $dbh->prepare("$query");
 	$sth->execute("$passwordhex");
 
 	# Retrieve hash reference to result from running query.

@@ -71,7 +71,22 @@ sub register{
 	
 	#Arguments for UserDB Registers are as follows: 
 	# $username, $password, $email, $firstname, $middlename, $lastname
-	UserDB->register($user,$passhex,$email,$firstname,"",$lastname); 
+	UserDB->register($user,$passhex,$email,$firstname,"",$lastname);
+	
+	`mkdir ./files/$user`;
+	
+	`sqlite3 ./files/$user/user.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
+                        filepath TEXT NOT NULL COLLATE NOCASE,
+                        filename TEXT NOT NULL,
+                        public INTEGER NOT NULL,
+                        permissions INTEGER NOT NULL,
+                        timemodified TEXT NOT NULL,
+                        timeadded TEXT NOT NULL,
+                        size REAL NOT NULL,
+                        kind TEXT NOT NULL COLLATE NOCASE,
+                        comments TEXT COLLATE NOCASE,
+                        tags TEXT COLLATE NOCASE,
+                        UNIQUE (filepath) );"`;
 }
 
 
