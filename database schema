@@ -1,0 +1,29 @@
+Database in sqlite
+
+**Main table:**
+
+*username*
+pass
+home directory
+
+#User db does make sense; why does it need to exist? File table makes this redundant
+
+**User db in ~/**
+*path*
+filename
+permissions
+
+**File table attributes**
+*Path*
+Filename
+Public
+Permission
+Timestamps
+Size
+Kind
+Comments
+Tags
+
+**File attributes**
+*words*
+wordcount

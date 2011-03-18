@@ -1,0 +1,12 @@
+CREATE TABLE files ( id INTEGER PRIMARY KEY,
+                    filepath TEXT NOT NULL COLLATE NOCASE,
+                    filename TEXT NOT NULL,
+                    public INTEGER NOT NULL,
+                    permissions INTEGER NOT NULL,
+                    timemodified TEXT NOT NULL,
+                    timeadded TEXT NOT NULL,
+                    size REAL NOT NULL,
+                    kind TEXT NOT NULL COLLATE NOCASE,
+                    comments TEXT COLLATE NOCASE,
+                    tags TEXT COLLATE NOCASE,
+                    UNIQUE (filepath) );
