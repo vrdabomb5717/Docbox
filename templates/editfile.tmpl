@@ -7,18 +7,26 @@
 <h2 align="center"> user's DocBox </h2>
 	
     <h3> Edit File : </h3>
+    
+    <TMPL_IF NAME="badinput"> <!-- if user enters input in both rename and copy file fields-->
+        <p> <font color=red> <strong> Warning, you can only perform one operation at a time. Please only enter text into one of the fields and try again. </strong> </font></p>
+    </TMPL_IF>
+    
     <p>Please choose an Action that you would like to perform below : </p>
-        <a href="download.pl.cgi<TMPL_VAR NAME="download_query">"><p>Download File</p></a
+        
         <form action="editfile.pl.cgi" method="post">
         <p> <strong>Rename File to:  </strong><input type="textarea" name="renamedfile"> &nbsp; <input type="submit" value="Rename"> </p>
         <p> <strong>Copy File As: </strong> <input type="textarea" name="copyfilename"> &nbsp; <input type="submit" value="Copy"> </p>
         <p> <strong>Delete File: </strong><input type="submit" value="Permanently Delete File"> </p>
         
-        <!-- Hidden form field that contains the user ID and filename-->
+        <!-- Hidden form field that contains the user ID and filename for maintaining user state-->
         <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
         <input type="hidden" name="filename" value="<TMPL_VAR NAME="filename">">
-        
-        </form>
+        <input type="hidden" name="prevlink" value="<TMPL_VAR NAME="prevlink">" > 
+        </form> 
+        <br>
+         <p> <a href="<TMPL_VAR NAME="prevlink">"> <big>Return to Directory Listing </big></p> </a> <!-- Return to previous referrer page-->
+       
     
 	
     

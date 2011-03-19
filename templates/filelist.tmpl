@@ -11,6 +11,7 @@
     <th>File Name</th>
     <th>Date Modified</th>
     <th>File Size (KB)</th>
+    <th> Link </th>
   </tr>
 <!-- File Loop only-->  
 <TMPL_LOOP NAME="list_loop">
@@ -18,6 +19,15 @@
         <td > <img alt="" height="24" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
+        <td align="left"> 
+            <a href="download.pl.cgi<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download File" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
+            &nbsp;
+            <a href="<TMPL_VAR NAME="querystring">"> <img alt="Copy File" title="Copy File" height="26" src="images/copy.png" width="26" align="middle"> </a> <!-- Link points to edit file page.-->
+            &nbsp;
+            <a href="<TMPL_VAR NAME="querystring">"> <img alt="Rename File" title="Rename File" height="25" src="images/rename.png" width="25" align="middle"> </a> <!-- Link points to edit file page. -->
+           
+            
+        </td>
     </tr>
 </TMPL_LOOP>
 

@@ -1,0 +1,32 @@
+Jervis Muindi
+Advanced Programming 
+Project 1
+2/24/2011
+
+Team Alpha:
+
+- Upload Files
+- Searching personal files
+- Searching shared files
+- Remove documents user owns (has backend component0
+- Making copies of documents
+- Renaming documents
+- Categorising documents into groups
+- Download Documents
+- Download groups of documents
+- Make it Graphical
+- Log what X user does. 
+- Log User login attempts
+- Interface so that user can accees and ANALYZE their documents: e.g. most common words (top 30); Avg. size of documents. number of docs. 
+
+
+Team Beta:
+
+- Store and search document files: provide tech to extract meaningful information. 
+	* Strings is ur friend
+- Access control restrictions:  only user who docs can delete it. If doc is public, then all users can see it. 
+- Provide statistics to the user
+	*Count how many users
+	*How many docs added. for user ??
+
+

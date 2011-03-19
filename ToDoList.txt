@@ -1,0 +1,15 @@
+TO dos: 
+
+- Test varun's new registration code. 
+- Public Uploading
+- Downloading documents
+- Searching
+    *Public docs
+     * private docs
+- Document analysis.  
+- Password Resets via email
+- Categorising documents into groups
+- Adding Logging capabilities (backend)
+    *Give access to user transaction log.
+    *Give access to user
+ 

@@ -26,8 +26,9 @@ my $uid; # user id (token) of current user.
 my $q = CGI->new();
 my $template = HTML::Template->new(filename => 'templates/filelist.tmpl');
 
+
 if(validUser()){
-	#HTML->start("$user - DocBox");
+	#HTML->start("$user - DocBox");	
 	listFiles();
 	#print "<br> <a href=upload_page.pl.cgi?uid=$uid> Upload a File </a>"; # uid is defined in validUser routine. 
 	#HTML->end();
@@ -86,7 +87,7 @@ foreach my $filepath (@files){
 	$size = sprintf("%.2f", $size); # round to 2 dps. 
 	
 	# set query string for editfile script. 
-	my $querystring = "editfile.pl.cgi\?uid=$uid\&file=$filename";
+	my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$filename";
 	
 	my %row = (
 			filename => $filename,
@@ -129,7 +130,7 @@ ENDHEADER
 #HTML->h1("Count is $count");	
 
 #############3	
-	print <<ENDROW
+	print <<ENDROW;
 <tr>
 <td> \$filename </td> <!--File Name -->
 <td>&nbsp; </td> <!-- Date Modified -->
