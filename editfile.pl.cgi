@@ -7,7 +7,8 @@
 # March 16, 2011
 
 ### Still To DO  ###
-## * Add Safety checking to user input. e.g. user gives same filename for copy opertaion etc
+## * Add Safety checking to user input. e.g. user gives same filename for copy opertaion etc.
+## * Collision check for rename operation. 
 ## * Add Full FIle PAths so that ops will work inside directories
 
 use strict;
@@ -31,10 +32,21 @@ $uid = $q->param('uid'); # because uid is passed over query string.
 $uid = $q->url_param('uid') if(!defined($uid)); # for when uid is in post data and we're have mixed post/get.
 UserDB->validateUser($uid); # Check if valid user logged in. Redirect to login page otherwise.
 
-$user = UserDB->getUser($uid); # get username of current logged in user. 
+$user = UserDB->getUser($uid); # get username of current logged in user.
+
+## Define source file path for current user. 
+# Will need to add directory path, after enabling grouping funtionality. 
+my $sourcefilepath = "files/$user/"; 
 
 my $filename = $q->param('filename');
 $filename = $q->url_param('filename') if(!defined($filename));# for when filename is in post data and we're have mixed post/get.
+
+
+## save extension of filename
+my @s = split(/\./, $filename);
+my $n = int(@s) - 1; # minus one to get correct index
+my $extension =  $s[$n];
+
 
 ## Save Filename and user id in hidden form field to preserve user state
 $template->param(userid => $uid); 
@@ -46,6 +58,8 @@ my $copyfilename = $q->param('copyfilename'); # comes thru post
 my $prevlink; # stores link back to directory/file listing
 my $prevlink_form = $q->param('prevlink'); #  
 
+my $deleteoption = $q->param('delete'); # get user delete command
+
 if(!defined($prevlink_form)){
 	$prevlink = $ENV{'HTTP_REFERER'}; # get previous page's link	
 }else{
@@ -54,6 +68,7 @@ if(!defined($prevlink_form)){
  
 $template->param(prevlink => $prevlink); # write link to return to previous page.
 $op_template->param(prevlink => $prevlink);
+$op_template->param(filename => $filename); # show user filename of file being operated on. 
 
 my $badinput; 
 ### Check for Bad User Input
@@ -81,16 +96,27 @@ if($badinput){ ## Stop if bad input
 }
 
 
+
 if($renamedfilename){ # if renmaedfilename field specified
-	my_rename($renamedfilename); 
+		
+	my $source = "$sourcefilepath" . "$filename"; 
+	my $dest = "$sourcefilepath" . "$copyfilename" . "extension";
+	
+	# move function overwrites filesystem with the destination filename. 
+	# so if any file exits beforehand with same name as user supplied filename (to use for renaming)
+	# then that file on the filesystem is overwritten.  
+ 
+	move($source, $dest);
+	$op_template->param(operation => 'Move');
+	print $op_template->output();
+	exit;
+		
 }
 
 if($copyfilename){ # if copyfilename field specified
-	#my_copy($renamedfilename);
-	my $sourcefilepath = "files/$user/";
 	
 	my $source = "$sourcefilepath" . "$filename"; 
-	my $dest = "$sourcefilepath" . "$copyfilename";
+	my $dest = "$sourcefilepath" . "$copyfilename" . ".$extension";
 	
 	copy($source, $dest);
 	$op_template->param(operation => 'Copy');
@@ -99,23 +125,17 @@ if($copyfilename){ # if copyfilename field specified
 }
 
 
-# print the template
-print $template->output;
-
-
-
-
- sub my_delete{
- 	
- }
- 
- 
- sub my_rename{
- 	return; 
- }
-
-sub my_copy{
-	return;
+if(defined($deleteoption)){
+	if($deleteoption eq 'Yes'){
+		
+		my $file= "$sourcefilepath" . "$filename";
+		unlink($file);
+	
+		$op_template->param(operation => 'Delete');
+		print $op_template->output();
+		exit;
+	} 
 }
 
-
+# print the template
+print $template->output;
