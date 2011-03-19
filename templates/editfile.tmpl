@@ -15,8 +15,10 @@
     <p>Please choose an Action that you would like to perform below : </p>
         
         <form action="editfile.pl.cgi" method="post">
-        <p> <strong>Rename File to:  </strong><input type="textarea" name="renamedfile"> &nbsp; <input type="submit" value="Rename"> </p>
-        <p> <strong>Copy File As: </strong> <input type="textarea" name="copyfilename"> &nbsp; <input type="submit" value="Copy"> </p>
+        <p> <img alt="Rename File" title="Rename File" height="25" src="images/rename.png" width="25" align="middle">
+        <strong>Rename File to:  </strong><input type="textarea" name="renamedfile"> &nbsp; <input type="submit" value="Rename"> </p>
+        <p> <img alt="Copy File" title="Copy File" height="26" src="images/copy.png" width="26" align="middle">
+        <strong>Copy File As: </strong> <input type="textarea" name="copyfilename"> &nbsp; <input type="submit" value="Copy"> </p>
        
         <!-- Hidden form field that contains the user ID and filename for maintaining user state-->
         <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
@@ -30,7 +32,8 @@
         <input type="hidden" name="filename" value="<TMPL_VAR NAME="filename">">
         <input type="hidden" name="prevlink" value="<TMPL_VAR NAME="prevlink">" > 
         
-        <p> <strong>Delete File: </strong>  
+        <p> <img alt="Delete File" title="Delete File" height="25" src="images/delete.png" width="25" align="middle">
+        <strong>Delete File: </strong>  
                 <select name=delete>
                 <option>No</option>
                 <option>Yes</option>

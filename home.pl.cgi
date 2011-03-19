@@ -89,11 +89,15 @@ foreach my $filepath (@files){
 	# set query string for editfile script. 
 	my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$filename";
 	
+	# set query string for download script
+	my $directorypath = "";
+	my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$filename" . "\&directorypath=$directorypath";
 	my %row = (
 			filename => $filename,
 			date => $mtime,
 			size => $size,
-			querystring => $querystring
+			querystring => $querystring,
+			download_query => $downloadquery
 			);
 
 	# put this row into the loop by reference             

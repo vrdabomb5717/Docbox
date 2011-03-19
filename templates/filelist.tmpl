@@ -20,12 +20,15 @@
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
         <td align="left"> 
-            <a href="download.pl.cgi<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download File" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
+            <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download <TMPL_VAR NAME="filename">" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
+            
+            
+            <!-- Old Code: Shows image link to copy / rename operations. 
+            <a href="<TMPL_VAR NAME="querystring">"> <img alt="Copy File" title="Copy File" height="26" src="images/copy.png" width="26" align="middle"> </a> 
             &nbsp;
-            <a href="<TMPL_VAR NAME="querystring">"> <img alt="Copy File" title="Copy File" height="26" src="images/copy.png" width="26" align="middle"> </a> <!-- Link points to edit file page.-->
-            &nbsp;
-            <a href="<TMPL_VAR NAME="querystring">"> <img alt="Rename File" title="Rename File" height="25" src="images/rename.png" width="25" align="middle"> </a> <!-- Link points to edit file page. -->
+            <a href="<TMPL_VAR NAME="querystring">"> <img alt="Rename File" title="Rename File" height="25" src="images/rename.png" width="25" align="middle"> </a> 
            
+           -->
             
         </td>
     </tr>
