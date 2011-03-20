@@ -84,4 +84,31 @@ sub removeFile
 	
 }
 
+sub average_size
+{
+    #SELECT AVG(size) FROM files
+    my $average = "SELECT AVG(size) FROM files";
+    my $sth = $dbh->prepare("$average");
+    
+    #not sure if the execute is needed
+    $sth->execute();
+
+    my @row_array = $sth->fetchrow_array;
+    return $row_array[0];
+}
+
+sub num_files
+{
+    #SELECT COUNT(filename) FROM files
+    my $count= "SELECT COUNT(filename) FROM files";
+    my $sth = $dbh->prepare("$count");
+
+    #not sure if the execute is needed
+    $sth->execute();
+
+    my @row_array = $sth->fetchrow_array;
+    return $row_array[0];
+
+}
+
 1;
