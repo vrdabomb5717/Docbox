@@ -112,5 +112,14 @@ sub register
 	$sth->execute("$username", "$password", "$email", "$firstname", "$middlename", "$lastname");	
 }
 
+sub num_users
+{
+    # SELECT COUNT(*) FROM userpass;
+    my $count = "SELECT COUNT(*) FROM userpass";
+    my $sth = $dbh->prepare("$count");
+    $sth->execute();
+    my @row_array = $sth->fetchrow_array;
+    return $row_array[0];
+}
 
 1;
