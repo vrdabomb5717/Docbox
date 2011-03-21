@@ -77,7 +77,7 @@ sub addFile()
 sub removeFile
 {
 	my ($filepath, $filename) = @_;
-	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = 2";
+	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
@@ -87,8 +87,8 @@ sub removeFile
 #returns reference to a hash that contains each row, with the id used as the hash's key
 sub get_public
 {
-    #SELECT FROM files WHERE public != 0
-    my $public = "SELECT FROM files WHERE public != 0";
+    #SELECT * FROM files WHERE public != 0
+    my $public = "SELECT * FROM files WHERE public != 0";
     my $sth = $dbh->prepare("$public");
     $sth->execute;
 
@@ -120,6 +120,60 @@ sub num_files
 
     my @row_array = $sth->fetchrow_array;
     return $row_array[0];
+
+}
+
+sub search_filenames
+{
+    my ($query) = @_;
+
+    #SELECT * FROM files WHERE filenames LIKE '$query'
+
+    my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
+
+
+}
+
+sub search_kind
+{
+    my ($query) = @_;
+
+    #SELECT * FROM files WHERE kind LIKE '$query'
+                                                                                                                                                                                                                            
+    my $search = "SELECT * FROM files WHERE kind LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
+
+
+}
+
+sub search_comments
+{
+    my ($query) = @_;
+
+    #SELECT * FROM files WHERE comments LIKE '$query'
+                                                                                                                                                                                                                    
+    my $search = "SELECT * FROM files WHERE comments LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
+
+
+}
+
+sub search_tags
+{
+    my ($query) = @_;
+
+    #SELECT * FROM files WHERE tags LIKE '$query'
+    my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
 
 }
 
