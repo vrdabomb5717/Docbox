@@ -112,6 +112,38 @@ sub register
 	$sth->execute("$username", "$password", "$email", "$firstname", "$middlename", "$lastname");	
 }
 
+sub change_password
+{
+    my ($self, $username, $email, $newpass) = @_;
+
+    #UPDATE userpass SET password= :1 WHERE username= :2 AND email = :3
+    my $update = "UPDATE userpass SET password= :1 WHERE username= :2 AND email = :3";
+    my $sth = $dbh->prepare("$update");
+    $sth->execute($newpass, $username, $email);
+}
+
+sub change_email
+{
+    my ($self, $username, $password, $newemail) = @_;
+
+    #UPDATE userpass SET email= :1 WHERE username= :2 AND password= :3                                                                                                                                                                                                    
+    my $update = "UPDATE userpass SET email= :1 WHERE username= :2 AND password = :3";
+    my $sth = $dbh->prepare("$update");
+    $sth->execute($username, $password, $newemail);
+
+}
+
+sub change_name
+{
+    my ($self, $username, $password, $newfirst, $newmiddle, $newlast) = @_;
+
+    #UPDATE userpass SET firstname= :1, middlename = :2, lastname = :3 WHERE username= :4 AND password= :5
+    my $update = "UPDATE userpass SET firstname= :1, middlename = :2, lastname = :3 WHERE username= :4 AND password= :5";
+    my $sth = $dbh->prepare("$update");
+    $sth->execute($newfirst, $newmiddle, $newlast, $username, $password);
+
+}
+
 sub num_users
 {
     # SELECT COUNT(*) FROM userpass;
