@@ -206,4 +206,14 @@ sub search_tags
     return $sth->fetchall_hashref('id');
 }
 
+sub top30
+{
+    my ($self, $filepath) = @_;
+
+    my $select = "SELECT * FROM $filepath LIMIT 30 ORDER BY count DESC";
+    my $sth = $dbh->prepare($select);
+    $sth->execute();
+    return $sth->fetchall_hashref('id');
+}
+
 1;
