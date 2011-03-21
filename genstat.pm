@@ -26,7 +26,7 @@ my $dbh = DBI->connect( "dbi:SQLite:$dbfile", "", "",
 #if the file is already in the database, it attempts to update the record.
 sub addFile()
 {
-	my ($filepath, $filename, $public, $comments, $tags) = @_;
+	my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
 	
 	my ($permissions, $timemodified, $timeadded, $filesize, $kind);
 	
@@ -111,7 +111,7 @@ sub addFile()
 #removes a file given a filepath and filename, just to be doubly sure
 sub removeFile
 {
-	my ($filepath, $filename) = @_;
+	my ($self, $filepath, $filename) = @_;
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
 	my $sth = $dbh->prepare("$delete");
