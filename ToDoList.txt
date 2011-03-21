@@ -13,3 +13,23 @@ TO dos:
     *Give access to user transaction log.
     *Give access to user
  
+
+From Varun:
+
+UserDB.pm
+	- sub num_users
+	- sub change_password
+	- sub change_email
+	- sub change_name
+
+genstat.pm
+	- sub average_size
+	- sub num_files
+	- sub get_public
+	- sub remove_file
+	- sub search_filenames
+	- sub search_kind
+	- sub search_comments
+	- sub search_tags
+	- sub addFile
+	- sub top30	
