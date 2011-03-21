@@ -7,7 +7,8 @@
 
 
 ## Still to DO:
-# * add user checking of file name supplied. (taint mode ??)
+# * add checking of file name supplied. (taint mode ??)
+# * 
 
 use strict;
 use CGI qw/:standard/; 
@@ -60,14 +61,13 @@ print $q->header(-type            => 'application/x-download',
                  'Content-length' => -s $filepath,
    				);
 
-print while(<FH>); 
+print while(<FH>); # reading file one line at a time. 
 close FH;
 
 #my $buffer;
 #while(read(FH, $buffer, 1024)){ # serve file in 1K bits, otherwise download prompt will take time to appear. 
 #	print $buffer;
 #}
-
 
 #print "Content-type: image/jpeg\n\n";
 #print @file; 

@@ -30,7 +30,7 @@ my $lastname = $q->param('lastname'); #last name
 
 # Password hash will be hash of username concatenated with cleartext password without any spaces
 # NB: This will also be used as the user ID and passed around as user browses site.  
-my $passhex = sha1_hex("user"."$pass"); # encrypt  password
+my $passhex = sha1_hex("$user"."$pass"); # encrypt  password
 
 if($ENV{REQUEST_METHOD} eq 'POST'){
 	&register(); # register user

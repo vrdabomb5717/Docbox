@@ -49,8 +49,81 @@ sub authenticate
 	}
 }
 
-# returns username whose has the given user id token.
-# Still to be implemented. 
+sub validEmailAndName{ # matches email and Name. Names are CASE-SENSITIVE
+	my ($self, $email, $firstname, $lastname) = @_;
+	
+	# SELECT * FROM userpass WHERE email='$email'
+	my $sth = $dbh->prepare("SELECT * FROM userpass WHERE email=:1 AND firstname=:2 AND lastname=:3 ");
+	$sth->execute("$email", "$firstname","$lastname");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	# Since email address must be unique per user, can use this to
+	# check if email exists in database or not.
+	 
+	my $result = $sth->fetchrow_hashref; 
+	
+	if(defined($result))
+	{
+		return 1; # record exists with that email and name
+	}
+	else
+	{
+		return 0;
+	}
+	
+}
+
+sub validEmail{ # matches email
+	my ($self, $email) = @_;
+	
+	# SELECT * FROM userpass WHERE email='$email'
+	my $sth = $dbh->prepare("SELECT * FROM userpass WHERE email=:1");
+	$sth->execute("$email");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	# Since email address must be unique per user, can use this to
+	# check if email exists in database or not.
+	 
+	my $result = $sth->fetchrow_hashref; 
+	
+	if(defined($result))
+	{
+		return 1; # email exists
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+# returns Email address given user id token. 
+sub getEmail{ 
+	
+	my ($self, $passwordhex) = @_;
+	
+	# SELECT * FROM userpass WHERE password='$passwordhex'
+	my $query = "SELECT * FROM userpass WHERE password=:1";
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute("$passwordhex");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href->{email}; #need to use deference operator '->' since we've a hash ref 
+	}
+	else
+	{
+		return undef; # there is no user with that id. 
+	}
+}
+
+# returns username whose has the given user id token. 
 sub getUser{ 
 	
 	my ($self, $passwordhex) = @_;
@@ -75,6 +148,31 @@ sub getUser{
 	}
 }
 
+# returns user token id (i.e passwordhex) belonging to given email address.
+sub getUserID{ 
+	
+	my ($self, $email) = @_;
+	
+	# SELECT * FROM userpass WHERE password='$passwordhex'
+	my $query = "SELECT * FROM userpass WHERE email=:1";
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute("$email");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href->{password}; #need to use deference operator '->' since we've a hash ref 
+	}
+	else
+	{
+		return undef; # there is no user-id with that email address. 
+	}
+}
+
 sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects to homepage. 
 	
 	my ($self, $uid) = @_; 
@@ -85,6 +183,7 @@ sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects
 		HTML->redirectLogin(); # redirect to login page. 
 	}
 }
+
 
 sub register
 {

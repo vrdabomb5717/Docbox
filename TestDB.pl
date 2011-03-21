@@ -28,20 +28,31 @@ my $ln = "Smith";
 #$username, $password, $email, $firstname, $middlename, $lastname
 
 
+
+
 print "Test for Userpass Module\n";
 
 #Test Adding User
-print "Adding user...";
-UserDB->register($u,$p,$em,$fn,$mn,$ln);
-print "\nUser $u added successfuly";
+#print "Adding user...";
+#UserDB->register($u,$p,$em,$fn,$mn,$ln);
+#print "\nUser $u added successfuly";
 
 # Test Authentication
-print "\nauthenticating user...";
+#print "\nauthenticating user...";
 
-my $valid = UserDB->authenticate($u,"hkjhjk");
+#my $valid = UserDB->authenticate($u,"hkjhjk");
 
-print "\nSuccessful Authentication" if($valid);
-print "\nAuthentication failure" if(!$valid);
+#print "\nSuccessful Authentication" if($valid);
+#print "\nAuthentication failure" if(!$valid);
+
+# Test Email checking
+print "checking user email id...";
+my $email = "jjm2190\@columbia.edu";
+my $valid2 = UserDB->validEmailAndName($email,"Jervis","Muindi");
+
+print "\nSuccessful Valid email and name\n" if($valid2);
+print "\nEmail / name not Valid\n" if(!$valid2);
+
 
 # Test User ID retrieval
 
