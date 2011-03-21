@@ -10,7 +10,7 @@
 ## Still to DO:
 # * Create tables for each file, creating word counts
 
-package UserDB;
+package Genstat;
 
 use strict;
 use warnings;
