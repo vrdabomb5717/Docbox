@@ -71,6 +71,27 @@ sub addFile()
 	my $insert = "INSERT OR REPLACE INTO files (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)";
 	my $sth = $dbh->prepare("$insert");
 	$sth->execute("$filepath", "$filename", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
+
+	
+	my $create = "CREATE TABLE $filepath (id INTEGER PRIMARY KEY, word TEXT NOT NULL COLLATE NOCASE, count INTEGER NOT NULL, UNIQUE(word))";
+	my $cth = $dbh->prepare("$create");
+	$cth->execute();
+
+
+	$insert = "INSERT INTO $filepath (word, count) VALUES (:1, :2)";
+	$sth->prepare("$insert");
+
+	if(-T "$filepath")
+	{
+	    my $words = `cat $filepath | perl -ne 'print join("\n", split(/\W+/, $_))' | sort | uniq -c | sort -nr`;
+	    
+
+	}
+	else
+	{
+	    return;
+	}
+
 }
 
 #removes a file given a filepath and filename, just to be doubly sure
@@ -82,6 +103,9 @@ sub removeFile
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
 	
+	$drop = "DROP TABLE $filepath";
+	$sth = $dbh->prepare("$drop");
+	$sth->execute();
 }
 
 #returns reference to a hash that contains each row, with the id used as the hash's key
@@ -93,7 +117,6 @@ sub get_public
     $sth->execute;
 
     return $sth->fetchall_hashref('id');
-
 }
 
 sub average_size
@@ -120,12 +143,11 @@ sub num_files
 
     my @row_array = $sth->fetchrow_array;
     return $row_array[0];
-
 }
 
 sub search_filenames
 {
-    my ($query) = @_;
+    my ($self, $query) = @_;
 
     #SELECT * FROM files WHERE filenames LIKE '$query'
 
@@ -133,13 +155,11 @@ sub search_filenames
     my $sth = $dbh->prepare($search);
     $sth->execute($query);
     return $sth->fetchall_hashref('id');
-
-
 }
 
 sub search_kind
 {
-    my ($query) = @_;
+    my ($self, $query) = @_;
 
     #SELECT * FROM files WHERE kind LIKE '$query'
                                                                                                                                                                                                                             
@@ -147,13 +167,11 @@ sub search_kind
     my $sth = $dbh->prepare($search);
     $sth->execute($query);
     return $sth->fetchall_hashref('id');
-
-
 }
 
 sub search_comments
 {
-    my ($query) = @_;
+    my ($self, $query) = @_;
 
     #SELECT * FROM files WHERE comments LIKE '$query'
                                                                                                                                                                                                                     
@@ -161,20 +179,17 @@ sub search_comments
     my $sth = $dbh->prepare($search);
     $sth->execute($query);
     return $sth->fetchall_hashref('id');
-
-
 }
 
 sub search_tags
 {
-    my ($query) = @_;
+    my ($self, $query) = @_;
 
     #SELECT * FROM files WHERE tags LIKE '$query'
     my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
     my $sth = $dbh->prepare($search);
     $sth->execute($query);
     return $sth->fetchall_hashref('id');
-
 }
 
 1;
