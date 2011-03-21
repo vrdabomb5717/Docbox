@@ -79,17 +79,31 @@ sub addFile()
 
 
 	$insert = "INSERT INTO $filepath (word, count) VALUES (:1, :2)";
-	$sth->prepare("$insert");
+	$sth = $dbh->prepare("$insert");
 
 	if(-T "$filepath")
 	{
-	    my $words = `cat $filepath | perl -ne 'print join("\n", split(/\W+/, $_))' | sort | uniq -c | sort -nr`;
-	    
+	    my $words = `"cat $filepath | perl -ne 'print join("\n", split(/\\W+/, $_))' | sort | uniq -c | sort -nr"`;
+	    my @splitted = split(/'\n'/, $words);
+
+	    foreach my $line(@splitted)
+	    {
+		my @counts = split($line);
+		$sth->execute($counts[1], $counts[0]);
+	    }
 
 	}
 	else
 	{
-	    return;
+	    my $words = `strings $filepath | perl -ne 'print join("\n", split(/\\W+/, $_))' | sort | uniq -c | sort -nr`;
+            my @splitted = split(/'\n'/, $words);
+
+            foreach my $line(@splitted)
+            {
+		my @counts = split($line);
+                $sth->execute($counts[1], $counts[0]);
+            }
+
 	}
 
 }
@@ -103,7 +117,7 @@ sub removeFile
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
 	
-	$drop = "DROP TABLE $filepath";
+	my $drop = "DROP TABLE $filepath";
 	$sth = $dbh->prepare("$drop");
 	$sth->execute();
 }
