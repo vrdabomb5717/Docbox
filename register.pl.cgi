@@ -73,9 +73,9 @@ sub register{
 	# $username, $password, $email, $firstname, $middlename, $lastname
 	UserDB->register($user,$passhex,$email,$firstname,"",$lastname);
 	
-	`mkdir ./files/$user`;
+	mkdir "./Files/$user"; # use perl's builtin mkdir function for improved security. 
 	
-	`sqlite3 ./files/$user/user.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
+	`sqlite3 ./Files/$user/user.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
                         filepath TEXT NOT NULL COLLATE NOCASE,
                         filename TEXT NOT NULL,
                         public INTEGER NOT NULL,

@@ -20,36 +20,166 @@ use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files. 
 #use File::Find;
 
-my $user; # store current user
-my $uid; # user id (token) of current user. 
+
+ 
 
 my $q = CGI->new();
+my $uid = $q->param('uid'); # user id (token) of current user.
+my $dir = $q->param('dir'); # get current directory relative to the User's Home Directory.  
+
+$dir = '' if !(defined($dir)); # if dir is not given in query string, set it to empty. 
+
+my $valid = UserDB->validateUser($uid); # validate user correctly logged in, redirect to homepage otherwise. 
+if($valid == 0){
+	exit; # stop running of user is not logged in. 
+}
+
+my $user = UserDB->getUser($uid); # store current user
 my $template = HTML::Template->new(filename => 'templates/filelist.tmpl');
 
+listDirs();
+listFiles();
 
-if(validUser()){
-	#HTML->start("$user - DocBox");	
-	listFiles();
-	#print "<br> <a href=upload_page.pl.cgi?uid=$uid> Upload a File </a>"; # uid is defined in validUser routine. 
-	#HTML->end();
+# send the obligatory Content-Type
+print "Content-Type: text/html\n\n";
 	
-	#successLogin();
+# print the template
+print $template->output;
+
+sub listDirs{ # Producs HTML Output of a Listing of user's file in their root directory.  
 	
-} else{
+	my $count =0;	
 	
-	HTML->redirectLogin(); # redirect user to login page
+	my @list; # file list data will go here
+	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
+	
+	# Fill user's name and unique id in template:
+	$template->param(user => $user);
+	$template->param(userid => $uid);
+	
+	
+	my $subdir = "Files/$user/$dir"; # set subdirectory if any specified; otherwise, working at root of user's directory.
+	opendir(my $dh, $subdir); 
+	
+	while(defined(my $file = readdir $dh)){
+		if(-d "$subdir/$file"){ # -f specifies if file handle is a directory
+			if($file eq '.' || $file eq '..'){
+				next; # skip the . and .. directories. 
+			}
+			$count++;
+			my $filepath = "$subdir/$file";
+			
+			#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
+	        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
+	    	
+			my $mtimesecs = (stat($filepath))[9]; # modified time in secs since epoch
+	    	my $size  = (stat($filepath))[7]; # file size
+	    	
+	    	my ($sec,$min,$hour,$mday,$mon,$year) = localtime($mtimesecs); # get detailled time info 
+		    $year += 1900; #get proper year, since we start from 1900. 
+		    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
+			
+			#convert size to kilobytes to 2 decimal places:
+			$size =  int($size/1024);
+			$size = sprintf("%.2f", $size); # round to 2 dps. 
+			
+			# set query string for opening directory. 
+			my $querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
+			
+			# set query string for download script
+			my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$file" . "\&directorypath=$dir";
+			my %row = (
+					dirname => $file,
+					date => $mtime,
+					size => $size,
+					querystring => $querystring,
+					download_query => $downloadquery
+					);
+		
+			# put this row into the loop by reference             
+		    push(@list, \%row);	
+		}
+	}
+		
+	# call param to fill in the loop with the loop data by reference.
+	$template->param(dir_loop => \@list);
+	
+	
 }
 
 
 
 
+
 sub listFiles{ # Producs HTML Output of a Listing of user's file in their root directory.  
+	
+	my $count =0;	
+	
+	my @list; # file list data will go here
+	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
+	
+	# Fill user's name and unique id in template:
+	$template->param(user => $user);
+	$template->param(userid => $uid);
+	
+	
+	my $subdir = "Files/$user/$dir"; # set subdirectory if any specified; otherwise, working at root of user's directory.
+	opendir(my $dh, $subdir); 
+	
+	while(defined(my $file = readdir $dh)){
+		if(-f "$subdir/$file"){ # -f specifies if file handle is a file
+			$count++;
+			my $filepath = "$subdir/$file";
+			
+			#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
+	        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
+	    	
+			my $mtimesecs = (stat($filepath))[9]; # modified time in secs since epoch
+	    	my $size  = (stat($filepath))[7]; # file size
+	    	
+	    	my ($sec,$min,$hour,$mday,$mon,$year) = localtime($mtimesecs); # get detailled time info 
+		    $year += 1900; #get proper year, since we start from 1900. 
+		    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
+			
+			#convert size to kilobytes to 2 decimal places:
+			$size =  int($size/1024);
+			$size = sprintf("%.2f", $size); # round to 2 dps. 
+			
+			# set query string for editfile script. 
+			my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$file\&dir=$dir";
+			
+			# set query string for download script
+			my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$file" . "\&directorypath=$dir";
+			my %row = (
+					filename => $file,
+					date => $mtime,
+					size => $size,
+					querystring => $querystring,
+					download_query => $downloadquery
+					);
+		
+			# put this row into the loop by reference             
+		    push(@list, \%row);	
+		}
+	}
+		
+	# call param to fill in the loop with the loop data by reference.
+	$template->param(list_loop => \@list);
+}
+
+## backup version, incase need to revert. 
+sub listFiles_OLD{ # Producs HTML Output of a Listing of user's file in their root directory.  
 
 
 ## Read Files in User Directory and Print them in HTML
 
+my @files;
+if(length($dir) == 0){ # no subdirectory specified. 
+	@files = <Files/$user/*>; # get file and directory listing in user's home directory	
+} else {
+	@files = <Files/$user/$dir/*>; # get file and directory listing in user's home directory
+}
 
-my @files = <Files/$user/*>; # get file and directory listing in user's home directory
 my $count =0;
 
 
@@ -162,11 +292,7 @@ sub validUser{
 	}
 }
 
-sub getUser{ # should return user name of currently logged in user. 
-	$uid = $q->param('uid'); # gets the UID being passed along. UID is a SHA1 hash of the string "UseranmePasswordHEX"
-	$user = UserDB->getUser($uid);
-	return $user;
-}
+
 
 
 sub getFiles{ # should return list of Files belonging to user 

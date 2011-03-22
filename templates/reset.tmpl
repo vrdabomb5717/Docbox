@@ -1,0 +1,51 @@
+	<html>
+	<head>
+	<title> Password Reset </title>
+	<link href="../css/main.css" rel="stylesheet" type="text/css">
+	</head>
+	<body align="center" bgcolor="orange"> 
+<h2 align="center"> <font color=blue> <a href="index.html"> DocBox</u> </a></font></h2>
+	<p>
+    <strong> Password Reset: </strong><TMPL_VAR NAME="filename">
+    </p>
+    
+    <TMPL_IF NAME="badinput"> <!-- if user enters invalid email-->
+        <p> <font color=red> <strong> Invalid email address entered. Please enter a valid email address and <a href=reset_page.pl.cgi> try again </a>. </strong> </font> <a href="register.pl.cgi"> 
+        <br>
+        Click here </a> if you want to register for a new account. </p>
+        
+    </TMPL_IF>
+    
+    <TMPL_IF NAME="resetpage">
+    <p>
+    To reset your password, please enter the email address that you used to sign up for an account along with the <b>exact</b> First Name and Last Name that you used when you signed up for the account. A password reset link will be mailed to you shortly thereafter. 
+    </p>
+    
+     
+        <form action="email.pl.cgi" method="post">
+        <p> <strong> First Name: </strong> <input type="textarea" name="firstname"> </p>
+        <p> <strong> Last Name: </strong> <input type="textarea" name="lastname"> </p>
+        </p>
+        <p> <img alt="Email File" height="25" src="images/email.png" width="25" align="middle">
+        <strong>Email Password Reset link to:  </strong><input type="textarea" name="email"> &nbsp; <input type="submit" value="Reset Password"> </p>
+       
+        </form>
+
+    </TMPL_IF>
+    
+    <TMPL_IF NAME="passwordchange">
+     <p>
+    To reset your password, please enter a new password below: 
+    </p>
+    
+    <form action="reset.pl.cgi" method="post">
+        <p> <strong> New Password: </strong> <input type="textarea" name="password">         
+        <input type="submit" value="Reset Password"> </p>
+        
+        <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
+   
+    </form>
+    </TMPL_IF>
+	<br>
+	<footer><p align="center">Docbox &copy 2011. All Rights Reserved.  </p></footer>
+	 </body></html>

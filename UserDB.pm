@@ -177,10 +177,18 @@ sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects
 	
 	my ($self, $uid) = @_; 
 	
+	if(!defined($uid)){ # for null user id token
+		HTML->redirectLogin(); # redirect to login page.
+		return 0; 
+	}
+	
 	my $user = UserDB->getUser($uid);	# should return user name of currently logged in user. 
 	
 	if(!defined($user)){ # if user Not found
-		HTML->redirectLogin(); # redirect to login page. 
+		HTML->redirectLogin(); # redirect to login page.
+		return 0; 
+	} else{
+		return 1;
 	}
 }
 

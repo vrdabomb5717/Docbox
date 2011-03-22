@@ -19,6 +19,7 @@ use HTML::Template; # for creating html from template files.
 my $user; # store current user
 my $uid; # user id (token) of current user. 
 
+
 my $q = CGI->new();
 #print $q->header(); # Print HTML Headers
 #my $template = HTML::Template->new(filename => 'templates/editfile.tmpl');
@@ -40,9 +41,18 @@ my $sourcefilepath = "files/$user/$dirpath" ;
 my $filename = $q->param('filename');
 my $filepath = "$sourcefilepath/" . "$filename";
 
-open(FH, $filepath) || die Error('open',$filepath); # opens file for reading. 
-#my @file = <FH>;
-#close FH; 
+if(-d $filepath){ # if directory
+	`tar -cvf temp.tar $filepath`; # zip directory into tar
+	my $dfile = "temp.tar";
+	open(FH, $dfile) || die Error('open',$dfile); # opens file for reading.
+	$filename = "$filename.tar"; # append .tar extension to filename so that this is the name of file being downloaded.	
+  
+} else{
+	open(FH, $filepath) || die Error('open',$filepath); # opens file for reading.
+ 	
+}
+
+ 
  
 #switch both input and output handles to binary mode to ensure proper file transfer.
 binmode STDOUT; 
@@ -52,13 +62,9 @@ binmode FH;
 # The Headers below will force browse to show save as dialog rather than 
 # showing/vieweing the file.  
 
-
-#print "Content-Type:application/x-download\n";   
-#print "Content-Disposition:attachment;filename=$filename\n\n";
-
 print $q->header(-type            => 'application/x-download',
                  -attachment      => $filename,
-                 'Content-length' => -s $filepath,
+                 'Content-length' => -s $filepath
    				);
 
 print while(<FH>); # reading file one line at a time. 
