@@ -10,7 +10,9 @@
 # Currently reads password.txt
 # Post User ID in a hidden form field
 
-
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
@@ -33,11 +35,12 @@ else{
 
 
 sub redirectLogin{ # go to failed login page
-	
+#Space above EOF (i.e. new-line) is Necessary for the Apache webserver to follow redirect.
 	print <<EOF;
-Status: 302 Relocate status
+Status: 302 Moved Temporarily
 Location: login_failed.html
 Content-type: text/html
+
 EOF
 }
 
@@ -46,7 +49,7 @@ sub redirectHome{ # go to homepage
 	$uid = sha1_hex($uid);
 	
 	print <<EOF;
-Status: 302 Relocate status
+Status: 302 Moved Temporarily
 Location: home.pl.cgi?uid=$passhex
 Content-type: text/html
 

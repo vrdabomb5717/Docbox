@@ -11,6 +11,9 @@
 # Still to Do:
 # * Add a hidden form that will be used to maintain user state.  
 
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;

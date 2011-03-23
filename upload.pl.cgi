@@ -11,7 +11,9 @@
 # Handle cases when duplicate file are uploaded.
 # Add user authentication verification and Save File to users' directory only. 
 
-
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use CGI qw/:standard/;
 use HTML; 
@@ -49,7 +51,7 @@ sub savefile { # Process uploaded File
 	
 	    my $io_handle = $lightweight_fh->handle; # Change the handle to one compatible with IO::Handle:
 	    
-	    open (OUTFILE,">$path/$filename") || die "Can't Open File for Writing"; # Open File for Writing. If File Exists, It will be overwritten.
+	    open (OUTFILE,">$path/$filename") || die HTML->Error("open for writing","$path/$filename"); # Open File for Writing. If File Exists, It will be overwritten.
 	
 	    # switch file input/output to Binmode. This ensures that all data will be be preserved regardless of file format.
 	    # This is especially important for windows machines where there is a distinction between text file and files like images
@@ -63,3 +65,4 @@ sub savefile { # Process uploaded File
 		close OUTFILE;
 	}
 }
+

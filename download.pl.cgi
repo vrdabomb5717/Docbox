@@ -10,6 +10,10 @@
 # * add checking of file name supplied. (taint mode ??)
 # * 
 
+
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use CGI qw/:standard/; 
 use HTML;
@@ -36,10 +40,10 @@ my $dirpath = $q->param('directorypath');  # dirpath shouldn't NOT containing tr
 
 ## Define source file path for current user. 
 # Will need to add directory path, after enabling grouping funtionality. 
-my $sourcefilepath = "files/$user/$dirpath" ; 
+my $sourcefilepath = "Files/$user/$dirpath" ; 
 
 my $filename = $q->param('filename');
-my $filepath = "$sourcefilepath/" . "$filename";
+my $filepath = "$sourcefilepath" . "$filename";
 
 if(-d $filepath){ # if directory
 	`tar -cvf temp.tar $filepath`; # zip directory into tar

@@ -42,9 +42,16 @@ EOF
 	
 }
 
+
+sub Error{  
+   print "Content-type: text/html\n\n";  
+   print "The server can't $_[1] the $_[2]: $! \n";  
+   exit;  
+ }
+
 sub redirectLogin{
 	print <<EOF;
-Status: 302 Relocate status
+Status: 302 Moved Temporarily
 Location: index.html
 Content-type: text/html
 

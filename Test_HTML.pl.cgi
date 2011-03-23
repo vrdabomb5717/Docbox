@@ -5,7 +5,9 @@
 # February 26, 2011
 # Author: Jervis
 
-
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict; 
 use CGI qw/:standard/;
 use HTML;

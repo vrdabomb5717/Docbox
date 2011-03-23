@@ -11,13 +11,15 @@
 # * Create new directory for new User. 
 
 ## Input data will be via POST
-
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 use HTML; # generate docbox specific HTML
-use userDB; # connects to user Database
+use UserDB; # connects to user Database
 
 my $q = CGI->new();
 

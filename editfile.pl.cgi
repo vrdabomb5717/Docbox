@@ -11,6 +11,9 @@
 ## * Collision check for rename operation. 
 ## * Add Full FIle PAths so that ops will work inside directories
 
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use Fcntl ':flock'; # handle file  i/o
 use CGI qw/:standard/;
@@ -36,7 +39,7 @@ $user = UserDB->getUser($uid); # get username of current logged in user.
 
 ## Define source file path for current user. 
 # Will need to add directory path, after enabling grouping funtionality. 
-my $sourcefilepath = "files/$user/"; 
+my $sourcefilepath = "Files/$user/"; 
 
 my $filename = $q->param('filename');
 $filename = $q->url_param('filename') if(!defined($filename));# for when filename is in post data and we're have mixed post/get.
@@ -100,14 +103,14 @@ if($badinput){ ## Stop if bad input
 if($renamedfilename){ # if renmaedfilename field specified
 		
 	my $source = "$sourcefilepath" . "$filename"; 
-	my $dest = "$sourcefilepath" . "$copyfilename" . "extension";
+	my $dest = "$sourcefilepath" . "$renamedfilename" . ".$extension";
 	
 	# move function overwrites filesystem with the destination filename. 
 	# so if any file exits beforehand with same name as user supplied filename (to use for renaming)
 	# then that file on the filesystem is overwritten.  
  
 	move($source, $dest);
-	$op_template->param(operation => 'Move');
+	$op_template->param(operation => 'Rename');
 	print $op_template->output();
 	exit;
 		

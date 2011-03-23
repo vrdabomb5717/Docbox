@@ -10,7 +10,9 @@
 ## Still to do 
 # * still need to add user id when calling upload.pl.cgi script.
 # * Need to do User authentication.  
-
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
 use strict;
 use CGI qw/:all/;
 use UserDB; 
