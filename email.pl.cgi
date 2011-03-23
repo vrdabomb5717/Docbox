@@ -31,7 +31,7 @@ $email = $q->param('email');
 $fname= $q->param('firstname');
 $lname = $q->param('lastname');
 #$validemail = UserDB->validEmailAndName($email);  # checks if email along with supplied names exists in database. Names are case-sensitive
-$validemail = UserDB->validEmailAndName($email);  # checks if email exists in database.
+$validemail = UserDB->validEmail($email);  # checks only if email exists in database.
 my $template; # html template object 
 
 if(malformed_email($email)){
