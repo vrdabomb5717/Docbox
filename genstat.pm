@@ -117,9 +117,9 @@ sub removeFile
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
 	
-	my $drop = "DROP TABLE $filepath";
+	my $drop = "DROP TABLE :1";
 	$sth = $dbh->prepare("$drop");
-	$sth->execute();
+	$sth->execute($filepath);
 }
 
 #returns reference to a hash that contains each row, with the id used as the hash's key
@@ -128,7 +128,7 @@ sub get_public
     #SELECT * FROM files WHERE public != 0
     my $public = "SELECT * FROM files WHERE public != 0";
     my $sth = $dbh->prepare("$public");
-    $sth->execute;
+    $sth->execute();
 
     return $sth->fetchall_hashref('id');
 }
