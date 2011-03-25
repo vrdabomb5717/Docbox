@@ -78,7 +78,7 @@ sub addFile()
 	$cth->execute();
 
 
-	$insert = "INSERT INTO $filepath (word, count) VALUES (:1, :2)";
+	$insert = "INSERT INTO :1 (word, count) VALUES (:2, :3)";
 	$sth = $dbh->prepare("$insert");
 
 	if(-T "$filepath")
@@ -89,7 +89,7 @@ sub addFile()
 	    foreach my $line(@splitted)
 	    {
 		my @counts = split($line);
-		$sth->execute($counts[1], $counts[0]);
+		$sth->execute($filepath, $counts[1], $counts[0]);
 	    }
 
 	}
@@ -101,7 +101,7 @@ sub addFile()
             foreach my $line(@splitted)
             {
 		my @counts = split($line);
-                $sth->execute($counts[1], $counts[0]);
+                $sth->execute($filepath, $counts[1], $counts[0]);
             }
 
 	}
