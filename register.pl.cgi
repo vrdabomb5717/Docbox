@@ -77,7 +77,7 @@ sub register{
 	
 	mkdir "./Files/$user"; # use perl's builtin mkdir function for improved security. 
 	
-	`sqlite3 ./Files/$user/user.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
+	`sqlite3 ./Files/$user/.user.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
                         filepath TEXT NOT NULL COLLATE NOCASE,
                         filename TEXT NOT NULL,
                         public INTEGER NOT NULL,

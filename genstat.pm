@@ -16,7 +16,7 @@ use strict;
 use warnings;
 use DBI;
 
-my $dbfile = "user.db";
+my $dbfile = ".user.db";
 
 my $dbh = DBI->connect( "dbi:SQLite:$dbfile", "", "",
 	{RaiseError => 1, AutoCommit => 1}) || die "Cannot connect: $DBI::errstr";
