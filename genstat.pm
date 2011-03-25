@@ -210,9 +210,9 @@ sub top30
 {
     my ($self, $filepath) = @_;
 
-    my $select = "SELECT * FROM $filepath LIMIT 30 ORDER BY count DESC";
+    my $select = "SELECT * FROM :1 LIMIT 30 ORDER BY count DESC";
     my $sth = $dbh->prepare($select);
-    $sth->execute();
+    $sth->execute($filepath);
     return $sth->fetchall_hashref('id');
 }
 
