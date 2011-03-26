@@ -14,6 +14,7 @@ use DBI;
 use UserDB;
 use HTML::Template;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
+use Genstat; 
 
 #print "Hello";
 
@@ -32,29 +33,64 @@ my $ln = "Smith";
 #$username, $password, $email, $firstname, $middlename, $lastname
 
 print "Test for Userpass Module\n";
-
+word();
 #makedb();
 
-#my @files = <Files/user/*>;
-#print @files;
-
-my $dir = "./Files/user";
-opendir(my $dh, $dir); 
+#addfile();
 
 
-#my @dir =  readdir($dh); 
-#my $d =  readdir($dh);
-#print $d; 
-while(defined(my $aFile = readdir $dh)){
-	if(-f "$dir/$aFile"){
-		print scalar($aFile);
-		#print $aFile;
-		print "\n";
-	}
+
+sub word{
+	$filepath = "Project Desc";
+	my $words = `"cat $filepath | perl -ne 'print join("\n", split(/\\W+/, $_))' | sort | uniq -c | sort -nr"`;
+	    my @splitted = split(/'\n'/, $words);
+
+	    foreach my $line(@splitted)
+	    {
+	    my @counts = split($line);	
+		print "line is $line : counts are ";
+		print "$counts[1] and $counts[0] \n";
+		
+		
+		#$sth->execute($counts[1], $counts[0]);
+	    }
 }
 
+sub read{
+	#my @files = <Files/user/*>;
+	#print @files;
+	
+	my $dir = "./Files/user";
+	opendir(my $dh, $dir); 
+	
+	
+	#my @dir =  readdir($dh); 
+	#my $d =  readdir($dh);
+	#print $d; 
+	while(defined(my $aFile = readdir $dh)){
+		if(-f "$dir/$aFile"){
+			print scalar($aFile);
+			#print $aFile;
+			print "\n";
+		} 
+	}
+	#print @dir;
+}
 
-#print @dir; 
+ 
+
+sub addfile{
+	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	#my $filepath = "Files/user/110.jpg";
+	$filepath = "passwords.txt"; 
+	my $fn = "110.jpg";
+	my $comments = " I have no commnets at this time";
+	my $tags = " THis is to be tage dlater on"; 
+	
+	print "Running addfile command ... "; 
+	Genstat->addFile($filepath, $fn, "1", $comments, $tags);
+	
+}
 
 sub makedb{
 	print "making db ...\n";

@@ -1,4 +1,13 @@
 TO dos: 
+**Top Priority ***
+- Searching 
+	* filename
+	* file content
+
+- Document Grouping
+
+
+
 - Add a go up one level button. 
 - Add public / private sections in file listing
 - Test varun's new registration code. -> Works.  
