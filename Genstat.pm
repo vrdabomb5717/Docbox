@@ -17,22 +17,18 @@ use warnings;
 use DBI;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 
-#my $dbfile = ".user.db";
-my $dbfile = "Files/TestUser/user.db";
 
-my $dbh = DBI->connect( "dbi:SQLite:$dbfile", "", "",
-	{RaiseError => 1, AutoCommit => 1}) || die "Cannot connect: $DBI::errstr";
-
+my $dbh; #declare db handle.  
 
 #takes filepath, filename, whether the uploaded file is public, comments, and tags, and adds it to the database.
 #if the file is already in the database, it attempts to update the record.
 sub addFile()
 {
-	my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my ($self, $dbfile, $filepath, $filename, $public, $comments, $tags) = @_;
 	
+	Genstat->connect($dbfile); #connect to specific user db
+	  
 	my $fph = getTableHash($filepath); # File path hash
-	
-	
 	if(!defined($comments)){
 		$comments = ""; 
 	}
@@ -116,9 +112,19 @@ sub addFile()
 	}
 }
 
+# Connects to user database
+# Internal Method - should not be used publicly
+sub connect{
+	my ($self, $dbfile) = @_; 
+
+	$dbh = DBI->connect( "dbi:SQLite:$dbfile", "", "",
+	{RaiseError => 1, AutoCommit => 1}) || die HTML->Error("connect to DB", "$dbfile - $DBI::errstr");
+}
+
 
 # Takes a string and Returns words in a sorted order list including word count like shown below. 
 # List contains string of format: aWord itsCount
+# Internal method - don't use publicly
 sub getWordCount{
 	
 	my $input = $_[0]; 
@@ -143,6 +149,7 @@ sub getWordCount{
 
 # Takes a plain text file Returns words in a sorted order list including word count like shown below. 
 # List contains string of format: aWord itsCount
+# Internal method only
 sub getWordCountText{
 	
 	my $filepath = $_[0];
@@ -176,6 +183,7 @@ sub getWordCountText{
 # This is to be used in naming the tables to be created when a user adds a new file. 
 #NOTE: In generating the tablenames, I take the filepath hash and a pre-append the letter "a"
 #This is to please DBI becasue it can't process table names starting with numbers.
+# Also, this is an internal method - dont use publicly. 
 sub getTableHash{ 
 	my ($filepath) = @_;
 	my $fph = sha1_hex($filepath); # File path hash : This will used as the name of the table.
@@ -186,7 +194,10 @@ sub getTableHash{
 #removes a file given a filepath and filename, just to be doubly sure
 sub removeFile
 {
-	my ($self, $filepath, $filename) = @_;
+	
+	my ($self, $dbfile, $filepath, $filename) = @_;
+	
+	Genstat->connect($dbfile); #connect to specific user db
 	my $fph = getTableHash($filepath); # File path hash
 	 
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
@@ -202,6 +213,10 @@ sub removeFile
 #returns reference to a hash that contains each row, with the id used as the hash's key
 sub get_public
 {
+    
+    my ($self, $dbfile) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+  
     #SELECT * FROM files WHERE public != 0
     my $public = "SELECT * FROM files WHERE public != 0";
     my $sth = $dbh->prepare("$public");
@@ -212,6 +227,9 @@ sub get_public
 
 sub average_size
 {
+    my ($self, $dbfile) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+    
     #SELECT AVG(size) FROM files
     my $average = "SELECT AVG(size) FROM files";
     my $sth = $dbh->prepare("$average");
@@ -225,6 +243,9 @@ sub average_size
 
 sub num_files
 {
+    my ($self, $dbfile) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+    
     #SELECT COUNT(filename) FROM files
     my $count= "SELECT COUNT(filename) FROM files";
     my $sth = $dbh->prepare("$count");
@@ -238,8 +259,9 @@ sub num_files
 
 sub search_filenames
 {
-    my ($self, $query) = @_;
-
+    my ($self, $dbfile, $query) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+	
     #SELECT * FROM files WHERE filenames LIKE '$query'
 
     my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
@@ -250,10 +272,11 @@ sub search_filenames
 
 sub search_kind
 {
-    my ($self, $query) = @_;
-
+    my ($self, $dbfile, $query) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+    
     #SELECT * FROM files WHERE kind LIKE '$query'
-                                                                                                                                                                                                                            
+                                                                                                                                                                                                                           
     my $search = "SELECT * FROM files WHERE kind LIKE '%:1%";
     my $sth = $dbh->prepare($search);
     $sth->execute($query);
@@ -262,8 +285,8 @@ sub search_kind
 
 sub search_comments
 {
-    my ($self, $query) = @_;
-
+    my ($self, $dbfile, $query) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
     #SELECT * FROM files WHERE comments LIKE '$query'
                                                                                                                                                                                                                     
     my $search = "SELECT * FROM files WHERE comments LIKE '%:1%";
@@ -274,8 +297,9 @@ sub search_comments
 
 sub search_tags
 {
-    my ($self, $query) = @_;
-
+    my ($self, $dbfile, $query) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+    
     #SELECT * FROM files WHERE tags LIKE '$query'
     my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
     my $sth = $dbh->prepare($search);
@@ -285,8 +309,10 @@ sub search_tags
 
 sub top30
 {
-    my ($self, $filepath) = @_;
+    my ($self, $dbfile, $filepath) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
 	my $fph = getTableHash($filepath); # File path hash
+	
 	#my $fph = sha1_hex($filepath); # File path hash
     #$fph = "a" . "$fph"; #append a letter to guranteee that first character is always a letter.
     

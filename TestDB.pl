@@ -44,11 +44,12 @@ print "Test for Userpass Module\n";
 
 
 
-addfile();
+#addfile();
 removeFile();
 
 sub removeFile{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my $db = "Files/TestUser/.user.db";
 	my $filepath = "Files/user/110.jpg";
 	$filepath = "passwords.txt"; 
 	$filepath = "HTML.pm";
@@ -57,7 +58,7 @@ sub removeFile{
 	my $tags = " THis is to be tage dlater on"; 
 	
 	print "Running REMOVE file command ... \n"; 
-	Genstat->removeFile($filepath, $fn);
+	Genstat->removeFile($db, $filepath, $fn);
 	
 }
 
@@ -124,6 +125,7 @@ sub read{
 
 sub addfile{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my $db = "Files/TestUser/.user.db";
 	my $filepath = "Files/user/110.jpg";
 	$filepath = "passwords.txt"; 
 	$filepath = "HTML.pm";
@@ -132,7 +134,7 @@ sub addfile{
 	my $tags = " THis is to be tage dlater on"; 
 	
 	print "Running addfile command ... "; 
-	Genstat->addFile($filepath, $fn, "1", $comments, $tags);
+	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);
 	
 }
 
