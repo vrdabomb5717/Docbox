@@ -26,7 +26,11 @@ use GenStat;
 #$CGI::POST_MAX = (1024*1024) * 25;  # maximum upload filesize is 25 Megabytes
 
 my $q = CGI->new(); # make CGI object
-my $uid = $q->url_param('uid'); # because uid is passed over query string. 
+my $uid = $q->url_param('uid'); # because uid is passed over query string.
+my $public =  $q->url_param('public');
+my $comments = $q->url_param('comments');
+my $tags = $q->url_param('tags');
+
 UserDB->validateUser($uid); # Check if valid user logged in. 
 
 my $user = UserDB->getUser($uid); # get userame
@@ -89,7 +93,8 @@ sub savefile { # Process uploaded File
 		## Add file to database.
 		my $dbfile = "$path/.user.db"; # user db file
 		my $fp = "$path/$filename";  # full file path
-		Genstat->addFile($dbfile, $fp);
+		#addfile takes arguments in form: $dbfile, $filepath, $filename, $public, $comments, $tags	
+		Genstat->addFile($dbfile, $fp, $filename, );
 		
 		return; # exit function
 	}

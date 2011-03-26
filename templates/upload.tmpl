@@ -1,0 +1,31 @@
+
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"> 
+<head> 
+<title>Upload Your File</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+<link href="../css/main.css" rel="stylesheet" type="text/css">
+</head> 
+
+<body bgcolor="orange"> 
+
+<h1>Upload File</h1>
+
+<form method="post" action="upload.pl.cgi?uid=<TMPL_VAR NAME="userid">" enctype="multipart/form-data"> 
+<p> <strong>Make File Public:</strong>
+<select name=public>
+                <option>No</option>
+                <option>Yes</option>
+</select>
+<br>
+<strong>Tags: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</strong><input type="textarea" width="100" name="tags"> <br>
+<strong>Comments: </strong> <textarea name="comments" rows="3" cols="45"></textarea> <br>
+<input type="file" name="uploaded_file" value="starting value" size="50" maxlength="80" />
+<input type="submit" name="Upload to Server" value="Upload to Server" /></form> 
+
+
+</body> 
+</html>

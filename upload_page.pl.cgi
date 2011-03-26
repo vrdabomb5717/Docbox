@@ -17,16 +17,24 @@ use strict;
 use CGI qw/:all/;
 use UserDB; 
 use HTML;
+use HTML::Template; # for creating html from template files.
 my $q = CGI->new(); # cgi object
 
+
+my $template = HTML::Template->new(filename => 'templates/upload.tmpl');
 
 my $uid = $q->param('uid');
 UserDB->validateUser($uid); # Check if valid user logged in. 
 my $user = UserDB->getUser($uid);
 
-start();
-&uploadForm();
-print &end_html;
+
+$template->param(userid => $uid);
+$q->print(header); # Print HTTP header
+print $template->output();
+ 
+#start();
+#&uploadForm();
+#print &end_html;
 
 sub start{
 	print header;
@@ -34,6 +42,17 @@ sub start{
 	print h1('Upload File');
 	#HTML->start('Upload File'); 
 	#HTMl->h1('Upload a File');
+}
+
+sub publicOption{
+	print <<EOF;
+<select name=public>
+                <option>No</option>
+                <option>Yes</option>
+                </select>
+
+EOF
+
 }
 
 sub uploadForm{
@@ -45,5 +64,6 @@ sub uploadForm{
 	print filefield('uploaded_file','starting value',50,80);
 	#print hidden('uid',"$uid"); # Pass the uid in a hidden field.  
 	print submit('Upload to Server');
+	
 	print end_form;
 }
