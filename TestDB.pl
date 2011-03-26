@@ -59,15 +59,16 @@ $fp= "HTML.pm";
 #print "avg size is \n";
 #print Genstat->average_size($db); 
 
-
-addfile();
+makedb();
+exit;
+#addfile();
 #removeFile();
 
 sub sql{
 	my $db = "Files/TestUser/.user.db";
 $fp= "HTML.pm";
 #my $hash_ref_all = Genstat->get_public($db);
-my $hash_ref_all = Genstat->top30($db,$fp );
+#my $hash_ref_all = Genstat->top30($db,$fp );
 
 #foreach $row (keys %$hash_ref_all){
 #	 my $row_hash_ref = $hash_ref_all->{$row}; # deref hash reference
@@ -183,8 +184,21 @@ sub addfile{
 
 sub makedb{
 	print "making db ...\n";
-	mkdir "./files/$u";
+	#mkdir "./files/$u";
 	
+	
+	`sqlite3 public.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
+                        filepath TEXT NOT NULL COLLATE NOCASE,
+                        filename TEXT NOT NULL,
+                        owner INTEGER NOT NULL,
+                        timemodified TEXT NOT NULL,
+                        timeadded TEXT NOT NULL,
+                        size REAL NOT NULL,
+                        kind TEXT NOT NULL COLLATE NOCASE,
+                        comments TEXT COLLATE NOCASE,
+                        tags TEXT COLLATE NOCASE,
+                        UNIQUE (filepath) );"`;
+	exit;                        
 	`sqlite3 ./files/$u/user.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
                         filepath TEXT NOT NULL COLLATE NOCASE,
                         filename TEXT NOT NULL,
