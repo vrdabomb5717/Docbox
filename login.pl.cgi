@@ -39,10 +39,10 @@ else{
 sub logFailedLogin{
 	open (FILE, ">>Logs/logins.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
 	my $ip = $ENV{'REMOTE_ADDR'};
-	
+	my $time = localtime();
 	flock(FILE, LOCK_EX); # get file lock handle  
 	{ 
-		print (FILE "$user login attempt failed from IP address $ip \n"); #Append to login file	
+		print (FILE "$user login attempt failed from IP address $ip at $time\n"); #Append to login file	
 	}
 	close FILE; # save changes	
 }
@@ -53,10 +53,10 @@ sub logFailedLogin{
 sub logLogin{
 	open (FILE, ">>Logs/logins.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
 	my $ip = $ENV{'REMOTE_ADDR'};
-	
+	my $time = localtime();
 	flock(FILE, LOCK_EX); # get file lock handle  
 	{ 
-		print (FILE "$user logged in successfully from IP address $ip \n"); #Append to login file	
+		print (FILE "$user logged in successfully from IP address $ip at $time\n"); #Append to login file	
 	}
 	
 	close FILE; # save changes	

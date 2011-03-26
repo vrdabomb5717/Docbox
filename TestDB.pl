@@ -47,14 +47,16 @@ $fp= "HTML.pm";
 #my $hash_ref_all = Genstat->get_public($db);
 #my $hash_ref_all = Genstat->top30($db,$fp );
 
-my $result = Genstat->isPublic("HTML.pm");
-if($result){
-	print "FILE PUBLIC ";
-	exit;
-}else{
-	print "FILE PRIVATE";
-	exit;
-}
+
+
+#my $result = Genstat->isPublic("HTML.pm");
+#if($result){
+#	print "FILE PUBLIC ";
+	#exit;
+#}else{
+#	print "FILE PRIVATE";
+	#exit;
+#}
 
 #print "avg size is \n";
 #print Genstat->average_size($db); 
