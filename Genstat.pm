@@ -80,6 +80,14 @@ sub addFile()
 	$sth->execute("$filepath", "$filename", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
 
 	
+	my $table_exists = Genstat->existsTable($fph); 
+	
+	if($table_exists){ # if table already exists, DELETE it first
+		my $drop = "DROP TABLE $fph";
+		$sth = $dbh->prepare("$drop");
+		$sth->execute();
+	} 
+	
 	my $create = "CREATE TABLE $fph (id INTEGER PRIMARY KEY, word TEXT NOT NULL COLLATE NOCASE, count INTEGER NOT NULL, UNIQUE(word))";
 	my $cth = $dbh->prepare("$create");
 	$cth->execute();
@@ -109,6 +117,36 @@ sub addFile()
 			my @counts = split(' ', $line);
             $sth->execute($counts[0], $counts[1]);
         }
+	}
+}
+
+## Checks if given table name already exists
+# Internal method only 
+sub existsTable{
+	
+	#Genstat->connect("Files/TestUser/.user.db"); 
+	
+	my($self, $tn) = @_; # tn is table name
+	my $query ="SELECT name FROM sqlite_master WHERE type='table' AND name=:1"; 
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute($tn);
+	
+	
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	# Since the table name is unique , we can use this to
+	# check if that table already exists in database or not.
+	 
+	my $result = $sth->fetchrow_hashref; 
+	
+	if(defined($result))
+	{
+		return 1; # table exists
+	}
+	else
+	{
+		return 0;
 	}
 }
 
