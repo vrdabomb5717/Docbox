@@ -19,6 +19,7 @@ use CGI qw/:standard/;
 use CGI::Carp qw(fatalsToBrowser); # debugging only. remove for production use. 
 use HTML; 
 use UserDB;
+use GenStat;
 
 # Need to handle case when file size too big
 # Code below causes CLIC webserver to show 500 Internal error, when size over limit. 
@@ -84,6 +85,12 @@ sub savefile { # Process uploaded File
 	    }
 	    
 		close OUTFILE; # close file. 
+		
+		## Add file to database.
+		my $dbfile = "$path/.user.db"; # user db file
+		my $fp = "$path/$filename";  # full file path
+		Genstat->addFile($dbfile, $fp);
+		
 		return; # exit function
 	}
 	

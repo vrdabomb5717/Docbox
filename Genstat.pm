@@ -65,13 +65,13 @@ sub addFile()
 	my @suffix = split('\.', $filename);
 	my $length = scalar(@suffix);
 	
-	if($length > 0)
+	if(-T "$filepath") # if file is a text file
 	{
 		$kind = "txt";
 	}
 	else
 	{
-		$kind = $suffix[$length - 1];
+		$kind = $suffix[$length - 1]; #use extension to determine type. 
 	}
 	
 	# INSERT INTO userpass (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)
@@ -316,9 +316,11 @@ sub top30
 	#my $fph = sha1_hex($filepath); # File path hash
     #$fph = "a" . "$fph"; #append a letter to guranteee that first character is always a letter.
     
-    my $select = "SELECT * FROM :1 LIMIT 30 ORDER BY count DESC";
+    #my $select = "SELECT * FROM $fph LIMIT 30 ORDER BY count DESC";
+    my $select = "SELECT * FROM $fph ORDER BY count DESC";
     my $sth = $dbh->prepare($select);
-    $sth->execute($fph);
+    #$sth = $dbh->prepare("ORDER BY count");
+    $sth->execute();
     return $sth->fetchall_hashref('id');
 }
 

@@ -42,10 +42,43 @@ print "Test for Userpass Module\n";
 
 #print w($y);
 
+my $db = "Files/TestUser/.user.db";
+$fp= "HTML.pm";
+#my $hash_ref_all = Genstat->get_public($db);
+#my $hash_ref_all = Genstat->top30($db,$fp );
+print "avg size is \n";
+print Genstat->average_size($db); 
 
 
 #addfile();
-removeFile();
+#removeFile();
+
+sub sql{
+	my $db = "Files/TestUser/.user.db";
+$fp= "HTML.pm";
+#my $hash_ref_all = Genstat->get_public($db);
+my $hash_ref_all = Genstat->top30($db,$fp );
+
+#foreach $row (keys %$hash_ref_all){
+#	 my $row_hash_ref = $hash_ref_all->{$row}; # deref hash reference
+#	 
+#	 foreach $col (keys %$row_hash_ref){
+#	 	print "$col => $row_hash_ref->{$col}\n";	
+#	 }
+#	 print "===================================\n"; 
+#}
+
+while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){
+	 #my $row_hash_ref = $hash_ref_all->{$row}; # deref hash reference
+	 
+	 #print $row_hash_ref; 
+	 foreach $col (keys %$row_hash_ref){
+	 	print "$col => $row_hash_ref->{$col}\n";	
+	 }
+	 print "===================================\n"; 
+}
+	
+}
 
 sub removeFile{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
