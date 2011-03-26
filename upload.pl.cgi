@@ -27,9 +27,9 @@ use GenStat;
 
 my $q = CGI->new(); # make CGI object
 my $uid = $q->url_param('uid'); # because uid is passed over query string.
-my $public =  $q->url_param('public');
-my $comments = $q->url_param('comments');
-my $tags = $q->url_param('tags');
+my $public =  $q->param('public'); # passed over POST
+my $comments = $q->param('comments'); #passed over POST
+my $tags = $q->param('tags'); # passed over POST
 
 UserDB->validateUser($uid); # Check if valid user logged in. 
 
@@ -94,7 +94,7 @@ sub savefile { # Process uploaded File
 		my $dbfile = "$path/.user.db"; # user db file
 		my $fp = "$path/$filename";  # full file path
 		#addfile takes arguments in form: $dbfile, $filepath, $filename, $public, $comments, $tags	
-		Genstat->addFile($dbfile, $fp, $filename, );
+		Genstat->addFile($dbfile, $fp, $filename, $public, $comments, $tags);
 		
 		return; # exit function
 	}

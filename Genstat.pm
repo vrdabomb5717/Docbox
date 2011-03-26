@@ -27,6 +27,8 @@ sub addFile()
 	my ($self, $dbfile, $filepath, $filename, $public, $comments, $tags) = @_;
 	
 	Genstat->connect($dbfile); #connect to specific user db
+	
+	#HTML->Error("READ Comment: ", $comments);
 	  
 	my $fph = getTableHash($filepath); # File path hash
 	if(!defined($comments)){
