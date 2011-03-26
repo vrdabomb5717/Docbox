@@ -15,8 +15,10 @@ package Genstat;
 use strict;
 use warnings;
 use DBI;
+use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 
-my $dbfile = ".user.db";
+#my $dbfile = ".user.db";
+my $dbfile = "Files/TestUser/user.db";
 
 my $dbh = DBI->connect( "dbi:SQLite:$dbfile", "", "",
 	{RaiseError => 1, AutoCommit => 1}) || die "Cannot connect: $DBI::errstr";
@@ -28,6 +30,15 @@ sub addFile()
 {
 	my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
 	
+	my $fph = getTableHash($filepath); # File path hash
+	
+	
+	if(!defined($comments)){
+		$comments = ""; 
+	}
+	if(!defined($tags)){
+		$tags = "";
+	}
 	my ($permissions, $timemodified, $timeadded, $filesize, $kind);
 	
 	#	Chart:
@@ -60,7 +71,7 @@ sub addFile()
 	
 	if($length > 0)
 	{
-		$kind = "txt"
+		$kind = "txt";
 	}
 	else
 	{
@@ -73,53 +84,119 @@ sub addFile()
 	$sth->execute("$filepath", "$filename", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
 
 	
-	my $create = "CREATE TABLE $filepath (id INTEGER PRIMARY KEY, word TEXT NOT NULL COLLATE NOCASE, count INTEGER NOT NULL, UNIQUE(word))";
+	my $create = "CREATE TABLE $fph (id INTEGER PRIMARY KEY, word TEXT NOT NULL COLLATE NOCASE, count INTEGER NOT NULL, UNIQUE(word))";
 	my $cth = $dbh->prepare("$create");
 	$cth->execute();
 
 
-	$insert = "INSERT INTO :1 (word, count) VALUES (:2, :3)";
+	$insert = "INSERT INTO $fph (word, count) VALUES (:2, :3)";
 	$sth = $dbh->prepare("$insert");
 
 	if(-T "$filepath")
 	{
-	    my $words = `"cat $filepath | perl -ne 'print join("\n", split(/\\W+/, $_))' | sort | uniq -c | sort -nr"`;
-	    my @splitted = split(/'\n'/, $words);
-
+		 
+		my @splitted = getWordCountText($filepath);
 	    foreach my $line(@splitted)
 	    {
-		my @counts = split($line);
-		$sth->execute($filepath, $counts[1], $counts[0]);
+			my @counts = split(' ', $line); # List has format: aWord itsCount
+			$sth->execute($counts[0], $counts[1]);
 	    }
 
 	}
 	else
 	{
-	    my $words = `strings $filepath | perl -ne 'print join("\n", split(/\\W+/, $_))' | sort | uniq -c | sort -nr`;
-            my @splitted = split(/'\n'/, $words);
+	    my $text = `strings $filepath`;  
+        my @splitted = getWordCount($text); 
 
-            foreach my $line(@splitted)
-            {
-		my @counts = split($line);
-                $sth->execute($filepath, $counts[1], $counts[0]);
-            }
-
+        foreach my $line(@splitted)
+        {
+			my @counts = split(' ', $line);
+            $sth->execute($counts[0], $counts[1]);
+        }
 	}
+}
 
+
+# Takes a string and Returns words in a sorted order list including word count like shown below. 
+# List contains string of format: aWord itsCount
+sub getWordCount{
+	
+	my $input = $_[0]; 
+	
+	my @output; 
+	my %word_list; #hash table to store words
+	$input = lc($input); #convert to lowercase
+	my @words = split(/\W+/, $input); # get all words
+	foreach my $word (@words){
+		$word_list{$word}++; # store word and increment count. 
+	}
+	
+	my @sorted_list = sort{$word_list{$b} <=> $word_list{$a}} keys %word_list; #sort hash table on key value counts in descending order
+	
+	my $count; 
+	foreach my $word(@sorted_list){
+		$count = $word_list{$word}; # get word count 
+		push(@output, "$word $count\n");
+	}
+	return @output;
+}
+
+# Takes a plain text file Returns words in a sorted order list including word count like shown below. 
+# List contains string of format: aWord itsCount
+sub getWordCountText{
+	
+	my $filepath = $_[0];
+	my %word_list; #hash table to store words
+	my @output;
+	open(FILE, "$filepath") || die HTML->Error("opening", $filepath);	 
+	
+	while( my $line = <FILE>){
+		chomp($line);
+		$line = lc($line); #convert to lowercase
+		my @words = split(/\W+/, $line); # get all words in line
+		foreach my $word (@words){
+			if($word eq ''){ # don't add empty strings 
+				next; 
+			}
+			$word_list{$word}++; # store word and increment count. 
+		}	
+	}
+	
+	my @sorted_list = sort{$word_list{$b} <=> $word_list{$a}} keys %word_list; #sort hash table on key value counts in descending order
+	
+	my $count; 
+	foreach my $word(@sorted_list){
+		$count = $word_list{$word}; # get word count 
+		push(@output, "$word $count\n");
+	}
+	return @output;
+}
+
+# Returns SHA hash of file path given.
+# This is to be used in naming the tables to be created when a user adds a new file. 
+#NOTE: In generating the tablenames, I take the filepath hash and a pre-append the letter "a"
+#This is to please DBI becasue it can't process table names starting with numbers.
+sub getTableHash{ 
+	my ($filepath) = @_;
+	my $fph = sha1_hex($filepath); # File path hash : This will used as the name of the table.
+	$fph = "a" . "$fph"; #append a letter to guranteee that first character is always a letter.
+	return $fph; 
 }
 
 #removes a file given a filepath and filename, just to be doubly sure
 sub removeFile
 {
 	my ($self, $filepath, $filename) = @_;
+	my $fph = getTableHash($filepath); # File path hash
+	 
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
 	
-	my $drop = "DROP TABLE :1";
+	my $drop = "DROP TABLE $fph";
 	$sth = $dbh->prepare("$drop");
-	$sth->execute($filepath);
+	$sth->execute();
 }
 
 #returns reference to a hash that contains each row, with the id used as the hash's key
@@ -209,11 +286,15 @@ sub search_tags
 sub top30
 {
     my ($self, $filepath) = @_;
-
+	my $fph = getTableHash($filepath); # File path hash
+	#my $fph = sha1_hex($filepath); # File path hash
+    #$fph = "a" . "$fph"; #append a letter to guranteee that first character is always a letter.
+    
     my $select = "SELECT * FROM :1 LIMIT 30 ORDER BY count DESC";
     my $sth = $dbh->prepare($select);
-    $sth->execute($filepath);
+    $sth->execute($fph);
     return $sth->fetchall_hashref('id');
 }
+
 
 1;
