@@ -46,14 +46,15 @@ my $db = "Files/TestUser/.user.db";
 $fp= "HTML.pm";
 #my $hash_ref_all = Genstat->get_public($db);
 #my $hash_ref_all = Genstat->top30($db,$fp );
-my $result = Genstat->existsTable("a86df42f15082f6bb902be5568f9e682ef6bb2383");
-if($result){
-	print "TABLE EXISTS";
-	exit;
-}else{
-	print "tbale NOT FOUND;";
-	exit;
-}
+
+#my $result = Genstat->existsTable("a86df42f15082f6bb902be5568f9e682ef6bb2383");
+#if($result){
+#	print "TABLE EXISTS";
+	#exit;
+#}else{
+	#print "tbale NOT FOUND;";
+	#exit;
+#}
 
 #print "avg size is \n";
 #print Genstat->average_size($db); 

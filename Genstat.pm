@@ -79,8 +79,8 @@ sub addFile()
 	my $sth = $dbh->prepare("$insert");
 	$sth->execute("$filepath", "$filename", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
 
-	
-	my $table_exists = Genstat->existsTable($fph); 
+	 
+	my $table_exists = Genstat->existsTable($fph);
 	
 	if($table_exists){ # if table already exists, DELETE it first
 		my $drop = "DROP TABLE $fph";
@@ -123,10 +123,12 @@ sub addFile()
 ## Checks if given table name already exists
 # Internal method only 
 sub existsTable{
-	
-	#Genstat->connect("Files/TestUser/.user.db"); 
+	#my($self, $dbfile, $tn) = @_; # tn is table name
+	#Genstat->connect($dbfile);
 	
 	my($self, $tn) = @_; # tn is table name
+	 
+	
 	my $query ="SELECT name FROM sqlite_master WHERE type='table' AND name=:1"; 
 	
 	my $sth = $dbh->prepare("$query");
