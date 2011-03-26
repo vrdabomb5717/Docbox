@@ -33,12 +33,55 @@ my $ln = "Smith";
 #$username, $password, $email, $firstname, $middlename, $lastname
 
 print "Test for Userpass Module\n";
-word();
+#word();
 #makedb();
 
-#addfile();
+#my @splitted = split(' ', $y);
+#print @splitted;
+#print"\n length is" . int(@splitted);
+
+#print w($y);
 
 
+
+addfile();
+removeFile();
+
+sub removeFile{
+	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my $filepath = "Files/user/110.jpg";
+	$filepath = "passwords.txt"; 
+	$filepath = "HTML.pm";
+	my $fn = "110.jpg";
+	my $comments = " I have no commnets at this time";
+	my $tags = " THis is to be tage dlater on"; 
+	
+	print "Running REMOVE file command ... \n"; 
+	Genstat->removeFile($filepath, $fn);
+	
+}
+
+sub w{
+	my $input = $_[0]; 
+	
+	my @output; 
+	my %word_list; #hash table to store words
+	$input = lc($input); #convert to lowercase
+	my @words = split(/\W+/, $input); # get all words
+	foreach my $word (@words){
+		$word_list{$word}++; # store word and increment count. 
+	}
+	
+	my @sorted_list = sort{$word_list{$b} <=> $word_list{$a}} keys %word_list; #sort hash table on key value counts in descending order
+	
+	my $count; 
+	foreach my $word(@sorted_list){
+		$count = $word_list{$word}; # get word count 
+		push(@output, "$word $count\n");
+	}
+	return @output;
+	
+}
 
 sub word{
 	$filepath = "Project Desc";
@@ -81,8 +124,9 @@ sub read{
 
 sub addfile{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
-	#my $filepath = "Files/user/110.jpg";
+	my $filepath = "Files/user/110.jpg";
 	$filepath = "passwords.txt"; 
+	$filepath = "HTML.pm";
 	my $fn = "110.jpg";
 	my $comments = " I have no commnets at this time";
 	my $tags = " THis is to be tage dlater on"; 
