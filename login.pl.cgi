@@ -27,12 +27,40 @@ my $q = CGI->new(); # get new CGI object for parsing input data
 &getlogin(); # get user & pass
 
 if(validlogin()){
+	logLogin();
 	redirectHome(); # go to home.pl.cgi
 }
 else{
+	logFailedLogin();
 	redirectLogin(); # go to login_failed.html
 }
 
+# Logs failed login attempt
+sub logFailedLogin{
+	open (FILE, ">>Logs/logins.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
+	my $ip = $ENV{'REMOTE_ADDR'};
+	
+	flock(FILE, LOCK_EX); # get file lock handle  
+	{ 
+		print (FILE "$user login attempt failed from IP address $ip \n"); #Append to login file	
+	}
+	close FILE; # save changes	
+}
+
+
+
+# Logs successful login attempt
+sub logLogin{
+	open (FILE, ">>Logs/logins.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
+	my $ip = $ENV{'REMOTE_ADDR'};
+	
+	flock(FILE, LOCK_EX); # get file lock handle  
+	{ 
+		print (FILE "$user logged in successfully from IP address $ip \n"); #Append to login file	
+	}
+	
+	close FILE; # save changes	
+}
 
 sub redirectLogin{ # go to failed login page
 #Space above EOF (i.e. new-line) is Necessary for the Apache webserver to follow redirect.
