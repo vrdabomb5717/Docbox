@@ -16,7 +16,7 @@ use strict;
 use warnings;
 use DBI;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
-
+use PublicDB;
 
 my $dbh; #declare db handle.  
 
@@ -81,6 +81,12 @@ sub addFile()
 	my $sth = $dbh->prepare("$insert");
 	$sth->execute("$filepath", "$filename", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
 
+	
+	## Insert into Public DB if file is Public
+	# Argments are formt: $filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind) = @_;
+	my @l = split(/\//, $dbfile);
+	my $username = $l[1]; # get username 
+	PublicDB->addFile($filepath, $filename, $username, $comments, $tags, $timemodified, $timeadded, $size, $kind);
 	 
 	my $table_exists = Genstat->existsTable($fph);
 	
@@ -244,12 +250,46 @@ sub removeFile
 	 
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
+	my $public_file = Genstat->isPublic($filepath);
+	if($public_file){ 
+		PublicDB->removeFile($filepath, $filename); # Remove from Public DB if public file.  
+	} 
+	
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
 	
 	my $drop = "DROP TABLE $fph";
 	$sth = $dbh->prepare("$drop");
 	$sth->execute();
+}
+
+# Checks if a filename is public
+# internal method only 
+sub isPublic{
+	#Genstat->connect("Files/user/.user.db");
+	
+	my ($self, $filepath) = @_;
+	
+	my $query ="SELECT * FROM files WHERE filepath=:1"; 
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute($filepath);
+		
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	 
+	my $href = $sth->fetchrow_hashref; 
+	
+	if(defined($href))
+	{
+		return $href->{public}; #need to use deference operator '->' since we've a hash ref
+	}
+	else
+	{
+		return 0;
+	}
+	
+	
 }
 
 #returns reference to a hash that contains each row, with the id used as the hash's key
