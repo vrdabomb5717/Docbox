@@ -17,10 +17,10 @@
     </form>
     </p>
     
-    <form action="search.pl.cgi?uid=<TMPL_VAR NAME="user">" method="post">
+    <form action="search.pl.cgi?uid=<TMPL_VAR NAME="userid">" method="post">
     <p> <strong>Search Query : </strong><input type="textarea" name="query"> <br>
         <strong>Personal/Public Files: </strong>  
-                <select name="privacy">
+                <select name="scope">
                 <option>Personal</option>
                 <option>Public</option>
                 </select>  <br>
@@ -32,10 +32,17 @@
                 </select> <br>
             <input type="submit" value="Run Search">
     
+    
+    <!-- Hidden fields to preserve state 
+    <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
+    -->
+    
     </form>
    
     <p>
 
+    
+    
 <!--Show Search Results -->
  <TMPL_IF NAME="results">
 	<h3> Search Results </h3>

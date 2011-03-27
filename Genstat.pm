@@ -334,6 +334,15 @@ sub getFileID{
 	}
 }
 
+#### To be Implemented
+## Do a Document deep search of all Files in User's folder for given string...
+## Should Return a Hashref to Filename. 
+sub doc_search{
+    my ($self, $dbfile, $query) = @_;
+    Genstat->connect($dbfile); #connect to specific user db
+	return;
+}
+
 sub average_size
 {
     my ($self, $dbfile) = @_;
@@ -372,9 +381,9 @@ sub search_filenames
 	
     #SELECT * FROM files WHERE filenames LIKE '$query'
 
-    my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
+    my $search = "SELECT * FROM files WHERE filename LIKE \'%$query%\' ORDER BY filename";
     my $sth = $dbh->prepare($search);
-    $sth->execute($query);
+    $sth->execute();
     return $sth->fetchall_hashref('id');
 }
 

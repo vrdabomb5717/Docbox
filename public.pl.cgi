@@ -54,7 +54,8 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
 	
 	# Fill user's name and unique id in template:
-	$template->param(user => $user);
+	my $name = UserDB->getName($uid); 
+	$template->param(user => $name);
 	$template->param(userid => $uid);
 	
 	
@@ -69,10 +70,10 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 		#print $row_hash_ref;
 		# Row hash ref has following keys: filepath, filename, owner, timemodified, size, kind, comments, tags
 		 
-		my $fp = $row_hash_ref->{'filepath'};
-		my $fn = $row_hash_ref->{'filename'}; 
-		my $tm = $row_hash_ref->{'timemodified'};
-		my $size = $row_hash_ref->{'size'};
+		$fp = $row_hash_ref->{'filepath'};
+		$fn = $row_hash_ref->{'filename'}; 
+		$tm = $row_hash_ref->{'timemodified'};
+		$size = $row_hash_ref->{'size'};
 		 
 		## Get FilePath ID
 		my $fid = $row_hash_ref->{'id'};

@@ -67,7 +67,8 @@ sub listStats {
 	my @list; # file list data will go here
 	
 	# Fill user's name and unique id in template:
-	$template->param(user => $user);
+	my $name = UserDB->getName($uid); 
+	$template->param(user => $name);
 	$template->param(userid => $uid);
 	
 	

@@ -127,6 +127,21 @@ sub getFilePathByID{
 	}	
 }
 
+
+sub search_filenames
+{
+    my ($self, $query) = @_;
+    
+	
+    #SELECT * FROM files WHERE filenames LIKE '$query'
+
+    my $search = "SELECT * FROM files WHERE filename LIKE \'%$query%\' ORDER BY filename";
+    my $sth = $dbh->prepare($search);
+    $sth->execute();
+    return $sth->fetchall_hashref('id');
+}
+
+
 # Returns full file path, given a file ID
 sub getFileNameByID{
 	
@@ -150,6 +165,16 @@ sub getFileNameByID{
 	{
 		return undef; # there is no file with that path 
 	}	
+}
+
+#### To be Implemented
+## Do a Document deep search of all Files in User's folder for given string...
+## Should Return a Hashref to Filename. 
+sub doc_search
+{
+    my ($self, $query) = @_;
+    
+
 }
 
 #Returns all Publicly available files EXCEPT for the given user

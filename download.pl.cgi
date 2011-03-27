@@ -50,12 +50,20 @@ else {
 	#get currently working directory path for the file. 
 	my $dirpath = $q->param('directorypath');  # dirpath shouldn't NOT containing trailling '/'
 	
+	if(!defined($dirpath)){
+		$dirpath = '';
+	}
+	
 	## Define source file path for current user. 
 	# Will need to add directory path, after enabling grouping funtionality. 
 	my $sourcefilepath = "Files/$user/$dirpath" ; 
 	
+	if($dirpath eq ''){ ## if not Directory Path Specified, Assume user root directory. 
+		$sourcefilepath = "Files/$user" ;
+	}
+	
 	my $filename = $q->param('filename');
-	my $fp = "$sourcefilepath" . "$filename"; # filepath
+	my $fp = "$sourcefilepath/$filename"; # filepath
 	
 	download($fp, $filename);
 	exit;
