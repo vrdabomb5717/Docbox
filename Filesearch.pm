@@ -15,10 +15,10 @@ use Text::Extract::Word;
 
 sub search
 {
-    my ($self, $regex, $homepath) = @_;
+    my ($self, $query, $homepath) = @_;
 
     #search text files, and return those results
-    my $files = `grep -lrs "$regex" "$homepath" `;
+    my $files = `grep -lrs "$query" "$homepath" `;
     #$files =~ s/' '/\\' '/g;
     my @results = split(/'\n'/, $files);
 
@@ -32,8 +32,8 @@ sub search
 	$line =~ s/\///;
 	$line = "/" . "$line";
 
-	#extract text of PDF, search for $regex, and if search returns true, push file into list
-	my $exitcode = `pdftotext -q "$line" - | grep "$regex"`;
+	#extract text of PDF, search for $query, and if search returns true, push file into list
+	my $exitcode = `pdftotext -q "$line" - | grep "$query"`;
 	$exitcode = $?;
 
 	if($exitcode == 0)
@@ -43,14 +43,22 @@ sub search
     }
 
     $files = `find "$homepath" -type f -name '*.doc' -print`;
-    @filenames = split(/'\n'/, $files);
+    @filenames = split(/\n/, $files);
 
-    #foreach my $line (@filenames)
-    #{
-	#extract text of Word document, search for $regex, and if search returns true, push file into list
-	
-	#push(@results, $line);
-    #}
+    foreach my $line (@filenames)
+    {
+	$line =~ s/\///;
+	$line = "/" . "$line";
+
+	#extract text of Word document, search for $query, and if search returns true, push file into @results
+	my $doc = Text::Extract::Word->new("$line");
+	my $text = $doc->get_text();
+
+	if($text =~ /"$query"/)
+	{
+	    push(@results, $line);
+	}
+    }
 
     return @results;    
 }
