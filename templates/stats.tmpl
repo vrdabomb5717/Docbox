@@ -7,36 +7,33 @@
 <h2 align="center"> <a href="home.pl.cgi?uid=<TMPL_VAR NAME="userid">"<TMPL_VAR NAME="userid">"> user's DocBox </a></h2>
 	<form action="search.pl.cgi" method="post">
     <p align="center"><a href=upload_page.pl.cgi?uid=<TMPL_VAR NAME="userid">> Upload a New File to DocBox</a> |
-    <a href=""> View Public Files </a>|
+    <a href="public.pl.cgi?uid=<TMPL_VAR NAME="userid">"> View Public Files </a>|
     
-    <a href=""> Search Files </a>|
+    <a href="search.pl.cgi?uid=<TMPL_VAR NAME="userid">"> Search Files </a>|
     
     <a href="index.html"> Logout </a>
     </form>
     
     </p>
-    <h3> Public Files </h3>
+    <h3> File Stastistics </h3>
+    
+    <p> <strong> Your File Count : </strong> <TMPL_VAR NAME="userfilecount">
+    <p> <strong> Your Average File Size : </strong> <TMPL_VAR NAME="averagefilesize">
+    <p> <strong> Total Number of Site Users : </strong> <TMPL_VAR NAME="totalusers">
+    
+    <p> The Top 30 Words in this file are shown below </p> 
 	<table border="0" align="center" cellpadding="2" cellspacing="4">
   <tr>
-    <th>File Name</th>
-    <th>Date Modified</th>
-    <th>File Size (KB)</th>
-    <th> Link(s) </th>
+    <th>Word </th>
+    <th>Word Count </th>
   </tr>
  
 
 <!-- File Loop only-->  
 <TMPL_LOOP NAME="list_loop">
     <tr >
-        <td > 
-        <img alt="" height="24" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
-        <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
-        <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
-        <td align="left"> 
-        <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download <TMPL_VAR NAME="filename">" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
-            
-            
-        </td>
+        <td align="center">  <TMPL_VAR NAME="word">  </td> <!-- the word -->
+        <td align="center">  <TMPL_VAR NAME="count"> </td> <!-- word count-->
     </tr>
 </TMPL_LOOP>
 
