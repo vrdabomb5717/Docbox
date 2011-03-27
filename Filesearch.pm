@@ -18,7 +18,7 @@ sub search
     my ($self, $regex, $homepath) = @_;
 
     #search text files, and return those results
-    my $files = `grep -lr "$regex" "$homepath" `;
+    my $files = `grep -lrs "$regex" "$homepath" `;
     #$files =~ s/' '/\\' '/g;
     my @results = split(/'\n'/, $files);
 
@@ -33,7 +33,7 @@ sub search
 	$line = "/" . "$line";
 
 	#extract text of PDF, search for $regex, and if search returns true, push file into list
-	my $exitcode = `pdftotext "$line" - | grep "$regex"`;
+	my $exitcode = `pdftotext -q "$line" - | grep "$regex"`;
 	$exitcode = $?;
 
 	if($exitcode == 0)
