@@ -25,8 +25,10 @@ sub search
     #search text files, and return those results
     my $files = `grep -lrs "$query" "$homepath" `;
     #$files =~ s/' '/\\' '/g;
-    my @results = split(/'\n'/, $files);
-
+    my @results = split(/\n/, $files);
+    
+    pop(@results) if "$results[-1]" eq '\t';
+    #print scalar(@results) . "\n";
 
     #search for all PDF files
     $files = `find "$homepath" -type f -name '*.pdf' -print`;
@@ -87,9 +89,6 @@ sub search
 	#}
     #}
 
-
-
-    #pop(@results) if "$results[-1]" =~ m/\s/;
 
     return @results;    
 }
