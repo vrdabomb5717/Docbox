@@ -75,19 +75,22 @@ sub search {
 	if($search_type eq 'Filenames'){
 		if($search_scope eq 'Personal'){ ## Search Personal Files
 			my $dbfile = "Files/$user/.user.db"; # set path to user db file
-			my $hash_ref_all = Genstat->search_filenames($dbfile, $query); # get (double) hash ref to query results. Arguments are:  $dbfile, $query		
+			my $ary_ref_all = Genstat->search_filenames($dbfile, $query); # get (double) array ref to query results. Arguments are:  $dbfile, $query		
+			
+			## ary ref contains list with :: filepath (0), filename (1), time modified (2), time added (3), size(4), File ID (5) ##
 			
 			## HTML Format the search results in a table
-			while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){ 
-				 
-				$fn = $row_hash_ref->{'filename'};
-				$fp = $row_hash_ref->{'filepath'};
-				$size = $row_hash_ref->{'size'};
-				$tm = $row_hash_ref->{'timemodified'};
+			foreach my $arr_ref (@$ary_ref_all){
+				my @array = @$arr_ref; # deference array
+								
+				$fp = $array[0]; # file path
+				$fn = $array[1];  # file name
+				$tm = $array[2]; # time modified in secs since epoch
+				$size = $array[4]; #size in bytes
 						
 				 
 				## Get FilePath ID
-				my $fid = $row_hash_ref->{'id'};
+				my $fid = $array[5];
 				 
 				## Get dir subdirectory
 				my $offset = length("Files/$user/");
@@ -134,26 +137,25 @@ sub search {
 		else { ## Search Filenames in Public Files
 			
 			my $dbfile = "Files/$user/.user.db"; # set path to user db file
-			my $hash_ref_all = PublicDB->search_filenames($query); # get (double) hash ref to query results. Arguments are:  $query
+			my $ary_ref_all = PublicDB->search_filenames($query); # get (double) hash ref to query results. Arguments are:  $query
 				
 			my $fp; # file path
 			my $fn;  # file name
 			my $tm; # time modified
 			my $size; # size in bytes
 			
-			while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){
-				
-				#print $row_hash_ref;
-				# Row hash ref has following keys: filepath, filename, owner, timemodified, size, kind, comments, tags
-				 
-				$fp = $row_hash_ref->{'filepath'};
-				$fn = $row_hash_ref->{'filename'}; 
-				$tm = $row_hash_ref->{'timemodified'};
-				$size = $row_hash_ref->{'size'};
-				 
-				## Get FilePath ID
-				my $fid = $row_hash_ref->{'id'};
-		
+			
+			#fileid (0), filepath (1), filename(2), time modified(3), size(4)#
+			
+			foreach my $arr_ref (@$ary_ref_all){
+				my @array = @$arr_ref; # deference array
+								
+				my $fid = $array[0]; ## get file ID
+				$fp = $array[1]; # file path
+				$fn = $array[2];  # file name
+				$tm = $array[3]; # time modified in secs since epoch
+				$size = $array[4]; #size in bytes
+						
 				#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
 		        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
 		    	

@@ -16,6 +16,11 @@ use HTML::Template;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 use Genstat; 
 
+#addfile();
+sql2();
+exit; 
+
+
 #print "Hello";
 
 #open(FILE, "userpass.sql") || die "\ncant open";
@@ -72,6 +77,33 @@ print @l;
 exit;
 #addfile();
 #removeFile();
+
+
+sub sql2{
+	my $db = "Files/TestUser/.user.db";
+$fp= "HTML.pm";
+#my $hash_ref_all = Genstat->get_public($db);
+my $ary_ref_all = Genstat->top30($db,$fp );
+
+foreach my $arr_ref (@$ary_ref_all){
+	my @array = @$arr_ref; # deference
+	my $word = $array[0];
+	my $count = $array[1];
+	print "$word - $count \n";
+}
+exit;
+#foreach $row (keys %$hash_ref_all){
+#	 my $row_hash_ref = $hash_ref_all->{$row}; # deref hash reference
+#	 
+#	 foreach $col (keys %$row_hash_ref){
+#	 	print "$col => $row_hash_ref->{$col}\n";	
+#	 }
+#	 print "===================================\n"; 
+#}
+
+ 
+}
+
 
 sub sql{
 	my $db = "Files/TestUser/.user.db";

@@ -138,7 +138,8 @@ sub search_filenames
     my $search = "SELECT * FROM files WHERE filename LIKE \'%$query%\' ORDER BY filename";
     my $sth = $dbh->prepare($search);
     $sth->execute();
-    return $sth->fetchall_hashref('id');
+    #return $sth->fetchall_hashref('id');
+    return $sth->fetchall_arrayref([0,1,2,4,6]); # return fileid, filepath, filename, time modified, size
 }
 
 

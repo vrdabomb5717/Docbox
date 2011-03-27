@@ -384,7 +384,8 @@ sub search_filenames
     my $search = "SELECT * FROM files WHERE filename LIKE \'%$query%\' ORDER BY filename";
     my $sth = $dbh->prepare($search);
     $sth->execute();
-    return $sth->fetchall_hashref('id');
+    #return $sth->fetchall_hashref('id');
+    return $sth->fetchall_arrayref([1,2,5,6,7,0]); # return filepath, filename, time modified, time added, size, file ID
 }
 
 sub search_kind
@@ -438,7 +439,7 @@ sub top30
     my $sth = $dbh->prepare($select);
     #$sth = $dbh->prepare("ORDER BY count");
     $sth->execute();
-    return $sth->fetchall_hashref('id');
+    return $sth->fetchall_arrayref([1,2]); # return word and count columns only
 }
 
 
