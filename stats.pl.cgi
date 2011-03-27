@@ -62,7 +62,7 @@ sub listStats {
 	my $dbfile = "Files/$user/.user.db"; # path to user database file
 	$user = 'user';
 	my $count =0;	
-	my $hash_ref_all = Genstat->top30($dbfile, $fp); # get (double) hash ref to top 30 words. Top30 takes arguments:  $dbfile, $filepath  
+	my $ary_ref_all = Genstat->top30($dbfile, $fp); # get (double) hash ref to top 30 words. Top30 takes arguments:  $dbfile, $filepath  
 	
 	my @list; # file list data will go here
 	
@@ -89,20 +89,21 @@ sub listStats {
 		
 
 	## HTML Format the top 30 words in a table
-	while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){
-		# Row hash ref has following keys: id, word,count 
-		 
-		my $word = $row_hash_ref->{'word'};
-		my $count = $row_hash_ref->{'count'}; 
-				
+	
+	foreach my $arr_ref (@$ary_ref_all){
+		my @array = @$arr_ref; # deference
+		my $word = $array[0]; 
+		my $count = $array[1];
+		
 		my %row = (
 				word => $word,
 				count => $count
 				);
 	
 	 	push(@list, \%row);
-	}	 
-		 
+		
+	}
+	 
  	# call param to fill in the loop with the loop data by reference.
 	$template->param(list_loop => \@list);	
 }

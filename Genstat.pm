@@ -438,7 +438,7 @@ sub top30
     my $sth = $dbh->prepare($select);
     #$sth = $dbh->prepare("ORDER BY count");
     $sth->execute();
-    return $sth->fetchall_hashref('id');
+    return $sth->fetchall_arrayref([1,2]); # return word and count columns only
 }
 
 
