@@ -4,7 +4,7 @@
 	<link href="../css/main.css" rel="stylesheet" type="text/css">
 	</head>
 	<body align="center" bgcolor="orange"> 
-<h2 align="center"> user's DocBox </h2>
+<h2 align="center"> <TMPL_VAR NAME="user">'s DocBox </h2>
 	<p>
     <strong> File to be edited : </strong><TMPL_VAR NAME="filename">
     </p>
@@ -24,6 +24,8 @@
         <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
         <input type="hidden" name="filename" value="<TMPL_VAR NAME="filename">">
         <input type="hidden" name="prevlink" value="<TMPL_VAR NAME="prevlink">" > 
+        <input type="hidden" name="fid" value="<TMPL_VAR NAME="fid">" > 
+        <input type="hidden" name="dir" value="<TMPL_VAR NAME="dir">" > 
         </form> 
         
         <form action="editfile.pl.cgi" method="post"> <!-- put delete op in its form so that copying/rename can't accidentally delete files-->
@@ -31,6 +33,8 @@
         <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
         <input type="hidden" name="filename" value="<TMPL_VAR NAME="filename">">
         <input type="hidden" name="prevlink" value="<TMPL_VAR NAME="prevlink">" > 
+        <input type="hidden" name="fid" value="<TMPL_VAR NAME="fid">" > 
+        <input type="hidden" name="dir" value="<TMPL_VAR NAME="dir">" > 
         
         <p> <img alt="Delete File" title="Delete File" height="25" src="images/delete.png" width="25" align="middle">
         <strong>Delete File: </strong>  
@@ -39,10 +43,27 @@
                 <option>Yes</option>
                 </select>
             <input type="submit" value="Permanently Delete File"> </p>
-        
         </form>
+        
+        <form action="editfile.pl.cgi" method="post"> <!-- put make file public op in its form so that copying/rename/deleting can't accidentally make file public -->
+        <!-- Hidden form field that contains the user ID and filename for maintaining user state-->
+        <input type="hidden" name="uid" value="<TMPL_VAR NAME="userid">">
+        <input type="hidden" name="filename" value="<TMPL_VAR NAME="filename">">
+        <input type="hidden" name="prevlink" value="<TMPL_VAR NAME="prevlink">" > 
+        <input type="hidden" name="fid" value="<TMPL_VAR NAME="fid">" > 
+        <input type="hidden" name="dir" value="<TMPL_VAR NAME="dir">" > 
+        
+         <p> <img alt="Make File Public" title="Make File Public" height="30" src="images/public.png" width="30" align="middle">
+        <strong>Make Public: </strong>  
+                <select name=delete>
+                <option>No</option>
+                <option>Yes</option>
+                </select>
+            <input type="submit" value="Make File Public"> </p>
+        </form>
+        
         <br>
-        <p><a href=""> View File Statistics </a>| </p>
+        <p><img alt="File Statistics" title="View Statistics on This File" height="30" src="images/stat.png" width="30" align="middle"><a href=stats.pl.cgi?uid=<TMPL_VAR NAME="userid">&fid=<TMPL_VAR NAME="fid">> <strong>View File Statistics </strong> </a> </p>
          <p> <a href="<TMPL_VAR NAME="prevlink">"> <big>Return to Directory Listing </big></p> </a> <!-- Return to previous referrer page-->
        
     

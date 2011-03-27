@@ -42,10 +42,10 @@ if($public){
 	HTML->Error("Parse", "$fid") if(!defined($fid)); # Make sure fid is defined
 	$filepath = PublicDB->getFilePathByID($fid);
 	
-	
-} else { ## At the moment, I'm Just reading from System file system. Will need to Upgrade to use DBs 
-	
-	
+} else { ##use the file id to determine full file path 
+	HTML->Error("Parse", "$fid") if(!defined($fid)); # Make sure fid is defined
+	my $dbfile = "Files/$user/.user.db"; #get path to user's database
+	$filepath = Genstat->getFilePathByID($dbfile,$fid);
 } 
 
 
@@ -53,11 +53,11 @@ listStats($filepath,$user); # listStat takes argumetns: filepath, and username
 
 # send the obligatory Content-Type
 print "Content-Type: text/html\n\n";
-	
-# print the template
-print $template->output;
 
-listStats {
+# print the template
+print $template->output();
+
+sub listStats {
 	my ($fp, $user) = @_; # fp is file path
 	my $dbfile = "Files/$user/.user.db"; # path to user database file
 	$user = 'user';

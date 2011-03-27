@@ -22,6 +22,7 @@ use HTML;
 use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files. 
 use File::Copy; # provides functionality to copy and rename files
+use Genstat;
 
 my $user; # store current user
 my $uid; # user id (token) of current user. 
@@ -40,6 +41,14 @@ $user = UserDB->getUser($uid); # get username of current logged in user.
 ## Define source file path for current user. 
 # Will need to add directory path, after enabling grouping funtionality. 
 my $sourcefilepath = "Files/$user/"; 
+my $dir = $q->param('dir');
+if(!defined($dir)){
+	$dir = '';
+}
+
+if($dir ne ''){ ## Only IF directory path NOT empty, then append the source filepath
+	$sourcefilepath = "Files/$user/$dir";	
+}
 
 my $filename = $q->param('filename');
 $filename = $q->url_param('filename') if(!defined($filename));# for when filename is in post data and we're have mixed post/get.
@@ -50,10 +59,22 @@ my @s = split(/\./, $filename);
 my $n = int(@s) - 1; # minus one to get correct index
 my $extension =  $s[$n];
 
+# Set user's name
+my $name = UserDB->getName($uid);
+$template->param(user => $name);
 
 ## Save Filename and user id in hidden form field to preserve user state
 $template->param(userid => $uid); 
 $template->param(filename => $filename);
+
+## Get and Set the File ID
+my $dbfile = "Files/$user/.user.db";
+my $fp =  "$sourcefilepath" . "$filename"; 
+my $fid = Genstat->getFileID($dbfile, $fp);
+$template->param(fid => $fid);
+
+## Set the dir string value
+$template->param(dir => $dir);
 
 my $renamedfilename = $q->param('renamedfile'); # comes thru post 
 my $copyfilename = $q->param('copyfilename'); # comes thru post

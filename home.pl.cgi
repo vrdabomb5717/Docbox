@@ -20,7 +20,8 @@ use CGI qw/:standard/;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 use HTML;
 use UserDB; # use for validating user.
-use HTML::Template; # for creating html from template files. 
+use HTML::Template; # for creating html from template files.
+use Genstat; 
 #use File::Find;
 
 
@@ -43,6 +44,11 @@ my $template = HTML::Template->new(filename => 'templates/filelist.tmpl');
 listDirs();
 listFiles();
 
+# Fill user's name and unique id in template:
+my $name = UserDB->getName($uid); 
+$template->param(user => $name);
+$template->param(userid => $uid);
+
 # send the obligatory Content-Type
 print "Content-Type: text/html\n\n";
 	
@@ -56,12 +62,10 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 	my @list; # file list data will go here
 	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
 	
-	# Fill user's name and unique id in template:
-	$template->param(user => $user);
-	$template->param(userid => $uid);
-	
-	
 	my $subdir = "Files/$user/$dir"; # set subdirectory if any specified; otherwise, working at root of user's directory.
+	if($dir eq ''){ # if dir is not specified
+		$subdir = "Files/$user"; 
+	}
 	opendir(my $dh, $subdir); 
 	
 	while(defined(my $file = readdir $dh)){
@@ -121,12 +125,11 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 	my @list; # file list data will go here
 	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
 	
-	# Fill user's name and unique id in template:
-	$template->param(user => $user);
-	$template->param(userid => $uid);
-	
-	
 	my $subdir = "Files/$user/$dir"; # set subdirectory if any specified; otherwise, working at root of user's directory.
+	if($dir eq ''){ # if dir is not specified
+		$subdir = "Files/$user"; 
+	}
+	
 	opendir(my $dh, $subdir); 
 	
 	while(defined(my $file = readdir $dh)){
@@ -152,11 +155,15 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 			$size =  $size/1024;
 			$size = sprintf("%.2f", $size); # round to 2 dps. 
 			
+			### Get File ID
+			my $dbfile = "Files/$user/.user.db"; # set user db path
+			my $fid = Genstat->getFileID($dbfile, $filepath);
+			
 			# set query string for editfile script. 
-			my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$file\&dir=$dir";
+			my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$file\&dir=$dir" . "\&fid=$fid"; ## Don't Change DIR key value
 			
 			# set query string for download script
-			my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$file" . "\&directorypath=$dir";
+			my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$file" . "\&directorypath=$dir" . "\&fid=$fid";
 			my %row = (
 					filename => $file,
 					date => $mtime,

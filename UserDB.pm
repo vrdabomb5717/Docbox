@@ -98,6 +98,34 @@ sub validEmail{ # matches email
 	}
 }
 
+
+# returns Name given user id token. 
+sub getName{ 
+	
+	my ($self, $passwordhex) = @_;
+	
+	# SELECT * FROM userpass WHERE password='$passwordhex'
+	my $query = "SELECT * FROM userpass WHERE password=:1";
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute("$passwordhex");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href->{firstname}; #need to use deference operator '->' since we've a hash ref 
+	}
+	else
+	{
+		return undef; # there is no user with that id. 
+	}
+}
+
+
+
 # returns Email address given user id token. 
 sub getEmail{ 
 	
