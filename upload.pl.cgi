@@ -19,7 +19,7 @@ use CGI qw/:standard/;
 use CGI::Carp qw(fatalsToBrowser); # debugging only. remove for production use. 
 use HTML; 
 use UserDB;
-use GenStat;
+use Genstat;
 
 # Need to handle case when file size too big
 # Code below causes CLIC webserver to show 500 Internal error, when size over limit. 
