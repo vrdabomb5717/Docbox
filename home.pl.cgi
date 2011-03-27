@@ -134,6 +134,10 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 			$count++;
 			my $filepath = "$subdir/$file";
 			
+			if($dir eq '' && $file eq '.user.db'){ ## Don't Print User Datababse File. 
+				next;
+			}
+			
 			#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
 	        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
 	    	
