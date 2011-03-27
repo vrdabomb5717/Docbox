@@ -83,7 +83,7 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 		    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
 			
 			#convert size to kilobytes to 2 decimal places:
-			$size =  int($size/1024);
+			$size =  $size/1024;
 			$size = sprintf("%.2f", $size); # round to 2 dps. 
 			
 			# set query string for opening directory. 
@@ -149,7 +149,7 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 		    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
 			
 			#convert size to kilobytes to 2 decimal places:
-			$size =  int($size/1024);
+			$size =  $size/1024;
 			$size = sprintf("%.2f", $size); # round to 2 dps. 
 			
 			# set query string for editfile script. 

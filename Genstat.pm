@@ -307,6 +307,33 @@ sub get_public
     return $sth->fetchall_hashref('id');
 }
 
+# Returns ID number of file, given full path
+sub getFileID{
+	
+	my ($self, $dbfile, $filepath) = @_;
+	
+	Genstat->connect($dbfile); #connect to specific user db
+	
+	my $query ="SELECT * FROM files WHERE filepath=:1"; 
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute($filepath);
+		
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	 
+	my $href = $sth->fetchrow_hashref; 
+	
+	if(defined($href))
+	{
+		return $href->{id}; #need to use deference operator '->' since we've a hash ref
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 sub average_size
 {
     my ($self, $dbfile) = @_;
