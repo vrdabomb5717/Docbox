@@ -46,7 +46,7 @@ print $template->output;
 
 
 sub listFiles{ # Producs HTML Output of a Listing of user's file in their root directory.  
-	$user = 'user'; ### DELTE FROM PRODCTION VERSION
+	#$user = 'user'; ### DELTE FROM PRODCTION VERSION
 	my $count =0;	
 	my $hash_ref_all = PublicDB->getFiles($user); # get (double) hash ref to all public files 
 	
