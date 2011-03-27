@@ -77,7 +77,7 @@ sub listStats {
 	$template->param(userfilecount => $filecount);
 	
 	## Get and set Average File Size
-	my $avgfilesize = Genstat->num_files($dbfile);
+	my $avgfilesize = Genstat->average_size($dbfile);
 	$avgfilesize = $avgfilesize/1024; # convert to Kilobytes 
 	$avgfilesize = sprintf("%.2f", $avgfilesize); # round to 2 dps.
 	$template->param(averagefilesize => $avgfilesize);
