@@ -17,6 +17,12 @@ sub search
 {
     my ($self, $query, $homepath) = @_;
 
+    #get the last character of $homepath so we can later append a / for `find`
+    my @home = split('', $homepath);
+    my $lastchar = $home[-1];
+    pop(@home) if $lastchar eq '/';
+    $homepath = join('', @home);
+
     #search text files, and return those results
     my $files = `grep -lrs "$query" "$homepath" `;
     #$files =~ s/' '/\\' '/g;
