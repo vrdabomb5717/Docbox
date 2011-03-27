@@ -136,11 +136,13 @@ if($renamedfilename){ # if renmaedfilename field specified
 	my $success = move($source, $dest);
 	if($success == 0){ ## check if rename failed
 		HTML->Error("Rename", "the File from $source to $dest "); # Print Error
-		Log->log("Rename Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest");
+		my $time = localtime();
+		Log->log("Rename Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest. Time: $time");
 		exit;
 	}
 	## Log Successful operation
-	Log->log("Rename Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest");
+	my $time = localtime();
+	Log->log("Rename Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest. Time: $time");
 	
 	$op_template->param(operation => 'Rename');
 	print $op_template->output();
@@ -156,11 +158,13 @@ if($copyfilename){ # if copyfilename field specified
 	my $success = copy($source, $dest);
 	if($success == 0){ ## check if copy failed
 		HTML->Error("Copy", "the File from $source to $dest "); # Print Error
-		Log->log("Copy Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest");
+		my $time = localtime();
+		Log->log("Copy Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest. Time:$time");
 		exit;
 	}
 	## Log Successful operation
-	Log->log("Copy Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest");
+	my $time = localtime();
+	Log->log("Copy Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest. Time:$time");
 	
 	
 	$op_template->param(operation => 'Copy');
@@ -177,11 +181,12 @@ if(defined($deleteoption)){
 		
 		if($success == 0){ ## Check if delete operation failed
 			HTML->Error("Delete", "the File $file"); # Print Error
-			Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file");
+			my $time = localtime();
+			Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file. Time:$time ");
 			exit;
 		}
-		
-		Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file");
+		my $time = localtime();
+		Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file. Time:$time");
 		$op_template->param(operation => 'Delete');
 		print $op_template->output();
 		exit;

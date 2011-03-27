@@ -20,6 +20,7 @@ use CGI::Carp qw(fatalsToBrowser); # debugging only. remove for production use.
 use HTML; 
 use UserDB;
 use Genstat;
+use Log; 
 
 # Need to handle case when file size too big
 # Code below causes CLIC webserver to show 500 Internal error, when size over limit. 
@@ -37,6 +38,7 @@ my $user = UserDB->getUser($uid); # get userame
 my $homepath = "Files/$user"; # Path to home root directory for the current user 
 my $path =  $homepath; # path that file is to saved. Default is home directory. 
 my $filename; 
+my $ip = $ENV{'REMOTE_ADDR'}; # get IP Address
 
 #checkLimit(); # not tested yet. 
 savefile(); # Save Uploaded  file. 
@@ -93,8 +95,13 @@ sub savefile { # Process uploaded File
 		## Add file to database.
 		my $dbfile = "$path/.user.db"; # user db file
 		my $fp = "$path/$filename";  # full file path
+		
 		#addfile takes arguments in form: $dbfile, $filepath, $filename, $public, $comments, $tags	
 		Genstat->addFile($dbfile, $fp, $filename, $public, $comments, $tags);
+		
+		## Log File Addition
+		my $time = localtime();
+		Log->log("Upload file operation by $user at IP $ip Succedded. File $fp created at $time");
 		
 		return; # exit function
 	}
