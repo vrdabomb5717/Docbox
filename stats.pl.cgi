@@ -33,8 +33,23 @@ if($valid == 0){
 
 my $user = UserDB->getUser($uid); # store current user
 my $template = HTML::Template->new(filename => 'templates/stats.tmpl');
+my $public = $q->param('public'); # get public setting
+my $filepath; # store full path to file
+my $fid = $q->param('fid');
 
-listStats();
+## Set filepath arguments appropriately for ListStat Function. 
+if($public){
+	HTML->Error("Parse", "$fid") if(!defined($fid)); # Make sure fid is defined
+	$filepath = PublicDB->getFilePathByID($fid);
+	
+	
+} else { ## At the moment, I'm Just reading from System file system. Will need to Upgrade to use DBs 
+	
+	
+} 
+
+
+listStats($filepath,$user); # listStat takes argumetns: filepath, and username
 
 # send the obligatory Content-Type
 print "Content-Type: text/html\n\n";
@@ -43,65 +58,45 @@ print "Content-Type: text/html\n\n";
 print $template->output;
 
 listStats {
-	my ($fp, $user) = @_; 
-	my $dbfile = "Files/$user/.user.db";
+	my ($fp, $user) = @_; # fp is file path
+	my $dbfile = "Files/$user/.user.db"; # path to user database file
 	$user = 'user';
 	my $count =0;	
-	my $hash_ref_all = Genstat->top30($dbfile, ); # get (double) hash ref to all public files 
+	my $hash_ref_all = Genstat->top30($dbfile, $fp); # get (double) hash ref to top 30 words. Top30 takes arguments:  $dbfile, $filepath  
 	
 	my @list; # file list data will go here
-	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
 	
 	# Fill user's name and unique id in template:
 	$template->param(user => $user);
 	$template->param(userid => $uid);
 	
 	
-	my $fp; # file path
-	my $fn;  # file name
-	my $tm; # time modified
-	my $size; # size in bytes
+	## Get and set File Count
+	my $filecount = Genstat->num_files($dbfile); 
+	$template->param(userfilecount => $filecount);
+	
+	## Get and set Average File Size
+	my $avgfilesize = Genstat->num_files($dbfile);
+	$avgfilesize = $avgfilesize/1024; # convert to Kilobytes 
+	$avgfilesize = sprintf("%.2f", $avgfilesize); # round to 2 dps.
+	$template->param(averagefilesize => $avgfilesize);
+	
+	## Get and set Total Number of Users
+	my $usercount = UserDB->num_users();
+	$template->param(totalusers => $usercount);
+	
+		
 
+	## HTML Format the top 30 words in a table
 	while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){
-		#my $row_hash_ref = $hash_ref_all->{$row}; # deref hash reference
-		
-		#print $row_hash_ref;
-		# Row hash ref has following keys: filepath, filename, owner, timemodified, size, kind, comments, tags
+		# Row hash ref has following keys: id, word,count 
 		 
-		my $fp = $row_hash_ref->{'filepath'};
-		my $fn = $row_hash_ref->{'filename'}; 
-		my $tm = $row_hash_ref->{'timemodified'};
-		my $size = $row_hash_ref->{'size'};
-		 
-		## Get FilePath ID
-		my $fid = $row_hash_ref->{'id'};
-		 
-		 
-		#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
-        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
-    	
-    	my ($sec,$min,$hour,$mday,$mon,$year) = localtime($tm); # get detailled time info 
-	    $year += 1900; #get proper year, since we start from 1900. 
-	    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
-		
-		#convert size to kilobytes to 2 decimal places:
-		$size =  $size/1024;
-		$size = sprintf("%.2f", $size); # round to 2 dps. 
-		
-		
-		# set query string for view statistics script.  
-		my $querystring = "stats.pl.cgi\?uid=$uid\&fid=$fid\&public=1";
-		
-		# set query string for download script
-		#my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$file" . "\&directorypath=$dir";
-		my $downloadquery = "download.pl.cgi\?uid=$uid\&public=1" . "\&fid=$fid";
-		
+		my $word = $row_hash_ref->{'word'};
+		my $count = $row_hash_ref->{'count'}; 
+				
 		my %row = (
-				filename => $fn,
-				date => $mtime,
-				size => $size,
-				querystring => $querystring,
-				download_query => $downloadquery
+				word => $word,
+				count => $count
 				);
 	
 	 	push(@list, \%row);
@@ -109,7 +104,4 @@ listStats {
 		 
  	# call param to fill in the loop with the loop data by reference.
 	$template->param(list_loop => \@list);	
-		
-		
-	
 }

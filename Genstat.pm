@@ -359,8 +359,7 @@ sub num_files
     my $count= "SELECT COUNT(filename) FROM files";
     my $sth = $dbh->prepare("$count");
 
-    #not sure if the execute is needed
-    $sth->execute();
+    $sth->execute(); # execute query, (this call is needed)
 
     my @row_array = $sth->fetchrow_array;
     return $row_array[0];

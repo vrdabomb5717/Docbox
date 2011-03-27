@@ -26,8 +26,10 @@ my $em = "testuser\@testdomain.com";
 my $fn = "John";
 my $mn = "Alex";
 my $ln = "Smith";
-#makedb();
-exit;
+
+my $t = Genstat->num_files("Files/TestUser/.user.db");
+print "USER TABLE HAS $t FILES";
+exit; 
 
 #my $db = Userpass->new();
 
