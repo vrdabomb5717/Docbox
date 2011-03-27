@@ -23,6 +23,7 @@ use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files. 
 use File::Copy; # provides functionality to copy and rename files
 use Genstat;
+use Log; 
 
 my $user; # store current user
 my $uid; # user id (token) of current user. 
@@ -37,6 +38,8 @@ $uid = $q->url_param('uid') if(!defined($uid)); # for when uid is in post data a
 UserDB->validateUser($uid); # Check if valid user logged in. Redirect to login page otherwise.
 
 $user = UserDB->getUser($uid); # get username of current logged in user.
+
+my $ip = $ENV{'REMOTE_ADDR'}; ## get ip address of user. 
 
 ## Define source file path for current user. 
 # Will need to add directory path, after enabling grouping funtionality. 
@@ -130,7 +133,15 @@ if($renamedfilename){ # if renmaedfilename field specified
 	# so if any file exits beforehand with same name as user supplied filename (to use for renaming)
 	# then that file on the filesystem is overwritten.  
  
-	move($source, $dest);
+	my $success = move($source, $dest);
+	if($success == 0){ ## check if rename failed
+		HTML->Error("Rename", "the File from $source to $dest "); # Print Error
+		Log->log("Rename Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest");
+		exit;
+	}
+	## Log Successful operation
+	Log->log("Rename Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest");
+	
 	$op_template->param(operation => 'Rename');
 	print $op_template->output();
 	exit;
@@ -142,7 +153,16 @@ if($copyfilename){ # if copyfilename field specified
 	my $source = "$sourcefilepath" . "$filename"; 
 	my $dest = "$sourcefilepath" . "$copyfilename" . ".$extension";
 	
-	copy($source, $dest);
+	my $success = copy($source, $dest);
+	if($success == 0){ ## check if copy failed
+		HTML->Error("Copy", "the File from $source to $dest "); # Print Error
+		Log->log("Copy Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest");
+		exit;
+	}
+	## Log Successful operation
+	Log->log("Copy Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest");
+	
+	
 	$op_template->param(operation => 'Copy');
 	print $op_template->output();
 	exit;
@@ -153,8 +173,15 @@ if(defined($deleteoption)){
 	if($deleteoption eq 'Yes'){
 		
 		my $file= "$sourcefilepath" . "$filename";
-		unlink($file);
-	
+		my $success = unlink($file);
+		
+		if($success == 0){ ## Check if delete operation failed
+			HTML->Error("Delete", "the File $file"); # Print Error
+			Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file");
+			exit;
+		}
+		
+		Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file");
 		$op_template->param(operation => 'Delete');
 		print $op_template->output();
 		exit;
