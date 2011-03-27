@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Public
+# Statistics
 # Shows all available public files.  
 # Authors: Jervis
 # March 26, 2011
@@ -21,9 +21,7 @@ use HTML;
 use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files. 
 use PublicDB;  # use public file database
-
-
-
+use Genstat; 
 
 my $q = CGI->new();
 my $uid = $q->param('uid'); # user id (token) of current user.
@@ -34,9 +32,9 @@ if($valid == 0){
 }
 
 my $user = UserDB->getUser($uid); # store current user
-my $template = HTML::Template->new(filename => 'templates/public.tmpl');
+my $template = HTML::Template->new(filename => 'templates/stats.tmpl');
 
-listFiles();
+listStats();
 
 # send the obligatory Content-Type
 print "Content-Type: text/html\n\n";
@@ -44,11 +42,12 @@ print "Content-Type: text/html\n\n";
 # print the template
 print $template->output;
 
-
-sub listFiles{ # Producs HTML Output of a Listing of user's file in their root directory.  
-	$user = 'user'; ### DELTE FROM PRODCTION VERSION
+listStats {
+	my ($fp, $user) = @_; 
+	my $dbfile = "Files/$user/.user.db";
+	$user = 'user';
 	my $count =0;	
-	my $hash_ref_all = PublicDB->getFiles($user); # get (double) hash ref to all public files 
+	my $hash_ref_all = Genstat->top30($dbfile, ); # get (double) hash ref to all public files 
 	
 	my @list; # file list data will go here
 	my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ); # for date modified
@@ -109,9 +108,8 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 	}	 
 		 
  	# call param to fill in the loop with the loop data by reference.
-	$template->param(list_loop => \@list);
+	$template->param(list_loop => \@list);	
+		
+		
+	
 }
-	
-	
-
-

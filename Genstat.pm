@@ -426,11 +426,64 @@ sub top30
     #$fph = "a" . "$fph"; #append a letter to guranteee that first character is always a letter.
     
     #my $select = "SELECT * FROM $fph LIMIT 30 ORDER BY count DESC";
-    my $select = "SELECT * FROM $fph ORDER BY count DESC";
+    my $select = "SELECT * FROM $fph ORDER BY count DESC LIMIT 30";
     my $sth = $dbh->prepare($select);
     #$sth = $dbh->prepare("ORDER BY count");
     $sth->execute();
     return $sth->fetchall_hashref('id');
+}
+
+
+# Returns full file path, given a file ID
+sub getFilePathByID{
+	
+	my ($self, $dbfile, $id) = @_;
+	Genstat->connect($dbfile); #connect to specific user db
+	
+	# SELECT * FROM files WHERE password='$passwordhex'
+	my $query = "SELECT * FROM files WHERE id=:1";
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute("$id");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href->{filepath}; #need to use deference operator '->' since we've a hash ref 
+	}
+	else
+	{
+		return undef; # there is no file with that path 
+	}	
+}
+
+# Returns full file name, given a file ID
+sub getFileNameByID{
+
+	my ($self, $dbfile, $id) = @_;
+	Genstat->connect($dbfile); #connect to specific user db
+	
+	# SELECT * FROM files WHERE password='$passwordhex'
+	my $query = "SELECT * FROM files WHERE id=:1";
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute("$id");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href->{filename}; #need to use deference operator '->' since we've a hash ref 
+	}
+	else
+	{
+		return undef; # there is no file with that path 
+	}	
 }
 
 
