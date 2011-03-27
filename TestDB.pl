@@ -26,7 +26,8 @@ my $em = "testuser\@testdomain.com";
 my $fn = "John";
 my $mn = "Alex";
 my $ln = "Smith";
-
+#makedb();
+exit;
 
 #my $db = Userpass->new();
 
@@ -196,7 +197,7 @@ sub makedb{
 	`sqlite3 public.db "CREATE TABLE files ( id INTEGER PRIMARY KEY,
                         filepath TEXT NOT NULL COLLATE NOCASE,
                         filename TEXT NOT NULL,
-                        owner INTEGER NOT NULL,
+                        owner TEXT NOT NULL COLLATE NOCASE,
                         timemodified TEXT NOT NULL,
                         timeadded TEXT NOT NULL,
                         size REAL NOT NULL,
