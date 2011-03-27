@@ -9,9 +9,8 @@ package Filesearch;
 
 use strict;
 use warnings;
-
-#use CAM::PDF;
 use Text::Extract::Word;
+#use RTF::TEXT::Converter;
 
 sub search
 {
@@ -48,6 +47,7 @@ sub search
 	}
     }
 
+    #search for all Word documents
     $files = `find "$homepath" -type f -name '*.doc' -print`;
     @filenames = split(/\n/, $files);
 
@@ -65,6 +65,31 @@ sub search
 	    push(@results, $line);
 	}
     }
+
+    
+    #search for all RTF files
+    #$files = `find "$homepath" -type f -name '*.rtf' -print`;
+    #@filenames = split(/\n/, $files);
+    
+    #foreach my $line (@filenames)
+    #{
+	#$line =~ s/\///;
+	#$line = "/" . "$line";
+
+	#extract text of RTF file, search for $query, and if search returns true, push file into @results
+	#my $text;
+	#my $object = RTF::TEXT::Converter->new(output => \$text);
+	#$object->parse_string($line);
+
+	#if($text =~ /"$query"/)
+	#{
+	    #push(@results, $line);
+	#}
+    #}
+
+
+
+    #pop(@results) if "$results[-1]" =~ m/\s/;
 
     return @results;    
 }
