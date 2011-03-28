@@ -49,7 +49,9 @@ sub authenticate
 	}
 }
 
-sub validEmailAndName{ # matches email and Name. Names are CASE-SENSITIVE
+# matches email and Name. Names are CASE-SENSITIVE
+sub validEmailAndName
+{ 
 	my ($self, $email, $firstname, $lastname) = @_;
 	
 	# SELECT * FROM userpass WHERE email='$email'
@@ -74,7 +76,9 @@ sub validEmailAndName{ # matches email and Name. Names are CASE-SENSITIVE
 	
 }
 
-sub validEmail{ # matches email
+# matches email
+sub validEmail
+{
 	my ($self, $email) = @_;
 	
 	# SELECT * FROM userpass WHERE email='$email'
@@ -100,7 +104,8 @@ sub validEmail{ # matches email
 
 
 # returns Name given user id token. 
-sub getName{ 
+sub getName
+{ 
 	
 	my ($self, $passwordhex) = @_;
 	
@@ -127,7 +132,8 @@ sub getName{
 
 
 # returns Email address given user id token. 
-sub getEmail{ 
+sub getEmail
+{ 
 	
 	my ($self, $passwordhex) = @_;
 	
@@ -152,7 +158,8 @@ sub getEmail{
 }
 
 # returns username whose has the given user id token. 
-sub getUser{ 
+sub getUser
+{ 
 	
 	my ($self, $passwordhex) = @_;
 	
@@ -177,7 +184,8 @@ sub getUser{
 }
 
 # returns user token id (i.e passwordhex) belonging to given email address.
-sub getUserID{ 
+sub getUserID
+{ 
 	
 	my ($self, $email) = @_;
 	
@@ -201,8 +209,9 @@ sub getUserID{
 	}
 }
 
-sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects to homepage. 
-	
+# Checks if provided user id is valid. If invalid, redirects to homepage. 
+sub validateUser
+{	
 	my ($self, $uid) = @_; 
 	
 	if(!defined($uid)){ # for null user id token
@@ -220,7 +229,7 @@ sub validateUser(){ # Checks if provided user id is valid. If invalid, redirects
 	}
 }
 
-
+#register user and add them to the UserDB
 sub register
 {
 	
@@ -247,6 +256,7 @@ sub register
 	$sth->execute("$username", "$password", "$email", "$firstname", "$middlename", "$lastname");	
 }
 
+#allows user to change password, or for the password to be changed during a password-reset.
 sub change_password
 {
     my ($self, $username, $email, $newpass) = @_;
@@ -257,6 +267,7 @@ sub change_password
     $sth->execute($newpass, $username, $email);
 }
 
+#allows user to change the email address they registered with
 sub change_email
 {
     my ($self, $username, $password, $newemail) = @_;
@@ -268,6 +279,7 @@ sub change_email
 
 }
 
+#allows the user to change their name.
 sub change_name
 {
     my ($self, $username, $password, $newfirst, $newmiddle, $newlast) = @_;
@@ -279,6 +291,7 @@ sub change_name
 
 }
 
+#returns number of registered users.
 sub num_users
 {
     # SELECT COUNT(*) FROM userpass;

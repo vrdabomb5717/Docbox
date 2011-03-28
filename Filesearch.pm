@@ -12,6 +12,7 @@ use warnings;
 use Text::Extract::Word;
 #use RTF::TEXT::Converter;
 
+#search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
 sub search
 {
     my ($self, $query, $homepath) = @_;
@@ -22,7 +23,8 @@ sub search
     pop(@home) if $lastchar eq '/';
     $homepath = join('', @home);
 
-    #search text files, and return those results
+    #search text files and RTF files, and return those results
+	#silenced all error messages so they don't interfere with results.
     my $files = `grep -lrs "$query" "$homepath" `;
     #$files =~ s/' '/\\' '/g;
     my @results = split(/\n/, $files);
@@ -30,12 +32,14 @@ sub search
     pop(@results) if "$results[-1]" eq '\t';
     #print scalar(@results) . "\n";
 
-    #search for all PDF files
+    #search for all PDF files and returns the paths of those files
     $files = `find "$homepath" -type f -name '*.pdf' -print`;
     my @filenames = split(/\n/, $files);
 
     foreach my $line (@filenames)
     {
+		#removes the extra slash that find places in the path.
+		#I think these lines just undo each other's changes, but keeping them for now.
 		$line =~ s/\///;
 		$line = "/" . "$line";
 
@@ -58,7 +62,10 @@ sub search
 		$line =~ s/\///;
 		$line = "/" . "$line";
 
-		#extract text of Word document, search for $query, and if search returns true, push file into @results
+		
+		#extract text of Word document, search for $query
+		#if search returns true, push file into @results
+		
 		my $doc = Text::Extract::Word->new("$line");
 		my $text = $doc->get_text();
 
