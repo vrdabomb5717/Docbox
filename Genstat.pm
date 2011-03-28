@@ -76,6 +76,7 @@ sub addFile()
 	else
 	{
 		$kind = $suffix[$length - 1]; #use extension to determine type. 
+		$kind = lc($kind);
 	}
 	
 	# INSERT INTO userpass (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)
@@ -118,7 +119,7 @@ sub addFile()
 	    }
 
 	}
-	elsif($filepath =~ /\.pdf$/i)
+	elsif($kind eq "pdf")
 	{
 		my $text = `pdftotext -q $filepath`;  
         my @splitted = getWordCount($text); 
@@ -129,7 +130,7 @@ sub addFile()
             $sth->execute($counts[0], $counts[1]);
         }
 	}
-	elsif($filepath =~ /\.doc$/i)
+	elsif($kind eq "doc")
 	{
 		my $doc = Text::Extract::Word->new("$filepath");
 		my $text = $doc->get_text();
@@ -142,7 +143,7 @@ sub addFile()
             $sth->execute($counts[0], $counts[1]);
         }
 	}
-	elsif($filepath =~ /\.rtf$/i)
+	elsif($kind eq "rtf")
 	{
 		#open RTF file and read data into $text
 		my $text = "";
@@ -315,21 +316,56 @@ sub updateFile
 	my $fph = getTableHash($oldpath); # File path hash
 	my $nph = getTableHash($newpath); #new path hash
 	 
-	my $update = "UPDATE files SET filepath = :1 AND filename = :2 WHERE filepath = :3 AND filename = :4";
+	#because we cannot update a unique key directly, we must first do a select, capture the file's data, 
+	#delete the old file, and insert the new one
+	my $select = "SELECT * FROM files WHERE filepath = :1";
+	my $sth = $dbh->prepare("$select");
 	
-	#use the old filepath to check if the file is public because the update has not happened yet
-	my $public_file = Genstat->isPublic($oldpath);
-	if($public_file){ 
-		PublicDB->updateFile($oldpath, $oldname, $newpath, $newname); # Update Public DB if public file is renamed.  
-	} 
+	$sth->execute($oldpath);
+		
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	 
+	my $href = $sth->fetchrow_hashref; 
 	
-	my $sth = $dbh->prepare("$update");
-	$sth->execute("$oldpath", "$oldname", "$newpath", "$newname");
-	
-	my $alter = "ALTER TABLE $fph RENAME TO $nph";
-	$sth = $dbh->prepare("$alter");
-	$sth->execute();
-	
+	if(defined($href))
+	{
+		my $id = $href->{id}; #need to use deference operator '->' since we've a hash ref
+		my $public = $href->{public};
+		my $permissions = $href->{permissions};
+		my $timemodified = "" . time();
+		my $timeadded = $href->{timeadded};
+		my $size = $href->{size};
+		my $kind = $href->{kind};
+		my $comments = $href->{comments};
+		my $tags = $href->{tags};
+		
+		my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
+		$sth = $dbh->prepare("$delete");
+		$sth->execute("$oldpath", "$oldname");
+
+
+		# INSERT INTO userpass (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) 
+		#VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)
+		my $insert = "INSERT OR REPLACE INTO files (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)";
+		$sth = $dbh->prepare("$insert");
+		$sth->execute("$newpath", "$newname", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
+
+		#use the old filepath to check if the file is public because the update has not happened there yet
+		my $public_file = Genstat->isPublic($oldpath);
+		if($public_file){ 
+			PublicDB->updateFile($oldpath, $oldname, $newpath, $newname); # Update Public DB if public file is renamed.  
+		} 
+
+		my $alter = "ALTER TABLE $fph RENAME TO $nph";
+		$sth = $dbh->prepare("$alter");
+		$sth->execute();
+		
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 

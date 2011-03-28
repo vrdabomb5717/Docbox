@@ -12,13 +12,13 @@ BEGIN{
  
 use DBI;
 use UserDB;
-use HTML::Template;
+#use HTML::Template;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 use Genstat; 
 
-#addfile();
+addfile();
 updateFile();
-sql2();
+#sql2();
 exit; 
 
 
@@ -51,7 +51,7 @@ print "Test for Userpass Module\n";
 
 #print w($y);
 
-my $db = "Files/TestUser/.user.db";
+my $db = "Files/user/.user.db";
 $fp= "HTML.pm";
 #my $hash_ref_all = Genstat->get_public($db);
 #my $hash_ref_all = Genstat->top30($db,$fp );
@@ -211,10 +211,10 @@ sub read{
 
 sub addfile{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
-	my $db = "Files/TestUser/.user.db";
+	my $db = "Files/user/.user.db";
 	my $filepath = "Files/user/110.jpg";
-	$filepath = "passwords.txt"; 
-	$filepath = "HTML.pm";
+	#$filepath = "passwords.txt"; 
+	#$filepath = "HTML.pm";
 	my $fn = "110.jpg";
 	my $comments = " I have no commnets at this time";
 	my $tags = " THis is to be tage dlater on"; 

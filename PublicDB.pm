@@ -55,10 +55,41 @@ sub updateFile
 {
 	my ($self, $oldpath, $oldname, $newpath, $newname) = @_;
 	 
-	my $update = "UPDATE files SET filepath = :1 AND filename = :2 WHERE filepath = :3 AND filename = :4";
+	#because we cannot update a unique key directly, we must first do a select, capture the file's data, 
+	#delete the old file, and insert the new one
+	my $select = "SELECT * FROM files WHERE filepath = :1";
+	my $sth = $dbh->prepare("$select");
+	$sth->execute($oldpath);
+		
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	 
+	my $href = $sth->fetchrow_hashref; 
 	
-	my $sth = $dbh->prepare("$update");
-	$sth->execute("$oldpath", "$oldname", "$newpath", "$newname");
+	if(defined($href))
+	{
+		my $id = $href->{id}; #need to use deference operator '->' since we've a hash ref
+		my $public = $href->{public};
+		my $permissions = $href->{permissions};
+		my $timemodified = "" . time();
+		my $timeadded = $href->{timeadded};
+		my $size = $href->{size};
+		my $kind = $href->{kind};
+		my $comments = $href->{comments};
+		my $tags = $href->{tags};
+		
+		my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
+		$sth = $dbh->prepare("$delete");
+		$sth->execute("$oldpath", "$oldname");
+
+		my $insert = "INSERT OR REPLACE INTO files (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)";
+		$sth = $dbh->prepare("$insert");
+		$sth->execute("$newpath", "$newname", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 
