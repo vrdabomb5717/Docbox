@@ -171,11 +171,41 @@ sub getFilePathByID
 	}	
 }
 
+#returns the average size of the user's files
+sub average_size
+{
+    my ($self) = @_;
+    
+    #SELECT AVG(size) FROM files
+    my $average = "SELECT AVG(size) FROM files";
+    my $sth = $dbh->prepare("$average");
+    
+    #not sure if the execute is needed
+    $sth->execute();
+
+    my @row_array = $sth->fetchrow_array;
+    return $row_array[0];
+}
+
+#returns the number of files in the user's database
+sub num_files
+{
+    my ($self) = @_;
+    
+    #SELECT COUNT(filename) FROM files
+    my $count= "SELECT COUNT(filename) FROM files";
+    my $sth = $dbh->prepare("$count");
+
+    $sth->execute(); # execute query, (this call is needed)
+
+    my @row_array = $sth->fetchrow_array;
+    return $row_array[0];
+}
+
 #use the public database to search filenames for a specific query
 sub search_filenames
 {
     my ($self, $query) = @_;
-    
 	
     #SELECT * FROM files WHERE filenames LIKE '$query'
 
@@ -186,7 +216,43 @@ sub search_filenames
     return $sth->fetchall_arrayref([0,1,2,4,6]); # return fileid, filepath, filename, time modified, size
 }
 
+#use the user's database to search file types for a specific query (e.g. search for all "pdf" files)
+sub search_kind
+{
+    my ($self, $query) = @_;
+    
+    #SELECT * FROM files WHERE kind LIKE '$query'
+                                                                                                                                                                                                                           
+    my $search = "SELECT * FROM files WHERE kind LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
+}
 
+#use the user's database to search comments for a specific query
+sub search_comments
+{
+    my ($self, $query) = @_;
+
+    #SELECT * FROM files WHERE comments LIKE '$query'
+                                                                                                                                                                                                                    
+    my $search = "SELECT * FROM files WHERE comments LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
+}
+
+#use the user's database to search tags for a specific query
+sub search_tags
+{
+    my ($self, $query) = @_;
+    
+    #SELECT * FROM files WHERE tags LIKE '$query'
+    my $search = "SELECT * FROM files WHERE tags LIKE '%:1%";
+    my $sth = $dbh->prepare($search);
+    $sth->execute($query);
+    return $sth->fetchall_hashref('id');
+}
 
 
 # Returns full file path, given a file ID
