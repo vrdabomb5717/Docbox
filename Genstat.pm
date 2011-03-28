@@ -24,7 +24,7 @@ my $dbh; #declare db handle.
 
 #takes filepath, filename, whether the uploaded file is public, comments, and tags, and adds it to the database.
 #if the file is already in the database, it attempts to update the record.
-sub addFile()
+sub addFile
 {
 	my ($self, $dbfile, $filepath, $filename, $public, $comments, $tags) = @_;
 	
@@ -33,12 +33,17 @@ sub addFile()
 	#HTML->Error("READ Comment: ", $comments);
 	  
 	my $fph = getTableHash($filepath); # File path hash
-	if(!defined($comments)){
+	
+	if(!defined($comments))
+	{
 		$comments = ""; 
 	}
-	if(!defined($tags)){
+	
+	if(!defined($tags))
+	{
 		$tags = "";
 	}
+	
 	my ($permissions, $timemodified, $timeadded, $filesize, $kind);
 	
 	#	Chart:
@@ -75,7 +80,8 @@ sub addFile()
 	}
 	else
 	{
-		$kind = $suffix[$length - 1]; #use extension to determine type. 
+		#use extension to determine type
+		$kind = $suffix[$length - 1];
 		$kind = lc($kind);
 	}
 	
@@ -86,15 +92,16 @@ sub addFile()
 
 	
 	## Insert into Public DB if file is Public
-	# Argments are formt: $filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind) = @_;
+	# Argments are form: $filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind) = @_;
 	my @l = split(/\//, $dbfile);
 	my $username = $l[1]; # get username 
 	PublicDB->addFile($filepath, $filename, $username, $comments, $tags, $timemodified, $timeadded, $size, $kind);
 	 
 	my $table_exists = Genstat->existsTable($fph);
 	
+	# if table already exists, DELETE it first
 	if($table_exists)
-	{ # if table already exists, DELETE it first
+	{ 
 		my $drop = "DROP TABLE $fph";
 		$sth = $dbh->prepare("$drop");
 		$sth->execute();
@@ -114,7 +121,8 @@ sub addFile()
 		my @splitted = getWordCountText($filepath);
 	    foreach my $line(@splitted)
 	    {
-			my @counts = split(' ', $line); # List has format: aWord itsCount
+			# List has format: aWord itsCount
+			my @counts = split(' ', $line);
 			$sth->execute($counts[0], $counts[1]);
 	    }
 
@@ -174,7 +182,8 @@ sub addFile()
 
 ## Checks if given table name already exists
 # Internal method only 
-sub existsTable{
+sub existsTable
+{
 	#my($self, $dbfile, $tn) = @_; # tn is table name
 	#Genstat->connect($dbfile);
 	
@@ -206,7 +215,8 @@ sub existsTable{
 
 # Connects to user database
 # Internal Method - should not be used publicly
-sub connect{
+sub connect
+{
 	my ($self, $dbfile) = @_; 
 
 	$dbh = DBI->connect( "dbi:SQLite:$dbfile", "", "",
@@ -217,25 +227,30 @@ sub connect{
 # Takes a string and Returns words in a sorted order list including word count like shown below. 
 # List contains string of format: aWord itsCount
 # Internal method - don't use publicly
-sub getWordCount{
-	
+sub getWordCount
+{
 	my $input = $_[0]; 
 	
 	my @output; 
 	my %word_list; #hash table to store words
 	$input = lc($input); #convert to lowercase
 	my @words = split(/\W+/, $input); # get all words
-	foreach my $word (@words){
+	
+	foreach my $word (@words)
+	{
 		$word_list{$word}++; # store word and increment count. 
 	}
 	
 	my @sorted_list = sort{$word_list{$b} <=> $word_list{$a}} keys %word_list; #sort hash table on key value counts in descending order
 	
-	my $count; 
-	foreach my $word(@sorted_list){
+	my $count;
+	
+	foreach my $word(@sorted_list)
+	{
 		$count = $word_list{$word}; # get word count 
 		push(@output, "$word $count\n");
 	}
+	
 	return @output;
 }
 
@@ -249,25 +264,32 @@ sub getWordCountText{
 	my @output;
 	open(FILE, "$filepath") || die HTML->Error("opening", $filepath);	 
 	
-	while( my $line = <FILE>){
+	while( my $line = <FILE>)
+	{
 		chomp($line);
 		$line = lc($line); #convert to lowercase
 		my @words = split(/\W+/, $line); # get all words in line
-		foreach my $word (@words){
-			if($word eq ''){ # don't add empty strings 
+		foreach my $word (@words)
+		{
+			if($word eq '')
+			{ # don't add empty strings 
 				next; 
 			}
+			
 			$word_list{$word}++; # store word and increment count. 
 		}	
 	}
 	
 	my @sorted_list = sort{$word_list{$b} <=> $word_list{$a}} keys %word_list; #sort hash table on key value counts in descending order
 	
-	my $count; 
-	foreach my $word(@sorted_list){
+	my $count;
+	
+	foreach my $word(@sorted_list)
+	{
 		$count = $word_list{$word}; # get word count 
 		push(@output, "$word $count\n");
 	}
+	
 	return @output;
 }
 
@@ -276,7 +298,8 @@ sub getWordCountText{
 #NOTE: In generating the tablenames, I take the filepath hash and a pre-append the letter "a"
 #This is to please DBI becasue it can't process table names starting with numbers.
 # Also, this is an internal method - dont use publicly. 
-sub getTableHash{ 
+sub getTableHash
+{ 
 	my ($filepath) = @_;
 	my $fph = sha1_hex($filepath); # File path hash : This will used as the name of the table.
 	$fph = "a" . "$fph"; #append a letter to guranteee that first character is always a letter.
@@ -372,7 +395,8 @@ sub updateFile
 
 # Checks if a filename is public
 # internal method only 
-sub isPublic{
+sub isPublic
+{
 	#Genstat->connect("Files/user/.user.db");
 	
 	my ($self, $filepath) = @_;
@@ -415,7 +439,8 @@ sub get_public
 }
 
 # Returns ID number of file, given full path
-sub getFileID{
+sub getFileID
+{
 	
 	my ($self, $dbfile, $filepath) = @_;
 	
@@ -441,7 +466,7 @@ sub getFileID{
 	}
 }
 
-#### To be Implemented
+#### Implemented in Filesearch.pm. This is just dead code for initial plans to search database instead.
 ## Do a Document deep search of all Files in User's folder for given string...
 ## Should Return a Hashref to Filename. 
 sub doc_search{
@@ -450,6 +475,7 @@ sub doc_search{
 	return;
 }
 
+#returns the average size of the user's files
 sub average_size
 {
     my ($self, $dbfile) = @_;
@@ -466,6 +492,7 @@ sub average_size
     return $row_array[0];
 }
 
+#returns the number of files in the user's database
 sub num_files
 {
     my ($self, $dbfile) = @_;
@@ -481,6 +508,7 @@ sub num_files
     return $row_array[0];
 }
 
+#use the user's database to search filenames for a specific query
 sub search_filenames
 {
     my ($self, $dbfile, $query) = @_;
@@ -495,6 +523,7 @@ sub search_filenames
     return $sth->fetchall_arrayref([1,2,5,6,7,0]); # return filepath, filename, time modified, time added, size, file ID
 }
 
+#use the user's database to search file types for a specific query (e.g. search for all "pdf" files)
 sub search_kind
 {
     my ($self, $dbfile, $query) = @_;
@@ -508,6 +537,7 @@ sub search_kind
     return $sth->fetchall_hashref('id');
 }
 
+#use the user's database to search comments for a specific query
 sub search_comments
 {
     my ($self, $dbfile, $query) = @_;
@@ -520,6 +550,7 @@ sub search_comments
     return $sth->fetchall_hashref('id');
 }
 
+#use the user's database to search tags for a specific query
 sub search_tags
 {
     my ($self, $dbfile, $query) = @_;
@@ -532,6 +563,7 @@ sub search_tags
     return $sth->fetchall_hashref('id');
 }
 
+#use the user's database to return the top 30 most occurring words for a specific file
 sub top30
 {
     my ($self, $dbfile, $filepath) = @_;
@@ -544,6 +576,7 @@ sub top30
     #my $select = "SELECT * FROM $fph LIMIT 30 ORDER BY count DESC";
     my $select = "SELECT * FROM $fph ORDER BY count DESC LIMIT 30";
     my $sth = $dbh->prepare($select);
+
     #$sth = $dbh->prepare("ORDER BY count");
     $sth->execute();
     return $sth->fetchall_arrayref([1,2]); # return word and count columns only
@@ -577,8 +610,8 @@ sub getFilePathByID{
 }
 
 # Returns full file name, given a file ID
-sub getFileNameByID{
-
+sub getFileNameByID
+{
 	my ($self, $dbfile, $id) = @_;
 	Genstat->connect($dbfile); #connect to specific user db
 	

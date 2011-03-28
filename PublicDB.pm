@@ -94,7 +94,8 @@ sub updateFile
 
 
 # returns the owner of the given file path.  
-sub getOwner{ 
+sub getOwner
+{ 
 	
 	my ($self, $filepath) = @_;
 	
@@ -119,7 +120,8 @@ sub getOwner{
 }
 
 # returns the File ID of given file path  
-sub getFileID{ 
+sub getFileID
+{ 
 	
 	my ($self, $filepath) = @_;
 	
@@ -144,7 +146,8 @@ sub getFileID{
 }
 
 # Returns full file path, given a file ID
-sub getFilePathByID{
+sub getFilePathByID
+{
 	
 	my ($self, $id) = @_;
 	
@@ -168,7 +171,7 @@ sub getFilePathByID{
 	}	
 }
 
-
+#use the public database to search filenames for a specific query
 sub search_filenames
 {
     my ($self, $query) = @_;
@@ -182,6 +185,8 @@ sub search_filenames
     #return $sth->fetchall_hashref('id');
     return $sth->fetchall_arrayref([0,1,2,4,6]); # return fileid, filepath, filename, time modified, size
 }
+
+
 
 
 # Returns full file path, given a file ID
