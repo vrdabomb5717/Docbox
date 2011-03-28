@@ -2,13 +2,13 @@
 
 # genstat.pm
 # Contains methods for accessing user SQLite database
-# Authors: Varun
+# Authors: Varun and Jervis
 # 17th March 2011
 
 #Note: First argument in a static method call in perl is always the class name. This is what $self refers to. 
 
 ## Still to DO:
-# * Create tables for each file, creating word counts
+# * Make sure RTF support works, and that renaming files works as planned.
 
 package Genstat;
 
@@ -147,7 +147,7 @@ sub addFile()
 		#open RTF file and read data into $text
 		my $text = "";
 		open(my $fh, "$filepath");
-		my $object = RTF::TEXT::Converter->new(output => \text);
+		my $object = RTF::TEXT::Converter->new(output => \$text);
 		$object->parse_stream(\$fh);
 		
 		my @splitted = getWordCount($text); 
@@ -305,6 +305,34 @@ sub removeFile
 	$sth = $dbh->prepare("$drop");
 	$sth->execute();
 }
+
+#updates a filename given a filepath, filename, a new filepath, and the new filename.
+sub updateFile
+{
+	my ($self, $dbfile, $oldpath, $oldname, $newpath, $newname) = @_;
+	
+	Genstat->connect($dbfile); #connect to specific user db
+	my $fph = getTableHash($oldpath); # File path hash
+	my $nph = getTableHash($newpath); #new path hash
+	 
+	my $update = "UPDATE files SET filepath = :1 AND filename = :2 WHERE filepath = :3 AND filename = :4";
+	
+	#use the old filepath to check if the file is public because the update has not happened yet
+	my $public_file = Genstat->isPublic($oldpath);
+	if($public_file){ 
+		PublicDB->updateFile($oldpath, $oldname, $newpath, $newname); # Update Public DB if public file is renamed.  
+	} 
+	
+	my $sth = $dbh->prepare("$update");
+	$sth->execute("$oldpath", "$oldname", "$newpath", "$newname");
+	
+	my $alter = "ALTER TABLE $fph RENAME TO $nph";
+	$sth = $dbh->prepare("$alter");
+	$sth->execute();
+	
+}
+
+
 
 # Checks if a filename is public
 # internal method only 

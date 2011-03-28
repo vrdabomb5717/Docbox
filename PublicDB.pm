@@ -42,13 +42,23 @@ sub addFile()
 #removes a file given a filepath and filename, just to be doubly sure
 sub removeFile
 {
-	
 	my ($self, $filepath, $filename) = @_;
 	 
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
+}
+
+#updates a filename given a filepath, filename, a new filepath, and the new filename.
+sub updateFile
+{
+	my ($self, $oldpath, $oldname, $newpath, $newname) = @_;
+	 
+	my $update = "UPDATE files SET filepath = :1 AND filename = :2 WHERE filepath = :3 AND filename = :4";
+	
+	my $sth = $dbh->prepare("$update");
+	$sth->execute("$oldpath", "$oldname", "$newpath", "$newname");
 }
 
 
