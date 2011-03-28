@@ -29,7 +29,7 @@ sub search
     #$files =~ s/' '/\\' '/g;
     my @results = split(/\n/, $files);
     
-    pop(@results) if "$results[-1]" eq '\t';
+    pop(@results) if scalar(@results) > 0 && "$results[-1]" eq '\t';
     #print scalar(@results) . "\n";
 
     #search for all PDF files and returns the paths of those files
@@ -40,8 +40,8 @@ sub search
     {
 		#removes the extra slash that find places in the path.
 		#I think these lines just undo each other's changes, but keeping them for now.
-		$line =~ s/\///;
-		$line = "/" . "$line";
+		#$line =~ s/\///;
+		#$line = "/" . "$line";
 
 		#extract text of PDF, search for $query, and if search returns true, push file into list
 		my $exitcode = `pdftotext -q "$line" - | grep "$query"`;
