@@ -59,8 +59,10 @@ sub search
 
     foreach my $line (@filenames)
     {
-		$line =~ s/\///;
-		$line = "/" . "$line";
+		#removes the extra slash that find places in the path.
+		#I think these lines just undo each other's changes, but keeping them for now.
+		#$line =~ s/\///;
+		#$line = "/" . "$line";
 
 		
 		#extract text of Word document, search for $query
