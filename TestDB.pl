@@ -17,6 +17,7 @@ use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 use Genstat; 
 
 #addfile();
+updateFile();
 sql2();
 exit; 
 
@@ -221,6 +222,18 @@ sub addfile{
 	print "Running addfile command ... "; 
 	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);
 	
+}
+
+sub updateFile
+{
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/110.jpg";
+	my $fn = "110.jpg";
+	my $newpath = "Files/user/220.jpg";
+	my $newname = "220.jpg";
+	
+	print "Running updateFile command ... "; 
+	Genstat->updateFile($db, $filepath, $fn, $newpath, $newname);	
 }
 
 sub makedb{
