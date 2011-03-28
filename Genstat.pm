@@ -353,7 +353,7 @@ sub updateFile
 	
 	if(defined($href))
 	{
-		my $id = $href->{id}; #need to use deference operator '->' since we've a hash ref
+		#need to use deference operator '->' since we've a hash ref
 		my $public = $href->{public};
 		my $permissions = $href->{permissions};
 		my $timemodified = "" . time();
@@ -374,12 +374,22 @@ sub updateFile
 		$sth = $dbh->prepare("$insert");
 		$sth->execute("$newpath", "$newname", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
 
-		#use the old filepath to check if the file is public because the update has not happened there yet
-		my $public_file = Genstat->isPublic($oldpath);
-		if($public_file){ 
-			PublicDB->updateFile($oldpath, $oldname, $newpath, $newname); # Update Public DB if public file is renamed.  
+		#use the new filepath to check if the file is public because the update has already happened.
+		my $public_file = Genstat->isPublic($newpath);
+		if($public_file)
+		{ 
+			# Update Public DB if public file is renamed.
+			#PublicDB->updateFile($oldpath, $oldname, $newpath, $newname);
+			
+			my @l = split(/\//, $dbfile);
+			my $owner = $l[1]; # get username
+			print "owner is $owner\n";
+			
+			PublicDB->removeFile($oldpath, $oldname);
+			PublicDB->addFile($newpath, $newname, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind);
 		} 
 
+		#print "fph is $fph\n";
 		my $alter = "ALTER TABLE $fph RENAME TO $nph";
 		$sth = $dbh->prepare("$alter");
 		$sth->execute();

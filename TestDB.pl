@@ -16,6 +16,7 @@ use UserDB;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 use Genstat; 
 
+removeFile();
 addfile();
 updateFile();
 #sql2();
@@ -135,15 +136,15 @@ while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){
 
 sub removeFile{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
-	my $db = "Files/TestUser/.user.db";
-	my $filepath = "Files/user/110.jpg";
-	$filepath = "passwords.txt"; 
-	$filepath = "HTML.pm";
-	my $fn = "110.jpg";
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/220.jpg";
+	#$filepath = "passwords.txt"; 
+	#$filepath = "HTML.pm";
+	my $fn = "220.jpg";
 	my $comments = " I have no commnets at this time";
 	my $tags = " THis is to be tage dlater on"; 
 	
-	print "Running REMOVE file command ... \n"; 
+	print "Running remove file command ... \n"; 
 	Genstat->removeFile($db, $filepath, $fn);
 	
 }
@@ -219,7 +220,7 @@ sub addfile{
 	my $comments = " I have no commnets at this time";
 	my $tags = " THis is to be tage dlater on"; 
 	
-	print "Running addfile command ... "; 
+	print "Running addfile command ... \n"; 
 	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);
 	
 }
@@ -232,7 +233,7 @@ sub updateFile
 	my $newpath = "Files/user/220.jpg";
 	my $newname = "220.jpg";
 	
-	print "Running updateFile command ... "; 
+	print "Running updateFile command ... \n"; 
 	Genstat->updateFile($db, $filepath, $fn, $newpath, $newname);	
 }
 

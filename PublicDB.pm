@@ -68,9 +68,8 @@ sub updateFile
 	
 	if(defined($href))
 	{
-		my $id = $href->{id}; #need to use deference operator '->' since we've a hash ref
-		my $public = $href->{public};
-		my $permissions = $href->{permissions};
+		#need to use deference operator '->' since we've a hash ref
+		my $owner = $href->{owner};
 		my $timemodified = "" . time();
 		my $timeadded = $href->{timeadded};
 		my $size = $href->{size};
@@ -82,9 +81,9 @@ sub updateFile
 		$sth = $dbh->prepare("$delete");
 		$sth->execute("$oldpath", "$oldname");
 
-		my $insert = "INSERT OR REPLACE INTO files (filepath, filename, public, permissions, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)";
+		my $insert = "INSERT OR REPLACE INTO files (filepath, filename, owner, timemodified, timeadded, size, kind, comments, tags) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)";
 		$sth = $dbh->prepare("$insert");
-		$sth->execute("$newpath", "$newname", "$public", "$permissions", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
+		$sth->execute("$newpath", "$newname", "$owner", "$timemodified", "$timeadded", "$size", "$kind", "$comments", "$tags");
 	}
 	else
 	{
