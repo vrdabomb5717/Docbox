@@ -36,17 +36,17 @@ sub search
 
     foreach my $line (@filenames)
     {
-	$line =~ s/\///;
-	$line = "/" . "$line";
+		$line =~ s/\///;
+		$line = "/" . "$line";
 
-	#extract text of PDF, search for $query, and if search returns true, push file into list
-	my $exitcode = `pdftotext -q "$line" - | grep "$query"`;
-	$exitcode = $?;
+		#extract text of PDF, search for $query, and if search returns true, push file into list
+		my $exitcode = `pdftotext -q "$line" - | grep "$query"`;
+		$exitcode = $?;
 
-	if($exitcode == 0)
-	{
-	    push (@results, $line);
-	}
+		if($exitcode == 0)
+		{
+	    	push (@results, $line);
+		}
     }
 
     #search for all Word documents
@@ -55,17 +55,17 @@ sub search
 
     foreach my $line (@filenames)
     {
-	$line =~ s/\///;
-	$line = "/" . "$line";
+		$line =~ s/\///;
+		$line = "/" . "$line";
 
-	#extract text of Word document, search for $query, and if search returns true, push file into @results
-	my $doc = Text::Extract::Word->new("$line");
-	my $text = $doc->get_text();
+		#extract text of Word document, search for $query, and if search returns true, push file into @results
+		my $doc = Text::Extract::Word->new("$line");
+		my $text = $doc->get_text();
 
-	if($text =~ /"$query"/)
-	{
-	    push(@results, $line);
-	}
+		if($text =~ /"$query"/)
+		{
+	    	push(@results, $line);
+		}
     }
 
     
@@ -75,18 +75,18 @@ sub search
     
     #foreach my $line (@filenames)
     #{
-	#$line =~ s/\///;
-	#$line = "/" . "$line";
+		#$line =~ s/\///;
+		#$line = "/" . "$line";
 
-	#extract text of RTF file, search for $query, and if search returns true, push file into @results
-	#my $text;
-	#my $object = RTF::TEXT::Converter->new(output => \$text);
-	#$object->parse_string($line);
+		#extract text of RTF file, search for $query, and if search returns true, push file into @results
+		#my $text;
+		#my $object = RTF::TEXT::Converter->new(output => \$text);
+		#$object->parse_string($line);
 
-	#if($text =~ /"$query"/)
-	#{
-	    #push(@results, $line);
-	#}
+		#if($text =~ /"$query"/)
+		#{
+	    	#push(@results, $line);
+		#}
     #}
 
 

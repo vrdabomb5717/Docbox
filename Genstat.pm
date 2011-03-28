@@ -17,6 +17,8 @@ use warnings;
 use DBI;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 use PublicDB;
+use Text::Extract::Word;
+use RTF::TEXT::Converter;
 
 my $dbh; #declare db handle.  
 
@@ -90,7 +92,8 @@ sub addFile()
 	 
 	my $table_exists = Genstat->existsTable($fph);
 	
-	if($table_exists){ # if table already exists, DELETE it first
+	if($table_exists)
+	{ # if table already exists, DELETE it first
 		my $drop = "DROP TABLE $fph";
 		$sth = $dbh->prepare("$drop");
 		$sth->execute();
@@ -114,6 +117,44 @@ sub addFile()
 			$sth->execute($counts[0], $counts[1]);
 	    }
 
+	}
+	elsif($filepath =~ /\.pdf$/i)
+	{
+		my $text = `pdftotext -q $filepath`;  
+        my @splitted = getWordCount($text); 
+
+        foreach my $line(@splitted)
+        {
+			my @counts = split(' ', $line);
+            $sth->execute($counts[0], $counts[1]);
+        }
+	}
+	elsif($filepath =~ /\.doc$/i)
+	{
+		my $doc = Text::Extract::Word->new("$filepath");
+		my $text = $doc->get_text();
+		
+		my @splitted = getWordCount($text); 
+
+        foreach my $line(@splitted)
+        {
+			my @counts = split(' ', $line);
+            $sth->execute($counts[0], $counts[1]);
+        }
+	}
+	elsif($filepath =~ /\.rtf$/i)
+	{
+		my $text;
+		my $object = RTF::TEXT::Converter->new(output => \$text);
+		$object->parse_string("$filepath");
+		
+		my @splitted = getWordCount($text); 
+
+        foreach my $line(@splitted)
+        {
+			my @counts = split(' ', $line);
+            $sth->execute($counts[0], $counts[1]);
+        }
 	}
 	else
 	{
