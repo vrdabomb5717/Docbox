@@ -144,9 +144,11 @@ sub addFile()
 	}
 	elsif($filepath =~ /\.rtf$/i)
 	{
-		my $text;
-		my $object = RTF::TEXT::Converter->new(output => \$text);
-		$object->parse_string("$filepath");
+		#open RTF file and read data into $text
+		my $text = "";
+		open(my $fh, "$filepath");
+		my $object = RTF::TEXT::Converter->new(output => \text);
+		$object->parse_stream(\$fh);
 		
 		my @splitted = getWordCount($text); 
 
