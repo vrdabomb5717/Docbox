@@ -13,6 +13,8 @@ use Text::Extract::Word;
 #use RTF::TEXT::Converter;
 
 #search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
+
+#returns array where each element is a filepath with a result
 sub search
 {
     my ($self, $query, $homepath) = @_;
