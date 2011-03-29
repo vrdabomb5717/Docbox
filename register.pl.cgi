@@ -20,6 +20,7 @@ use CGI qw/:standard/;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
 use HTML; # generate docbox specific HTML
 use UserDB; # connects to user Database
+use Log; 
 
 my $q = CGI->new();
 
@@ -28,7 +29,7 @@ my $pass = $q->param('password'); #password
 my $email = $q->param('email'); #email
 my $firstname = $q->param('firstname'); #first name
 my $lastname = $q->param('lastname'); #last name
-
+my $ip = $ENV{'REMOTE_ADDR'};
 
 # Password hash will be hash of username concatenated with cleartext password without any spaces
 # NB: This will also be used as the user ID and passed around as user browses site.  
@@ -36,7 +37,9 @@ my $passhex = sha1_hex("$user"."$pass"); # encrypt  password
 
 if($ENV{REQUEST_METHOD} eq 'POST'){
 	&register(); # register user
-	&gotoLogin(); # return to login page	
+	&gotoLogin(); # return to login page
+	my $localtime = localtime();
+	Log->logReg("Registered user $user called $firstname $lastname successfully. IP=$ip and Time = $localtime");	
 }
 else {
 	HTML->start('Register Page');
