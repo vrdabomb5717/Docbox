@@ -92,10 +92,14 @@ sub addFile
 
 	
 	## Insert into Public DB if file is Public
-	# Argments are form: $filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind) = @_;
-	my @l = split(/\//, $dbfile);
-	my $username = $l[1]; # get username 
-	PublicDB->addFile($filepath, $filename, $username, $comments, $tags, $timemodified, $timeadded, $size, $kind);
+	my $public_file = Genstat->isPublic($filepath);
+	if($public_file)
+	{
+		# Argments are form: $filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind) = @_;
+		my @l = split(/\//, $dbfile);
+		my $username = $l[1]; # get username 
+		PublicDB->addFile($filepath, $filename, $username, $comments, $tags, $timemodified, $timeadded, $size, $kind);
+	}
 	
 	# if table already exists, DELETE it first
 	my $drop = "DROP TABLE IF EXISTS $fph";
@@ -314,7 +318,8 @@ sub removeFile
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
 	my $public_file = Genstat->isPublic($filepath);
-	if($public_file){ 
+	if($public_file)
+	{ 
 		PublicDB->removeFile($filepath, $filename); # Remove from Public DB if public file.  
 	} 
 	
