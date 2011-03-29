@@ -96,16 +96,11 @@ sub addFile
 	my @l = split(/\//, $dbfile);
 	my $username = $l[1]; # get username 
 	PublicDB->addFile($filepath, $filename, $username, $comments, $tags, $timemodified, $timeadded, $size, $kind);
-	 
-	my $table_exists = Genstat->existsTable($fph);
 	
 	# if table already exists, DELETE it first
-	if($table_exists)
-	{ 
-		my $drop = "DROP TABLE $fph";
-		$sth = $dbh->prepare("$drop");
-		$sth->execute();
-	} 
+	my $drop = "DROP TABLE IF EXISTS $fph";
+	$sth = $dbh->prepare("$drop");
+	$sth->execute();
 	
 	my $create = "CREATE TABLE $fph (id INTEGER PRIMARY KEY, word TEXT NOT NULL COLLATE NOCASE, count INTEGER NOT NULL, UNIQUE(word))";
 	my $cth = $dbh->prepare("$create");
@@ -254,10 +249,11 @@ sub getWordCount
 	return @output;
 }
 
-# Takes a plain text file Returns words in a sorted order list including word count like shown below. 
+# Takes a plain text file and returns words in a sorted order list including word count like shown below. 
 # List contains string of format: aWord itsCount
 # Internal method only
-sub getWordCountText{
+sub getWordCountText
+{
 	
 	my $filepath = $_[0];
 	my %word_list; #hash table to store words
@@ -293,7 +289,7 @@ sub getWordCountText{
 	return @output;
 }
 
-# Returns SHA hash of file path given.
+# Returns SHA1 hash of file path given.
 # This is to be used in naming the tables to be created when a user adds a new file. 
 #NOTE: In generating the tablenames, I take the filepath hash and a pre-append the letter "a"
 #This is to please DBI becasue it can't process table names starting with numbers.
@@ -325,7 +321,7 @@ sub removeFile
 	my $sth = $dbh->prepare("$delete");
 	$sth->execute("$filepath", "$filename");
 	
-	my $drop = "DROP TABLE $fph";
+	my $drop = "DROP TABLE IF EXISTS $fph";
 	$sth = $dbh->prepare("$drop");
 	$sth->execute();
 }

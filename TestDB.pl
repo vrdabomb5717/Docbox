@@ -14,14 +14,87 @@ use DBI;
 use UserDB;
 #use HTML::Template;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1 
-use Genstat; 
+use Genstat;
+use PublicDB;
+
+
+my $db = "Files/user/.user.db";
+my $filepath = "Files/user/220.jpg";
+my $oldpath = "Files/user/110.jpg";
+my $averagesize = Genstat->average_size($db);
+my $numfiles = Genstat->num_files($db);
+#print "The number of files in .user.db before removal is $numfiles.\n";
+print "The average size of files .user.db before removal is $averagesize.\n";
+
 
 removeFile();
+removePDF();
+removeDoc();
+removeRTF();
+
+my $newfiles = Genstat->num_files($db);
+print "numfiles is $numfiles and newfiles is $newfiles.\n";
+
+my $removesize = Genstat->average_size($db);
+print "The average size of files in .user.db after removal is $removesize.\n";
+
 addfile();
+
+my $addsize = Genstat->average_size($db);
+
+if($addsize != $averagesize)
+{
+	print "removeFile or addFile is broken.\n";
+	print "Alternatively, average_size is broken.\n";
+	#exit;
+}
+
+my $addnumfiles = Genstat->num_files($db);
+
+if ($addnumfiles != $newfiles + 1 && $addnumfiles != $numfiles)
+{
+	print "addFile is broken.\n";
+	print "Alternatively, num_files is broken.\n";
+	#exit;
+}
+
+
 updateFile();
-#sql2();
+
+my $fileid = Genstat->getFileID($db, $filepath);
+print "The fileid of $filepath is $fileid.\n";
+my $testpath = Genstat->getFilePathByID($db, $fileid);
+my $testname = Genstat->getFileNameByID($db, $fileid);
+print "The filename of $filepath is $testname.\n";
+
+if($filepath ne $testpath)
+{
+	print "The filepath and testpath are not the same. getFilePathByID is broken.\n";
+	#exit;
+}
+
+my $public = Genstat->isPublic("$filepath");
+
+if($public != 0)
+{
+	print "$filepath is public.\n";
+	
+	#my $publicnum = PublicDB->
+	
+}
+else
+{
+	print "$filepath is not public.\n";
+}
+
+addPDF();
+addDoc();
+addRTF();
+
 exit; 
 
+#sql2();
+exit;
 
 #print "Hello";
 
@@ -134,7 +207,8 @@ while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){
 	
 }
 
-sub removeFile{
+sub removeFile
+{
 	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
 	my $db = "Files/user/.user.db";
 	my $filepath = "Files/user/220.jpg";
@@ -146,7 +220,43 @@ sub removeFile{
 	
 	print "Running remove file command ... \n"; 
 	Genstat->removeFile($db, $filepath, $fn);
+}
+
+sub removePDF
+{
+	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/About Stacks.pdf";
+	my $fn = "About Stacks.pdf";
 	
+	print "Running remove PDF command ... \n"; 
+	Genstat->removeFile($db, $filepath, $fn);
+}
+
+sub removeDoc
+{
+	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/Halo 2.doc";
+	my $fn = "Halo 2.doc";
+	my $comments = "Halo 2 random document";
+	my $tags = "Halo fun gaming"; 
+	
+	print "Running remove Doc command ... \n"; 
+	Genstat->removeFile($db, $filepath, $fn);
+}
+
+sub removeRTF
+{
+	#my ($self, $filepath, $filename, $public, $comments, $tags) = @_;
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/Source Code License.rtf";
+	my $fn = "Source Code License.rtf";
+	my $comments = "random file lying around on my hard drive";
+	my $tags = "cs code license"; 
+	
+	print "Running remove RTF command ... \n"; 
+	Genstat->removeFile($db, $filepath, $fn);
 }
 
 sub w{
@@ -221,6 +331,44 @@ sub addfile{
 	my $tags = " THis is to be tage dlater on"; 
 	
 	print "Running addfile command ... \n"; 
+	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);
+	
+}
+
+sub addPDF
+{
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/About Stacks.pdf";
+	my $fn = "About Stacks.pdf";
+	my $comments = "Default PDF that came with Mac OSX";
+	my $tags = "cs apple tired";
+	
+	print "Running add PDF command ... \n"; 
+	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);	
+}
+
+sub addDoc
+{
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/Halo 2.doc";
+	my $fn = "Halo 2.doc";
+	my $comments = "Halo 2 random document";
+	my $tags = "Halo fun gaming";
+	
+	print "Running add Doc command ... \n"; 
+	Genstat->addFile($db, $filepath, $fn, "0", $comments, $tags);
+	
+}
+
+sub addRTF
+{
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/Source Code License.rtf";
+	my $fn = "Source Code License.rtf";
+	my $comments = "random file lying around on my hard drive";
+	my $tags = "apple code license";
+	
+	print "Running add RTF command ... \n"; 
 	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);
 	
 }

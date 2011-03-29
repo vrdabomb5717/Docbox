@@ -290,7 +290,8 @@ sub doc_search
 }
 
 #Returns all Publicly available files EXCEPT for the given user
-sub getFiles{
+sub getFiles
+{
 	
 	my ($self, $user) = @_;
     $user = '' if(!defined($user));
