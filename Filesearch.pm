@@ -9,7 +9,7 @@ package Filesearch;
 
 use strict;
 use warnings;
-use Text::Extract::Word;
+#use Text::Extract::Word;
 #use RTF::TEXT::Converter;
 
 #search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
@@ -56,11 +56,11 @@ sub search
     }
 
     #search for all Word documents
-    $files = `find "$homepath" -type f -name '*.doc' -print`;
-    @filenames = split(/\n/, $files);
+    #$files = `find "$homepath" -type f -name '*.doc' -print`;
+    #@filenames = split(/\n/, $files);
 
-    foreach my $line (@filenames)
-    {
+    #foreach my $line (@filenames)
+   # {
 		#removes the extra slash that find places in the path.
 		#I think these lines just undo each other's changes, but keeping them for now.
 		#$line =~ s/\///;
@@ -70,14 +70,14 @@ sub search
 		#extract text of Word document, search for $query
 		#if search returns true, push file into @results
 		
-		my $doc = Text::Extract::Word->new("$line");
-		my $text = $doc->get_text();
+	#	my $doc = Text::Extract::Word->new("$line");
+	#	my $text = $doc->get_text();
 		
-		if($text =~ /$query/i)
-		{
-	    	push(@results, $line);
-		}
-    }
+	#	if($text =~ /$query/i)
+	#	{
+	#   	push(@results, $line);
+	#	}
+    #}
 
     
     #search for all RTF files
@@ -100,10 +100,10 @@ sub search
 		#}
     #}
 
-	my %seen = ();
-	my @unique = grep { ! $seen{ $_ }++ } @results;
+	#my %seen = ();
+	#my @unique = grep { ! $seen{ $_ }++ } @results;
 
-    return @unique;    
+    return @results;    
 }
 
 #search for the query in the given filepath. Returns 0 if not in file, and 1 if query is present.
@@ -143,16 +143,16 @@ sub searchFile
 		}
 	}
 	
-	if($kind eq "doc")
-	{		
-		my $doc = Text::Extract::Word->new("$filepath");
-		my $text = $doc->get_text();
-		
-		if($text =~ /$query/i)
-		{
-	    	return 1;
-		}
-	}
+	#if($kind eq "doc")
+	#{		
+	#	my $doc = Text::Extract::Word->new("$filepath");
+	#	my $text = $doc->get_text();
+	#	
+	#	if($text =~ /$query/i)
+	#	{
+	#    	return 1;
+	#	}
+	#}
 	
 	return 0;
 }
