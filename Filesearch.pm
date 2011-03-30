@@ -10,7 +10,7 @@ package Filesearch;
 use strict;
 use warnings;
 use Text::Extract::Word;
-#use RTF::TEXT::Converter;
+use RTF::TEXT::Converter;
 
 #search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
 
@@ -82,23 +82,23 @@ sub search
     
     #search for all RTF files
     #$files = `find "$homepath" -type f -name '*.rtf' -print`;
-    #@filenames = split(/\n/, $files);
+   # @filenames = split(/\n/, $files);
     
-    #foreach my $line (@filenames)
-    #{
+  #  foreach my $line (@filenames)
+ #   {
 		#$line =~ s/\///;
 		#$line = "/" . "$line";
 
 		#extract text of RTF file, search for $query, and if search returns true, push file into @results
-		#my $text;
-		#my $object = RTF::TEXT::Converter->new(output => \$text);
-		#$object->parse_string($line);
+#		my $text;
+#		my $object = RTF::TEXT::Converter->new(output => \$text);
+#		$object->parse_string($line);
 
-		#if($text =~ /"$query"/i)
-		#{
-	    #	push(@results, $line);
-		#}
-    #}
+#		if($text =~ /$query/i)
+#		{
+#	    	push(@results, $line);
+#		}
+#    }
 
 	my %seen = ();
 	my @unique = grep { ! $seen{ $_ }++ } @results;
@@ -143,7 +143,7 @@ sub searchFile
 		}
 	}
 	
-	#oftentimes, grep can find the query for us. If it can't, try using Text::Extract::Word
+	#oftentimes, grep can find the query for us. If it can't, try extracting the Word or RTF's text and then search again.
 	if($kind eq "doc")
 	{		
 		my $doc = Text::Extract::Word->new("$filepath");
@@ -153,6 +153,22 @@ sub searchFile
 		{
 	    	return 1;
 		}
+	}
+	elsif($kind eq "rtf")
+	{
+			#extract text of RTF file, search for $query, and if search returns true, push file into @results
+			my $text;
+			my $object = RTF::TEXT::Converter->new(output => \$text);
+			open(my $fh, "$filepath") || die "The file could not be opened.\n";
+			$object->parse_string($fh);
+			
+			print "$text\n";
+			
+			if($text =~ /$query/i)
+			{
+		    	return 1;
+			}
+			
 	}
 	
 	return 0;
