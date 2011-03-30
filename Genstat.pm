@@ -434,7 +434,7 @@ sub isPublic
 # modifies a private file to make it public and adds it to the public db
 sub makePublic
 {
-	my ($self, $filepath) = @_;
+	my ($self, $dbfile, $filepath) = @_;
 	my $public = Genstat->isPublic($self, $filepath);
 	
 	
@@ -480,7 +480,7 @@ sub makePublic
 # modifies a public file to make it private and removes it from the public db
 sub makePrivate
 {
-	my ($self, $filepath) = @_;
+	my ($self, $dbfile, $filepath) = @_;
 	my $public = Genstat->isPublic($self, $filepath);
 	
 	my $fph = getTableHash($filepath);

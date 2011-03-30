@@ -91,6 +91,8 @@ addPDF();
 addDoc();
 addRTF();
 
+changePublic();
+
 exit; 
 
 #sql2();
@@ -257,6 +259,26 @@ sub removeRTF
 	
 	print "Running remove RTF command ... \n"; 
 	Genstat->removeFile($db, $filepath, $fn);
+}
+
+sub changePublic
+{
+	#doc is initially private, pdf and rtf are initially public
+	my $db = "Files/user/.user.db";
+	my $pdf = "Files/user/About Stacks.pdf";
+	my $doc = "Files/user/Halo 2.doc";
+	my $rtf = "Files/user/Source Code License.rtf";
+	
+	my $numfiles = PublicDB->num_files();
+	print "The number of public files before changePublic is $numfiles.\n";	
+	
+	Genstat->makePrivate($dbfile, $pdf);
+	Genstat->makePublic($dbfile, $doc);
+	Genstat->makePrivate($dbfile, $rtf);
+	
+	$numfiles = PublicDB->num_files();
+	
+	print "The number of public files is now $numfiles.\n";	
 }
 
 sub w{
