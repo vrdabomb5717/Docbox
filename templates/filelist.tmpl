@@ -8,7 +8,7 @@
 	<form action="group.pl.cgi?uid=<TMPL_VAR NAME="userid">" method="post">
     
     
-    <!--Post a Hidden Value to indicate that we're visiting group page for the First page -->
+    <!--Post a Hidden Value to indicate that we're visiting "group file operation page" for the First page -->
      <input type="hidden" name="firstvisit" value="1"> 
     
     <p align="center"><a href=upload_page.pl.cgi?uid=<TMPL_VAR NAME="userid">> Upload a New File to DocBox</a> |
@@ -49,7 +49,7 @@
     <tr >
         <td >  
         <!--<input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="dirname">"> Don't Enable Directory Grouping-->
-        <img alt="" height="24" src="images/dir.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="dirname">  </a> 
+        <img alt="" height="28" src="images/dir.png" width="32" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="dirname"> </a> 
         </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
@@ -69,11 +69,11 @@
     <tr >
         <td > 
          <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="fid">">
-        <img alt="" height="24" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
+        <img alt="" height="27" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
         <td align="left"> 
-            <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download <TMPL_VAR NAME="filename">" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
+            <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download <TMPL_VAR NAME="filename">" height="26" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
             
             
             <!-- Old Code: Shows image link to copy / rename operations. 

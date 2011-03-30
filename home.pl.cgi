@@ -33,6 +33,8 @@ my $dir = $q->param('dir'); # get current directory relative to the User's Home 
 
 $dir = '' if !(defined($dir)); # if dir is not given in query string, set it to empty. 
 
+
+
 my $valid = UserDB->validateUser($uid); # validate user correctly logged in, redirect to homepage otherwise. 
 if($valid == 0){
 	exit; # stop running of user is not logged in. 
@@ -48,6 +50,9 @@ listFiles();
 my $name = UserDB->getName($uid); 
 $template->param(user => $name);
 $template->param(userid => $uid);
+
+
+
 
 # send the obligatory Content-Type
 print "Content-Type: text/html\n\n";
@@ -91,8 +96,20 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 			$size = sprintf("%.2f", $size); # round to 2 dps. 
 			
 			# set query string for opening directory. 
-			my $querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
-			
+			#my $querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
+			my $querystring ;
+			if($dir eq ''){ # if no directory specified, then $file handle will be link to directory
+				 $querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
+			}
+			else{ # if there is a dir path specified, already, use that as basis for opening this directory. This allows us to do directory tree traversal. 
+				$querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$dir\/$file";
+				
+				## Show up Arrow to up one level. 	
+				my $up_one_level = "home.pl.cgi\?uid=$uid";
+				$template->param(parentlevel => 1);
+				$template->param(upquery => $up_one_level);
+				
+			}
 			# set query string for download script
 			my $downloadquery = "download.pl.cgi\?uid=$uid\&filename=$file" . "\&directorypath=$dir";
 			my %row = (

@@ -49,8 +49,8 @@ if(!defined($dir)){
 	$dir = '';
 }
 
-if($dir ne ''){ ## Only IF directory path NOT empty, then append the source filepath
-	$sourcefilepath = "Files/$user/$dir";	
+if($dir ne ''){ ## Only IF directory path NOT empty, then append dir to the source filepath
+	$sourcefilepath = "Files/$user/$dir/";	
 }
 
 my $filename = $q->param('filename');
@@ -169,14 +169,14 @@ if($copyfilename){ # if copyfilename field specified
 	
 	## Update Database. 
 	my $dbfile = "Files/$user/.user.db";
-	my $hash_ref = Genstat->getFileRecord($source); # Supply sourcepath b'se DB not yet updated. 
+	my $hash_ref = Genstat->getFileRecord($dbfile, $source); # Supply sourcepath b'se DB not yet updated. 
 	
 	## Copy over Old File Record Details
 	my $public = $hash_ref->{public};
 	my $comments = $hash_ref->{comments};
 	my $tags = $hash_ref->{tags};
 	
-	Genstat->addFile($dest, $copyfilename, $public, $comments, $tags); # arguments: $filepath, $filename, $public, $comments, $tags
+	Genstat->addFile($dbfile, $dest, $copyfilename, $public, $comments, $tags); # arguments: $filepath, $filename, $public, $comments, $tags
 	
 	
 	## Log Successful operation
