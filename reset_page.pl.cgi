@@ -22,7 +22,7 @@ my $template = HTML::Template->new(filename => 'templates/reset.tmpl');
 my $query_length = length();
 
 
-if(defined($ENV{"QUERY_STRING"})){ # if query string empty, means that user just visited us to reset pass.  
+if(($ENV{"QUERY_STRING"} eq '')){ # if query string empty, means that user just visited us to reset pass.  
 	$template->param(resetpage => 1); # toggle reset password page on
 	print $q->header(); # print http headers
 	print $template->output();

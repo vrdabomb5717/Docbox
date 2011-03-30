@@ -63,14 +63,16 @@ sub write_msg{ # write msg to $msg_body
 	my $strlen = -1 * length($script_name); #negative to so that we start counting at end of string. 
 	my $dirpath = substr($file,0,$strlen); # strlen is NEGATIVE
 	
-	my $base = "http://" . "$server" . "$dirpath" . "reset.pl.cgi";
+	$dirpath = "/~jjm2190/public/project/"; # hard-set for project submission. 
+	
+	my $base = "http://" . "$server" . "$dirpath" . "reset_page.pl.cgi";
 	my $query="\?uid=$uid"; # set query string. 
 	$resetlink = "$base" . "$query"; 
 	$msg_body = 
 "Dear $fname, 
 Thank you for using DocBox. At your request, we are sending you a link to reset your password. Please follow the link below in your web browser to perform the password reset.
 
-$resetlink; 
+$resetlink 
 
 If you did not initiate the password reset, please disregard this email.
 
