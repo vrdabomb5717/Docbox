@@ -450,7 +450,7 @@ sub makePublic
 		my $select = "SELECT * FROM files WHERE filepath = :1";
 		$sth = $dbh->prepare("$select");
 
-		$sth->execute($filename);
+		$sth->execute($filepath);
 
 		# Retrieve hash reference to result from running query.
 		# This will be defined if the query returned more than 0 results.
