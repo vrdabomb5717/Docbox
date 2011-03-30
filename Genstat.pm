@@ -10,6 +10,11 @@
 ## Still to DO:
 # * Make sure RTF support works, and that renaming files works as planned.
 
+
+BEGIN{
+	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
+}
+
 package Genstat;
 
 use strict;
