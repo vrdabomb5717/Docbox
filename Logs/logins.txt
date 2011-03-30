@@ -8,3 +8,5 @@ test logged in successfully from IP address 0:0:0:0:0:0:0:1 at Sun Mar 27 03:39:
 asdf login attempt failed from IP address 0:0:0:0:0:0:0:1 at Tue Mar 29 21:27:55 2011
 test login attempt failed from IP address 0:0:0:0:0:0:0:1 at Tue Mar 29 21:28:15 2011
 test logged in successfully from IP address 0:0:0:0:0:0:0:1 at Tue Mar 29 21:28:34 2011
+test login attempt failed from IP address 0:0:0:0:0:0:0:1 at Wed Mar 30 06:04:47 2011
+user logged in successfully from IP address 0:0:0:0:0:0:0:1 at Wed Mar 30 06:04:55 2011

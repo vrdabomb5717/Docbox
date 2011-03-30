@@ -72,7 +72,7 @@ sub addFile
 	
 	#extracts filetype from the filename	
 	my @suffix = split('\.', $filename);
-	my $length = scalar(@suffix);
+	my $length = int(@suffix);
 	
 	if(-T "$filepath") # if file is a text file
 	{
@@ -114,7 +114,7 @@ sub addFile
 	$insert = "INSERT INTO $fph (word, count) VALUES (:2, :3)";
 	$sth = $dbh->prepare("$insert");
 
-	if(-T "$filepath")
+	if(-T "$filepath" )  
 	{
 		 
 		my @splitted = getWordCountText($filepath);
@@ -128,7 +128,7 @@ sub addFile
 	}
 	elsif($kind eq "pdf")
 	{
-		my $text = `pdftotext -q $filepath`;  
+		my $text = `pdftotext -q "$filepath" -`;  
         my @splitted = getWordCount($text); 
 
         foreach my $line(@splitted)

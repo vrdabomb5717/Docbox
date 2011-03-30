@@ -26,3 +26,7 @@ Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/host
 Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 05:02:24 2011
 test successfully moved Files/test/testdir/activation code.txt to Files/test/t1/activation code.txt at Wed Mar 30 05:06:50 2011. IP = 0:0:0:0:0:0:0:1
 test successfully moved Files/test/testdir/hosts to Files/test/t1/hosts at Wed Mar 30 05:06:50 2011. IP = 0:0:0:0:0:0:0:1
+Upload file operation by user at IP 0:0:0:0:0:0:0:1 Succedded. File Files/user/Computer Science Theory Midterm Cheat Sheet.pdf created at Wed Mar 30 06:07:10 2011
+Upload file operation by user at IP 0:0:0:0:0:0:0:1 Succedded. File Files/user/Computer Science Theory Midterm Cheat Sheet.pdf created at Wed Mar 30 06:11:06 2011
+Delete Operation by user at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/user/Computer Science Theory Midterm Cheat Sheet.pdf. Time:Wed Mar 30 06:14:10 2011
+Delete Operation by user at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/user/Homework 2.pdf. Time:Wed Mar 30 06:42:28 2011
