@@ -21,6 +21,8 @@ use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files.
 use Genstat; 
 use File::Copy; # provides functionality to copy and rename files
+use Log;
+
 
 my $q = CGI->new();
 my $uid = $q->param('uid'); # user id (token) of current user.
@@ -118,7 +120,7 @@ else{ ## Try to do File Grouping.
 		Genstat->updateFile($dbfile, $oldpath, $filename, $newpath, $filename); # arguments are: $dbfile, $oldpath, $oldname, $newpath, $newname
 		
 		## Log Group OP. 
-		my $time = locatime();
+		my $time = localtime();
 		Log->log("$user successfully moved $oldpath to $newpath at $time. IP = $ip");     	
 	}
 	

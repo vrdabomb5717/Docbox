@@ -24,3 +24,5 @@ Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/host
 Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 05:01:41 2011
 Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 05:02:05 2011
 Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 05:02:24 2011
+test successfully moved Files/test/testdir/activation code.txt to Files/test/t1/activation code.txt at Wed Mar 30 05:06:50 2011. IP = 0:0:0:0:0:0:0:1
+test successfully moved Files/test/testdir/hosts to Files/test/t1/hosts at Wed Mar 30 05:06:50 2011. IP = 0:0:0:0:0:0:0:1
