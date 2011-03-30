@@ -264,7 +264,7 @@ sub removeRTF
 sub changePublic
 {
 	#doc is initially private, pdf and rtf are initially public
-	my $db = "Files/user/.user.db";
+	my $dbfile = "Files/user/.user.db";
 	my $pdf = "Files/user/About Stacks.pdf";
 	my $doc = "Files/user/Halo 2.doc";
 	my $rtf = "Files/user/Source Code License.rtf";
