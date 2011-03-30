@@ -18,8 +18,9 @@
     </p>
     
     <form action="search.pl.cgi?uid=<TMPL_VAR NAME="userid">" method="post">
-    <p> <strong>Search Query : </strong><input type="textarea" name="query"> <br>
-        <strong>Personal/Public Files: </strong>  
+    <p> <strong>Search Query : </strong><input type="textarea" name="query" size="30"> <br>
+    
+    <strong>Personal/Public Files: </strong>  
                 <select name="scope">
                 <option>Personal</option>
                 <option>Public</option>
@@ -29,6 +30,9 @@
                 <select name="searchtype">
                 <option>Filenames</option>
                 <option>Documents</option>
+                <option>Comments</option>
+                <option>Tags</option>
+                <option>File Type</option>
                 </select> <br>
             <input type="submit" value="Run Search">
     
@@ -41,8 +45,13 @@
    
     <p>
 
-    
-    
+<TMPL_IF NAME="noresult">
+
+    <h4> <p class="error">No Files Found that match specified query.  </h4>
+ </TMPL_IF>
+
+
+ 
 <!--Show Search Results -->
  <TMPL_IF NAME="results">
 	<h3> Search Results </h3>
@@ -58,7 +67,7 @@
 <TMPL_LOOP NAME="list_loop">
     <tr >
         <td > 
-         <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="filename">">
+        <!-- <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="filename">"> Don't show Checkbox-->
         <img alt="" height="24" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
