@@ -24,7 +24,7 @@ use Log;
 
 # Need to handle case when file size too big
 # Code below causes CLIC webserver to show 500 Internal error, when size over limit. 
-#$CGI::POST_MAX = (1024*1024) * 25;  # maximum upload filesize is 25 Megabytes
+$CGI::POST_MAX = (1024*1024) * 25;  # maximum upload filesize is 25 Megabytes
 
 my $q = CGI->new(); # make CGI object
 my $uid = $q->url_param('uid'); # because uid is passed over query string.
@@ -80,7 +80,7 @@ sub savefile { # Process uploaded File
 	
 	    #my $io_handle = $lightweight_fh->handle; # Change the handle to one compatible with IO::Handle:
 	    
-	    open (OUTFILE,">$path/$filename") || die HTML->Error("open for writing","$path/$filename"); # Open File for Writing. If File Exists, It will be overwritten.
+	    open (OUTFILE,">$path/$filename") || die HTML->Error("open for writing","$path/$filename. Please Make Sure the File is Under 20MBs"); # Open File for Writing. If File Exists, It will be overwritten.
 	
 	    # switch file output only to Binmode. This ensures that all data will be be preserved regardless of file format.
 	    # Note that switching to binmode on file handles causes a server error on CLIC webserver, so don't do that. 
