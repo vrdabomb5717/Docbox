@@ -3,7 +3,7 @@
 # TestDB
 # Test Code to test UserDB module works correctly 
 # Tests registeration and user authentication query
-# Authors: Jervis
+# Authors: Jervis and Varun
 # March 02, 2011
  
 BEGIN{
@@ -18,91 +18,15 @@ use Genstat;
 use PublicDB;
 
 
-
-
 #my $dbfile = "Files/$user/.user.db";
 #Genstat->removeFile("Files/test/.user.db", "Files/test/pub/copy-extra.txt",  "copy-extra.txt");  # argumetns are : $dbfile, $filepath, $filename
+
+varuntest();
+exit; 
 
 my $text = `pdftotext -q "Files/user/Homework2.pdf" -`; 
 print "RAAAAA\n $text";
 exit;
-
-my $db = "Files/user/.user.db";
-my $filepath = "Files/user/220.jpg";
-my $oldpath = "Files/user/110.jpg";
-my $averagesize = Genstat->average_size($db);
-my $numfiles = Genstat->num_files($db);
-#print "The number of files in .user.db before removal is $numfiles.\n";
-print "The average size of files .user.db before removal is $averagesize.\n";
-
-
-removeFile();
-removePDF();
-removeDoc();
-removeRTF();
-
-my $newfiles = Genstat->num_files($db);
-print "numfiles is $numfiles and newfiles is $newfiles.\n";
-
-my $removesize = Genstat->average_size($db);
-print "The average size of files in .user.db after removal is $removesize.\n";
-
-addfile();
-
-my $addsize = Genstat->average_size($db);
-
-if($addsize != $averagesize)
-{
-	print "removeFile or addFile is broken.\n";
-	print "Alternatively, average_size is broken.\n";
-	#exit;
-}
-
-my $addnumfiles = Genstat->num_files($db);
-
-if ($addnumfiles != $newfiles + 1 && $addnumfiles != $numfiles)
-{
-	print "addFile is broken.\n";
-	print "Alternatively, num_files is broken.\n";
-	#exit;
-}
-
-
-updateFile();
-
-my $fileid = Genstat->getFileID($db, $filepath);
-print "The fileid of $filepath is $fileid.\n";
-my $testpath = Genstat->getFilePathByID($db, $fileid);
-my $testname = Genstat->getFileNameByID($db, $fileid);
-print "The filename of $filepath is $testname.\n";
-
-if($filepath ne $testpath)
-{
-	print "The filepath and testpath are not the same. getFilePathByID is broken.\n";
-	#exit;
-}
-
-my $public = Genstat->isPublic("$filepath");
-
-if($public != 0)
-{
-	print "$filepath is public.\n";
-	
-	#my $publicnum = PublicDB->
-	
-}
-else
-{
-	print "$filepath is not public.\n";
-}
-
-addPDF();
-addDoc();
-addRTF();
-
-changePublic();
-
-exit; 
 
 #sql2();
 exit;
@@ -188,6 +112,86 @@ exit;
 #}
 
  
+}
+
+#comprehensive test to check removing files, adding them, updating them, changing the public status,
+#and most of the public statistic calls.
+sub varuntest
+{
+	my $db = "Files/user/.user.db";
+	my $filepath = "Files/user/220.jpg";
+	my $oldpath = "Files/user/110.jpg";
+	my $averagesize = Genstat->average_size($db);
+	my $numfiles = Genstat->num_files($db);
+	#print "The number of files in .user.db before removal is $numfiles.\n";
+	print "The average size of files .user.db before removal is $averagesize.\n";
+
+
+	removeFile();
+	removePDF();
+	removeDoc();
+	removeRTF();
+
+	my $newfiles = Genstat->num_files($db);
+	print "numfiles is $numfiles and newfiles is $newfiles.\n";
+
+	my $removesize = Genstat->average_size($db);
+	print "The average size of files in .user.db after removal is $removesize.\n";
+
+	addfile();
+
+	my $addsize = Genstat->average_size($db);
+
+	if($addsize != $averagesize)
+	{
+		print "removeFile or addFile is broken.\n";
+		print "Alternatively, average_size is broken.\n";
+		#exit;
+	}
+
+	my $addnumfiles = Genstat->num_files($db);
+
+	if ($addnumfiles != $newfiles + 1 && $addnumfiles != $numfiles)
+	{
+		print "addFile is broken.\n";
+		print "Alternatively, num_files is broken.\n";
+		#exit;
+	}
+
+
+	updateFile();
+
+	my $fileid = Genstat->getFileID($db, $filepath);
+	print "The fileid of $filepath is $fileid.\n";
+	my $testpath = Genstat->getFilePathByID($db, $fileid);
+	my $testname = Genstat->getFileNameByID($db, $fileid);
+	print "The filename of $filepath is $testname.\n";
+
+	if($filepath ne $testpath)
+	{
+		print "The filepath and testpath are not the same. getFilePathByID is broken.\n";
+		#exit;
+	}
+
+	my $public = Genstat->isPublic("$filepath");
+
+	if($public != 0)
+	{
+		print "$filepath is public.\n";
+
+		#my $publicnum = PublicDB->
+
+	}
+	else
+	{
+		print "$filepath is not public.\n";
+	}
+
+	addPDF();
+	addDoc();
+	addRTF();
+
+	changePublic();
 }
 
 
@@ -358,8 +362,8 @@ sub addfile{
 	#$filepath = "passwords.txt"; 
 	#$filepath = "HTML.pm";
 	my $fn = "110.jpg";
-	my $comments = " I have no commnets at this time";
-	my $tags = " THis is to be tage dlater on"; 
+	my $comments = " I have no comments at this time.";
+	my $tags = "This is to be tagged later on"; 
 	
 	print "Running addfile command ... \n"; 
 	Genstat->addFile($db, $filepath, $fn, "1", $comments, $tags);

@@ -27,7 +27,7 @@ sub search
 
     #search text files and RTF files, and return those results
 	#silenced all error messages so they don't interfere with results.
-    my $files = `grep -lrs "$query" "$homepath" `;
+    my $files = `grep -ilrs "$query" "$homepath" `;
     #$files =~ s/' '/\\' '/g;
     my @results = split(/\n/, $files);
     
@@ -46,7 +46,7 @@ sub search
 		#$line = "/" . "$line";
 
 		#extract text of PDF, search for $query, and if search returns true, push file into list
-		my $exitcode = `pdftotext -q "$line" - | grep "$query"`;
+		my $exitcode = `pdftotext -q "$line" - | grep -ils "$query"`;
 		$exitcode = $?;
 
 		if($exitcode == 0)
@@ -72,8 +72,8 @@ sub search
 		
 		my $doc = Text::Extract::Word->new("$line");
 		my $text = $doc->get_text();
-
-		if($text =~ /"$query"/)
+		
+		if($text =~ /$query/ix)
 		{
 	    	push(@results, $line);
 		}
@@ -94,7 +94,7 @@ sub search
 		#my $object = RTF::TEXT::Converter->new(output => \$text);
 		#$object->parse_string($line);
 
-		#if($text =~ /"$query"/)
+		#if($text =~ /"$query"/i)
 		#{
 	    #	push(@results, $line);
 		#}
@@ -102,6 +102,57 @@ sub search
 
 
     return @results;    
+}
+
+#search for the query in the given filepath. Returns 0 if not in file, and 1 if query is present.
+#Query is case-insensitive.
+sub searchFile
+{
+	my ($self, $query, $filepath) = @_;
+	
+	#extracts filetype from the filename	
+	my @suffix = split('\.', $filepath);
+	my $length = int(@suffix);
+	
+	#use extension to determine type
+	my $kind = $suffix[$length - 1];
+	$kind = lc($kind);
+	#print "kind is $kind.\n";
+	
+	if($kind eq "pdf")
+	{
+		#extract text of PDF, search for $query, and if search returns true, return
+		my $exitcode = `pdftotext -q "$filepath" - | grep -ils "$query"`;
+		$exitcode = $?;
+
+		if($exitcode == 0)
+		{
+	    	return 1;
+		}
+	}
+	elsif($kind eq "doc")
+	{
+		my $doc = Text::Extract::Word->new("$filepath");
+		my $text = $doc->get_text();
+		#print "$text\n";
+		
+		if($text =~ /$query/ix)
+		{
+	    	return 1;
+		}
+	}
+	else
+	{
+		my $files = `grep -ils "$query" "$filepath" `;
+		my $exitcode = $?;
+
+		if($exitcode == 0)
+		{
+	    	return 1;
+		}
+	}
+	
+	return 0;
 }
 
 1;
