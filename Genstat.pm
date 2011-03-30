@@ -357,7 +357,7 @@ sub updateFile
 		#need to use deference operator '->' since we've a hash ref
 		my $public = $href->{public};
 		my $permissions = $href->{permissions};
-		my $timemodified = "" . time();
+		my $timemodified = time();
 		my $timeadded = $href->{timeadded};
 		my $size = $href->{size};
 		my $kind = $href->{kind};
@@ -384,7 +384,6 @@ sub updateFile
 			
 			my @l = split(/\//, $dbfile);
 			my $owner = $l[1]; # get username
-			print "owner is $owner\n";
 			
 			PublicDB->removeFile($oldpath, $oldname);
 			PublicDB->addFile($newpath, $newname, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind);
@@ -404,7 +403,7 @@ sub updateFile
 
 
 
-# Checks if a filename is public
+# Checks if a filename is public. Return 1 if public, and 0 if private.
 # internal method only 
 sub isPublic
 {
@@ -429,10 +428,91 @@ sub isPublic
 	else
 	{
 		return 0;
-	}
-	
-	
+	}	
 }
+
+# modifies a private file to make it public and adds it to the public db
+sub makePublic
+{
+	my ($self, $filepath) = @_;
+	my $public = Genstat->isPublic($self, $filepath);
+	
+	
+	#if file is private, add it to public db. Otherwise, do nothing.
+	if($public == 0)
+	{
+		my $update = "UPDATE files SET public=1, timemodified = :1";
+		my $sth = $dbh->prepare("$update");
+		my $timemodified = time();
+		$sth->execute($timemodified);
+		
+		#capture the file's data so we can add it to the public db
+		my $select = "SELECT * FROM files WHERE filepath = :1";
+		my $sth = $dbh->prepare("$select");
+
+		$sth->execute($oldpath);
+
+		# Retrieve hash reference to result from running query.
+		# This will be defined if the query returned more than 0 results.
+
+		my $href = $sth->fetchrow_hashref; 
+
+		if(defined($href))
+		{
+			#need to use deference operator '->' since we've a hash ref
+			my $filename = $href->{filename};
+			my $timeadded = $href->{timeadded};
+			my $size = $href->{size};
+			my $kind = $href->{kind};
+			my $comments = $href->{comments};
+			my $tags = $href->{tags};
+			
+			my @l = split(/\//, $dbfile);
+			my $owner = $l[1]; # get username
+			
+			PublicDB->addFile($filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind);
+			
+		}
+		
+	}
+}
+
+# modifies a public file to make it private and removes it from the public db
+sub makePrivate
+{
+	my ($self, $filepath) = @_;
+	my $public = Genstat->isPublic($self, $filepath);
+	
+	my $fph = getTableHash($filepath);
+	
+	#if file is public, remove it from public db. Otherwise, do nothing.
+	if($public == 1)
+	{
+		my $update = "UPDATE files SET public=0, timemodified = :1";
+		my $sth = $dbh->prepare("$update");
+		my $timemodified = time();
+		$sth->execute($timemodified);
+		
+		#get filename so we can remove file from public db
+		my $select = "SELECT * FROM files WHERE filepath = :1";
+		my $sth = $dbh->prepare("$select");
+
+		$sth->execute($filepath);
+
+		# Retrieve hash reference to result from running query.
+		# This will be defined if the query returned more than 0 results.
+
+		my $href = $sth->fetchrow_hashref; 
+
+		if(defined($href))
+		{
+			#need to use deference operator '->' since we've a hash ref
+			my $filename = $href->{filename};
+			PublicDB->removeFile($filepath, $filename);
+		}
+	}
+}
+
 
 #returns reference to a hash that contains each row, with the id used as the hash's key
 sub get_public

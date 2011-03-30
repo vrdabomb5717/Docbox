@@ -70,7 +70,7 @@ sub updateFile
 	{
 		#need to use deference operator '->' since we've a hash ref
 		my $owner = $href->{owner};
-		my $timemodified = "" . time();
+		my $timemodified = time();
 		my $timeadded = $href->{timeadded};
 		my $size = $href->{size};
 		my $kind = $href->{kind};
