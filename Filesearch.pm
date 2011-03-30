@@ -10,7 +10,7 @@ package Filesearch;
 use strict;
 use warnings;
 use Text::Extract::Word;
-use RTF::TEXT::Converter;
+#use RTF::TEXT::Converter;
 
 #search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
 
@@ -154,22 +154,23 @@ sub searchFile
 	    	return 1;
 		}
 	}
-	elsif($kind eq "rtf")
-	{
+	#elsif($kind eq "rtf")
+	#{
 			#extract text of RTF file, search for $query, and if search returns true, push file into @results
-			my $text;
-			my $object = RTF::TEXT::Converter->new(output => \$text);
-			open(my $fh, "$filepath") || die "The file could not be opened.\n";
-			$object->parse_string($fh);
+	#		my $text;
+	#		my $object = RTF::TEXT::Converter->new(output => \$text);
+			#open(my $fh, "$filepath") || die "The file could not be opened.\n";
+		
+	#		$object->parse_string($rtf);
 			
-			print "$text\n";
+	#		print "$text\n";
 			
-			if($text =~ /$query/i)
-			{
-		    	return 1;
-			}
+	#		if($text =~ /$query/i)
+	#		{
+	#	    	return 1;
+	#		}
 			
-	}
+	#}
 	
 	return 0;
 }
