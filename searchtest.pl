@@ -15,9 +15,9 @@ my ($regex, $path) = @ARGV;
 #simple error check to make sure a regular and filepath were actually provided
 if (defined($regex) && defined($path))
 {
-	search($regex, $path);
+	#search($regex, $path);
 	
-	#searchFile($regex, $path);
+	searchFile($regex, $path);
 	
 }
 else

@@ -73,7 +73,7 @@ sub search
 		my $doc = Text::Extract::Word->new("$line");
 		my $text = $doc->get_text();
 		
-		if($text =~ /$query/ix)
+		if($text =~ /$query/i)
 		{
 	    	push(@results, $line);
 		}
@@ -132,23 +132,23 @@ sub searchFile
 	    	return 1;
 		}
 	}
-	elsif($kind eq "doc")
-	{
-		my $doc = Text::Extract::Word->new("$filepath");
-		my $text = $doc->get_text();
-		#print "$text\n";
-		
-		if($text =~ /$query/ix)
-		{
-	    	return 1;
-		}
-	}
 	else
 	{
 		my $files = `grep -ils "$query" "$filepath" `;
 		my $exitcode = $?;
 
 		if($exitcode == 0)
+		{
+	    	return 1;
+		}
+	}
+	
+	if($kind eq "doc")
+	{		
+		my $doc = Text::Extract::Word->new("$filepath");
+		my $text = $doc->get_text();
+		
+		if($text =~ /$query/i)
 		{
 	    	return 1;
 		}
