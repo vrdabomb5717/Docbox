@@ -17,6 +17,10 @@ use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 use Genstat;
 use PublicDB;
 
+#my $dbfile = "Files/$user/.user.db";
+Genstat->removeFile("Files/test/.user.db", "Files/test/pub/copy-extra.txt",  "copy-extra.txt");  # argumetns are : $dbfile, $filepath, $filename
+print "RAAAAA";
+exit;
 
 my $db = "Files/user/.user.db";
 my $filepath = "Files/user/220.jpg";

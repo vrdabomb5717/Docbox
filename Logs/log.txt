@@ -3,3 +3,6 @@ event
 event
 event
 Copy Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/public.txt and Destination:Files/test/pub/private-public.txt. Time:Wed Mar 30 03:23:46 2011
+Rename Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/private-public.txt and Destination:Files/test/pub/public-copy.txt. Time: Wed Mar 30 03:26:51 2011
+Copy Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/public-copy.txt and Destination:Files/test/pub/copy-extra.txt. Time:Wed Mar 30 03:27:35 2011
+Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/copy-extra.txt. Time:Wed Mar 30 03:29:37 2011

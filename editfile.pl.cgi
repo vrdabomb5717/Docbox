@@ -137,7 +137,7 @@ if($renamedfilename){ # if renmaedfilename field specified
 	if($success == 0){ ## check if rename failed
 		HTML->Error("Rename", "the File from $source to $dest "); # Print Error
 		my $time = localtime();
-		Log->log("Rename Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest. Time: $time");
+		Log->log("Rename Operation by $user at IP $ip Failed. Source:$source and Destination:$dest. Time: $time");
 		exit;
 	}
 	## Update Database.
@@ -146,7 +146,7 @@ if($renamedfilename){ # if renmaedfilename field specified
 	
 	## Log Successful operation
 	my $time = localtime();
-	Log->log("Rename Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest. Time: $time");
+	Log->log("Rename Operation by $user at IP $ip Succeeded. Source:$source and Destination:$dest. Time: $time");
 	
 	$op_template->param(operation => 'Rename');
 	print $op_template->output();
@@ -163,7 +163,7 @@ if($copyfilename){ # if copyfilename field specified
 	if($success == 0){ ## check if copy failed
 		HTML->Error("Copy", "the File from $source to $dest "); # Print Error
 		my $time = localtime();
-		Log->log("Copy Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest. Time:$time");
+		Log->log("Copy Operation by $user at IP $ip Failed. Source:$source and Destination:$dest. Time:$time");
 		exit;
 	}
 	
@@ -176,12 +176,12 @@ if($copyfilename){ # if copyfilename field specified
 	my $comments = $hash_ref->{comments};
 	my $tags = $hash_ref->{tags};
 	
-	Genstat->addFile($dbfile, $dest, $copyfilename, $public, $comments, $tags); # arguments: $filepath, $filename, $public, $comments, $tags
+	Genstat->addFile($dbfile, $dest, "$copyfilename.$extension", $public, $comments, $tags); # arguments: $filepath, $filename, $public, $comments, $tags
 	
 	
 	## Log Successful operation
 	my $time = localtime();
-	Log->log("Copy Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest. Time:$time");
+	Log->log("Copy Operation by $user at IP $ip Succeeded. Source:$source and Destination:$dest. Time:$time");
 	
 	
 	$op_template->param(operation => 'Copy');
@@ -199,7 +199,7 @@ if(defined($deleteoption)){
 		if($success == 0){ ## Check if delete operation failed
 			HTML->Error("Delete", "the File $file"); # Print Error
 			my $time = localtime();
-			Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file. Time:$time ");
+			Log->log("Delete Operation by $user at IP $ip Failed. Source:$file. Time:$time ");
 			exit;
 		}
 		
@@ -208,7 +208,7 @@ if(defined($deleteoption)){
 		Genstat->removeFile($dbfile, $file, $filename);  # argumetns are : $dbfile, $filepath, $filename
 		
 		my $time = localtime();
-		Log->log("Delete Operation by $user at IP $ip Succeeded. Source File:$file. Time:$time"); # Log Deletion. 
+		Log->log("Delete Operation by $user at IP $ip Succeeded. Source:$file. Time:$time"); # Log Deletion. 
 		
 		$op_template->param(operation => 'Delete');
 		print $op_template->output();
