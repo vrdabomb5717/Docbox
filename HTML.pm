@@ -45,7 +45,9 @@ EOF
 
 sub Error{  
    print "Content-type: text/html\n\n";  
-   print "The server can't $_[1] the $_[2]: $! \n";  
+   print "The server can't $_[1] the $_[2]: $! <br>";
+   my $prev = $ENV{'HTTP_REFERER'};
+   print "<a href=\"$prev\">Click Here </a> to go back and try again. <br> ";  
    exit;  
  }
 

@@ -140,6 +140,10 @@ if($renamedfilename){ # if renmaedfilename field specified
 		Log->log("Rename Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest. Time: $time");
 		exit;
 	}
+	## Update Database.
+	my $dbfile = "Files/$user/.user.db";
+	Genstat->updateFile($dbfile, $source, $filename, $dest, $renamedfilename); # takes arguments: $dbfile, $oldpath, $oldname, $newpath, $newname
+	
 	## Log Successful operation
 	my $time = localtime();
 	Log->log("Rename Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest. Time: $time");
@@ -162,6 +166,19 @@ if($copyfilename){ # if copyfilename field specified
 		Log->log("Copy Operation by $user at IP $ip Failed. Source File:$source and Destination:$dest. Time:$time");
 		exit;
 	}
+	
+	## Update Database. 
+	my $dbfile = "Files/$user/.user.db";
+	my $hash_ref = Genstat->getFileRecord($source); # Supply sourcepath b'se DB not yet updated. 
+	
+	## Copy over Old File Record Details
+	my $public = $hash_ref->{public};
+	my $comments = $hash_ref->{comments};
+	my $tags = $hash_ref->{tags};
+	
+	Genstat->addFile($dest, $copyfilename, $public, $comments, $tags); # arguments: $filepath, $filename, $public, $comments, $tags
+	
+	
 	## Log Successful operation
 	my $time = localtime();
 	Log->log("Copy Operation by $user at IP $ip Succeeded. Source File:$source and Destination:$dest. Time:$time");
@@ -185,8 +202,14 @@ if(defined($deleteoption)){
 			Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file. Time:$time ");
 			exit;
 		}
+		
+		## Update Database:
+		my $dbfile = "Files/$user/.user.db";
+		Genstat->removeFile($dbfile, $file, $filename);  # argumetns are : $dbfile, $filepath, $filename
+		
 		my $time = localtime();
-		Log->log("Delete Operation by $user at IP $ip Failed. Source File:$file. Time:$time");
+		Log->log("Delete Operation by $user at IP $ip Succeeded. Source File:$file. Time:$time"); # Log Deletion. 
+		
 		$op_template->param(operation => 'Delete');
 		print $op_template->output();
 		exit;
