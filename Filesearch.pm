@@ -100,8 +100,10 @@ sub search
 		#}
     #}
 
+	my %seen = ();
+	my @unique = grep { ! $seen{ $_ }++ } @results;
 
-    return @results;    
+    return @unique;    
 }
 
 #search for the query in the given filepath. Returns 0 if not in file, and 1 if query is present.
