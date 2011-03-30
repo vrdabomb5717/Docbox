@@ -18,7 +18,7 @@ use DBI;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 use PublicDB;
 use Text::Extract::Word;
-use RTF::TEXT::Converter;
+use File::Extract::RTF;
 
 my $dbh; #declare db handle.  
 
@@ -153,10 +153,8 @@ sub addFile
 	elsif($kind eq "rtf")
 	{
 		#open RTF file and read data into $text
-		my $text = "";
-		open(my $fh, "$filepath");
-		my $object = RTF::TEXT::Converter->new(output => \$text);
-		$object->parse_stream(\$fh);
+		my $object = File::Extract::RTF->extract("$filepath");
+		my $text = $object->text();
 		
 		my @splitted = getWordCount($text); 
 
