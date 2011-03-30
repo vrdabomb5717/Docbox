@@ -55,7 +55,11 @@ if($ENV{'REQUEST_METHOD'} ne 'POST'){
 }
 else {
 	$template->param(results => 1); # Show Search Results
-	search(); #run search
+	my $result_no = search(); #run search and check if any results found.  
+	if($result_no < 1){
+		$template->param(results => 0); # Don't Show Search Results
+		$template->param(noresult => 1); # Tell user no results found. 	
+	}
 	print $q->header(); 
 	print $template->output();
 	exit; # Exit script
@@ -133,6 +137,7 @@ sub search {
 				 
 		 	# call param to fill in the loop with the loop data by reference.
 			$template->param(list_loop => \@list);	
+			return int(@list); # return approx. no of results found.
 			
 		}
 		else { ## Search Filenames in Public Files
@@ -187,6 +192,7 @@ sub search {
 				 
 		 	# call param to fill in the loop with the loop data by reference.
 			$template->param(list_loop => \@list);
+			return int(@list); # return approx. no of results found.
 			
 		}
 		
@@ -200,6 +206,10 @@ sub search {
 			
 			## HTML Format the search results in a table
 			foreach my $path (@results){ 
+				
+				if($path eq "Files/$user/.user.db"){ # Skip User Db File if found. 
+					next; 
+				}
 				
 				my $row_hash_ref = Genstat->getFileByPath($dbfile, $path); # Get File record details. Arguments are $dbfile, $path
 				$fn = $row_hash_ref->{'filename'};
@@ -249,7 +259,7 @@ sub search {
 				 
 		 	# call param to fill in the loop with the loop data by reference.
 			$template->param(list_loop => \@list);		
-				
+			return int(@list); # return approx. no of results found. 	
 		}
 		else { ## Search  in Public Files
 			
@@ -311,6 +321,7 @@ sub search {
 				 
 		 	# call param to fill in the loop with the loop data by reference.
 			$template->param(list_loop => \@list);
+			return int(@list); # return approx. no of results found.
 		}		
 			
 	}

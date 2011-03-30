@@ -13,7 +13,11 @@ my ($regex, $path) = @ARGV;
 
 $regex = "user";
 $regex = "For convenience";
+
 $path = "Files/user/";
+
+$regex = "a"; 
+$path = "Files/test/";
 
 
 #simple error check to make sure a regular and filepath were actually provided
