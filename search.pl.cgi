@@ -285,8 +285,7 @@ sub search {
 				my $fid = $row_hash_ref->{'id'};
 		
 				## Check if File Contains query, if not skip to next iteration
-				my $result;
-				#$result = Filesearch($fp, $query); 213;# TO BE CHANGEd
+				my $result = Filesearch->searchFile($query, $fp);
 				if($result == 0){	
 					next; # go to next iteration
 				}
