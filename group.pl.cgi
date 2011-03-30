@@ -27,7 +27,7 @@ my $uid = $q->param('uid'); # user id (token) of current user.
 $uid = $q->url_param('uid') if (!defined($uid)); # for when we have mixed post/get data. 
 
 
-
+my $ip = $ENV{'REMOTE_ADDR'};
 my @fids = $q->param('selectedfiles'); # get list of fids on which to act on.  
 
 my $valid = UserDB->validateUser($uid); # validate user correctly logged in, redirect to homepage otherwise. 
@@ -115,7 +115,11 @@ else{ ## Try to do File Grouping.
 		## Update User DB with new paths.
 		my $oldpath = $filepath;  
 		my $newpath = "$dest" . "$filename";
-		Genstat->updateFile($dbfile, $oldpath, $filename, $newpath, $filename); # arguments are: $dbfile, $oldpath, $oldname, $newpath, $newname     	
+		Genstat->updateFile($dbfile, $oldpath, $filename, $newpath, $filename); # arguments are: $dbfile, $oldpath, $oldname, $newpath, $newname
+		
+		## Log Group OP. 
+		my $time = locatime();
+		Log->log("$user successfully moved $oldpath to $newpath at $time. IP = $ip");     	
 	}
 	
 	$op_template->param(success => 1); # Print Success message
