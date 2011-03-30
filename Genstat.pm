@@ -435,16 +435,16 @@ sub isPublic
 sub makePublic
 {
 	my ($self, $dbfile, $filepath) = @_;
-	my $public = Genstat->isPublic($self, $filepath);
+	my $public = isPublic($self, $filepath);
 	
 	
 	#if file is private, add it to public db. Otherwise, do nothing.
 	if($public == 0)
 	{
-		my $update = "UPDATE files SET public=1, timemodified = :1";
+		my $update = "UPDATE files SET public=1, timemodified = :1 WHERE filepath = :2";
 		my $sth = $dbh->prepare("$update");
 		my $timemodified = time();
-		$sth->execute($timemodified);
+		$sth->execute($timemodified, $filepath);
 		
 		#capture the file's data so we can add it to the public db
 		my $select = "SELECT * FROM files WHERE filepath = :1";
@@ -481,17 +481,15 @@ sub makePublic
 sub makePrivate
 {
 	my ($self, $dbfile, $filepath) = @_;
-	my $public = Genstat->isPublic($self, $filepath);
-	
-	my $fph = getTableHash($filepath);
+	my $public = isPublic($self, $filepath);
 	
 	#if file is public, remove it from public db. Otherwise, do nothing.
 	if($public == 1)
 	{
-		my $update = "UPDATE files SET public=0, timemodified = :1";
+		my $update = "UPDATE files SET public=0, timemodified = :1 WHERE filepath = :2";
 		my $sth = $dbh->prepare("$update");
 		my $timemodified = time();
-		$sth->execute($timemodified);
+		$sth->execute($timemodified, $filepath);
 		
 		#get filename so we can remove file from public db
 		my $select = "SELECT * FROM files WHERE filepath = :1";
