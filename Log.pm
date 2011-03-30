@@ -9,6 +9,7 @@
 
 package Log;
 use warnings; 
+use Fcntl ':flock'; # handle file  i/o
 
 sub log {
 	my($self, $event) = @_; 
@@ -33,6 +34,20 @@ sub logReg{
 	close FILE; # save changes
 		
 }
+
+# log DB errors
+sub Error{
+	my($self, $event) = @_; 
+	
+	open (FILE, ">>Logs/errors.txt"); # Open file for appending. Note this will create the file if it does not exist already. 
+	flock(FILE, LOCK_EX); # get file lock handle  
+	{ 
+		print (FILE "$event\n"); #Append to login file	
+	}
+	close FILE; # save changes
+		
+}
+
 
 
 1;

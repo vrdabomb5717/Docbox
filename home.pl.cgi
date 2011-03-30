@@ -22,6 +22,7 @@ use HTML;
 use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files.
 use Genstat; 
+use Log;
 #use File::Find;
 
 
@@ -33,6 +34,7 @@ my $dir = $q->param('dir'); # get current directory relative to the User's Home 
 
 $dir = '' if !(defined($dir)); # if dir is not given in query string, set it to empty. 
 
+my $ip = $ENV{'REMOTE_ADDR'};
 
 
 my $valid = UserDB->validateUser($uid); # validate user correctly logged in, redirect to homepage otherwise. 
@@ -172,10 +174,25 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 			$size =  $size/1024;
 			$size = sprintf("%.2f", $size); # round to 2 dps. 
 			
-			### Get File ID
+			### Get File ID and public setting. 
 			my $dbfile = "Files/$user/.user.db"; # set user db path
 			my $fid = Genstat->getFileID($dbfile, $filepath);
+			my $hash_ref = Genstat->getFileRecord($dbfile, $filepath);
 			
+			if($hash_ref == -1){ ## Log if anyfiles found that are not in the User DB. 
+				my $time = localtime();
+				Log->Error("$filepath exists does not exist in user $user Database. File System may potentially be out of sync with Database.  IP = $ip. $time");
+				next; # don't show file to user. 
+			}
+			
+			# Get user file privacy setting
+			my $public = $hash_ref->{public};
+			
+			if($public == 0){
+				$public = "No";
+			}else{
+				$public = "Yes";
+			}
 			# set query string for editfile script. 
 			my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$file\&dir=$dir" . "\&fid=$fid"; ## Don't Change DIR key value
 			
@@ -187,7 +204,8 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 					size => $size,
 					querystring => $querystring,
 					fid => $fid,
-					download_query => $downloadquery
+					download_query => $downloadquery,
+					public => $public
 					);
 		
 			# put this row into the loop by reference             

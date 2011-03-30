@@ -86,6 +86,7 @@ my $prevlink; # stores link back to directory/file listing
 my $prevlink_form = $q->param('prevlink'); #  
 
 my $deleteoption = $q->param('delete'); # get user delete command
+my $publicoption = $q->param('public'); # get user setting for privacy. 
 
 if(!defined($prevlink_form)){
 	$prevlink = $ENV{'HTTP_REFERER'}; # get previous page's link	
@@ -214,6 +215,39 @@ if(defined($deleteoption)){
 		print $op_template->output();
 		exit;
 	} 
+}
+
+
+if(defined($publicoption)){
+	if($publicoption eq 'Yes'){
+		my $file= "$sourcefilepath" . "$filename";
+		
+		## Update DB:
+		my $dbfile = "Files/$user/.user.db";
+		Genstat->makePublic($dbfile, $file);  # argumetns are : $dbfile, $filepath
+		
+		my $time = localtime();
+		Log->log("Make File Public Operation by $user at IP $ip Succeeded. Source:$file. Time:$time"); # Log file privacy change 
+		
+		$op_template->param(operation => 'File Privacy');
+		print $op_template->output();
+		exit;
+	} else{ # make private
+		
+		my $file= "$sourcefilepath" . "$filename";
+		
+		## Update DB:
+		my $dbfile = "Files/$user/.user.db";
+		Genstat->makePrivate($dbfile, $file);  # argumetns are : $dbfile, $filepath
+		
+		my $time = localtime();
+		Log->log("Make File Private Operation by $user at IP $ip Succeeded. Source:$file. Time:$time"); # Log file privacy change 
+		
+		$op_template->param(operation => 'Privacy');
+		print $op_template->output();
+		exit;
+		
+	}
 }
 
 # print the template

@@ -96,7 +96,14 @@ sub savefile { # Process uploaded File
 		my $dbfile = "$path/.user.db"; # user db file
 		my $fp = "$path/$filename";  # full file path
 		
-		#addfile takes arguments in form: $dbfile, $filepath, $filename, $public, $comments, $tags	
+		#addfile takes arguments in form: $dbfile, $filepath, $filename, $public, $comments, $tags
+		
+		if($public eq 'Yes'){
+			$public = 1;
+		}else{
+			$public = 0; 
+		}
+			
 		Genstat->addFile($dbfile, $fp, $filename, $public, $comments, $tags);
 		
 		## Log File Addition

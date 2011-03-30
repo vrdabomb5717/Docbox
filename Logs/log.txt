@@ -6,3 +6,21 @@ Copy Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/p
 Rename Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/private-public.txt and Destination:Files/test/pub/public-copy.txt. Time: Wed Mar 30 03:26:51 2011
 Copy Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/public-copy.txt and Destination:Files/test/pub/copy-extra.txt. Time:Wed Mar 30 03:27:35 2011
 Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source File:Files/test/pub/copy-extra.txt. Time:Wed Mar 30 03:29:37 2011
+Copy Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/pub/public-copy.txt and Destination:Files/test/pub/pub3.txt. Time:Wed Mar 30 03:53:23 2011
+Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/pub/pub3.txt. Time:Wed Mar 30 03:54:29 2011
+Copy Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/pub/public-copy.txt and Destination:Files/test/pub/pub3.txt. Time:Wed Mar 30 03:55:05 2011
+Make File Private Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/about_Arithmetic_Operators.help.txt. Time:Wed Mar 30 04:37:24 2011
+Make File Private Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/about_Arithmetic_Operators.help.txt. Time:Wed Mar 30 04:39:22 2011
+Make File Private Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/about_Arithmetic_Operators.help.txt. Time:Wed Mar 30 04:40:49 2011
+Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/activation code.txt created at Wed Mar 30 04:43:33 2011
+Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 04:49:34 2011
+Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 04:50:30 2011
+Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 04:51:27 2011
+Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 04:51:41 2011
+Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 04:51:59 2011
+Make File Private Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 04:52:52 2011
+Make File Public Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 05:00:26 2011
+Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 05:01:10 2011
+Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 05:01:41 2011
+Delete Operation by test at IP 0:0:0:0:0:0:0:1 Succeeded. Source:Files/test/hosts. Time:Wed Mar 30 05:02:05 2011
+Upload file operation by test at IP 0:0:0:0:0:0:0:1 Succedded. File Files/test/hosts created at Wed Mar 30 05:02:24 2011

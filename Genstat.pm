@@ -93,7 +93,7 @@ sub addFile
 	
 	## Insert into Public DB if file is Public
 	my $public_file = Genstat->isPublic($filepath);
-	if($public_file)
+	if($public_file == 1)
 	{
 		# Argments are form: $filepath, $filename, $owner, $comments, $tags,  $timemodified, $timeadded, $size, $kind) = @_;
 		my @l = split(/\//, $dbfile);
@@ -318,7 +318,7 @@ sub removeFile
 	my $delete = "DELETE FROM files WHERE filepath = :1 AND filename = :2";
 	
 	my $public_file = Genstat->isPublic($filepath);
-	if($public_file)
+	if($public_file == 1)
 	{ 
 		PublicDB->removeFile($filepath, $filename); # Remove from Public DB if public file.  
 	} 
@@ -377,7 +377,7 @@ sub updateFile
 
 		#use the new filepath to check if the file is public because the update has already happened.
 		my $public_file = Genstat->isPublic($newpath);
-		if($public_file)
+		if($public_file == 1)
 		{ 
 			# Update Public DB if public file is renamed.
 			#PublicDB->updateFile($oldpath, $oldname, $newpath, $newname);

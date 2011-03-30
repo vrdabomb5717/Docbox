@@ -30,6 +30,7 @@
     <th>File Name</th>
     <th>Date Modified</th>
     <th>File Size (KB)</th>
+    <th>Public </th>
     <th> Link(s) </th>
   </tr>
  
@@ -37,7 +38,7 @@
  
 <!--Show Move Up One level-->
  <TMPL_IF NAME="parentlevel">
-        <td> <img src="images/up.png" height="24" width="24" title="Go Up One Level"/> <a href="<TMPL_VAR NAME="upquery">">Go to Parent Directory</a>
+        <td> <img src="images/up.png" height="24" width="24" title="Go Up One Level"/> <a href="<TMPL_VAR NAME="upquery">">Go to Home Directory</a>
         </td>
         <td> </td>
         <td></td>
@@ -53,6 +54,7 @@
         </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
+        <td align="center">  ---- </td> <!--public?  --->
         <td align="left"> 
             <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download Directory" title="Download <TMPL_VAR NAME="filename">" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
             
@@ -72,6 +74,7 @@
         <img alt="" height="27" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
+        <td align="center">  <TMPL_VAR NAME="public"> </td> <!-- public -->
         <td align="left"> 
             <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download <TMPL_VAR NAME="filename">" height="26" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
             
