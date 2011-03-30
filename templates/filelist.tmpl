@@ -5,16 +5,23 @@
 	</head>
 	<body align="center" bgcolor="orange"> 
 <h2 align="center"> <a href="home.pl.cgi?uid=<TMPL_VAR NAME="userid">"<TMPL_VAR NAME="userid">"> <TMPL_VAR NAME="user">'s DocBox </a></h2>
-	<form action="search.pl.cgi" method="post">
+	<form action="group.pl.cgi?uid=<TMPL_VAR NAME="userid">" method="post">
+    
+    
+    <!--Post a Hidden Value to indicate that we're visiting group page for the First page -->
+     <input type="hidden" name="firstvisit" value="1"> 
+    
     <p align="center"><a href=upload_page.pl.cgi?uid=<TMPL_VAR NAME="userid">> Upload a New File to DocBox</a> |
     <a href="public.pl.cgi?uid=<TMPL_VAR NAME="userid">"> View Public Files </a>|
     
     <a href="search.pl.cgi?uid=<TMPL_VAR NAME="userid">"> Search Files </a>|
+    
+    <input type="submit" value="Group Selected Files">  |
     <!-- Disable search box
     --<strong>Search Files : </strong><input type="textarea" name="search"> 
-    <input type="submit" value="Go">  |  -->
+    <input type="submit" value="Group Selected Files">  |  -->
     <a href="index.html"> Logout </a>
-    </form>
+    
     
     </p>
     
@@ -26,7 +33,7 @@
     <th> Link(s) </th>
   </tr>
  
- <!--Add a Group Documents button here -->
+ 
  
 <!--Show Move Up One level-->
  <TMPL_IF NAME="parentlevel">
@@ -41,7 +48,7 @@
 <TMPL_LOOP NAME="dir_loop">
     <tr >
         <td >  
-        <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="dirname">">
+        <!--<input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="dirname">"> Don't Enable Directory Grouping-->
         <img alt="" height="24" src="images/dir.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="dirname">  </a> 
         </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
@@ -61,7 +68,7 @@
 <TMPL_LOOP NAME="list_loop">
     <tr >
         <td > 
-         <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="filename">">
+         <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="fid">">
         <img alt="" height="24" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
@@ -81,7 +88,7 @@
 </TMPL_LOOP>
 
 </table>
-
+</form>
 	<br>
 	<footer><p align="center">Docbox &copy 2011. All Rights Reserved.  </p></footer>
 	 </body></html>

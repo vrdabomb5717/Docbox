@@ -169,6 +169,7 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 					date => $mtime,
 					size => $size,
 					querystring => $querystring,
+					fid => $fid,
 					download_query => $downloadquery
 					);
 		

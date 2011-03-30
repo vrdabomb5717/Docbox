@@ -7,6 +7,12 @@ p.error
 {
     color: red;
 }
+
+p.success
+{
+    color: green;
+}
+
 table
 {
 border-collapse:collapse;

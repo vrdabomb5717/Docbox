@@ -1,0 +1,60 @@
+<html>
+	<head>
+	<title> <TMPL_VAR NAME="user">'s DocBox </title>
+	<link href="../css/main.css" rel="stylesheet" type="text/css">
+	</head>
+	<body align="center" bgcolor="orange"> 
+<h2 align="center"> <a href="home.pl.cgi?uid=<TMPL_VAR NAME="userid">"<TMPL_VAR NAME="userid">"> <TMPL_VAR NAME="user">'s DocBox </a></h2>
+	
+    <p align="center"><a href=upload_page.pl.cgi?uid=<TMPL_VAR NAME="userid">> Upload a New File to DocBox</a> |
+    <a href="public.pl.cgi?uid=<TMPL_VAR NAME="userid">"> View Public Files </a>|
+    
+    <a href="search.pl.cgi?uid=<TMPL_VAR NAME="userid">"> Search Files </a>|
+    
+    <a href="index.html"> Logout </a>
+    
+    <h3> Group Files </h3>
+    
+    <TMPL_IF NAME="nofiles_selected">
+
+    <h4> <p class="error">No Files Selected. Please first select the files you want to group and then try again.
+          <a href="home.pl.cgi?uid=<TMPL_VAR NAME="userid">"<TMPL_VAR NAME="userid">"> Click here</a> to return to the home directory listing. 
+    </h4>
+    </TMPL_IF>
+    
+    <TMPL_IF NAME="nodir_name">
+    
+    <h4> <p class="error">No Directory Selected. Please first select the files you want to group and then try again.
+          <a href="home.pl.cgi?uid=<TMPL_VAR NAME="userid">"<TMPL_VAR NAME="userid">"> Click here</a> to return to the home directory listing. 
+    </h4>
+    
+    </TMPL_IF>
+    
+    <TMPL_IF NAME="group">
+    <p> To Group the files listed below that you selected into a directory, Click the Group Button. Please be patience as this process can take some time.  </p>
+    
+    <form action="group.pl.cgi?uid=<TMPL_VAR NAME="userid">" method="post">
+    <p> <strong>Directory Name : </strong><input type="textarea" name="dirname" size="30"> 
+        <input type="submit" value="Group Files"> <br>
+    
+    <strong> Files to be grouped .... </strong> <br>
+    <TMPL_LOOP NAME="list_loop">
+        <input type="hidden" name="selectedfiles" value="<TMPL_VAR NAME="fid">">
+    
+    <!--Post a Hidden Value to indicate that we're NOT visiting group page for the First time -->
+     <input type="hidden" name="firstvisit" value="0"> 
+    
+        <TMPL_VAR NAME="filename"> <br>
+        
+    </TMPL_LOOP>
+    </p>
+    </TMPL_IF>
+    
+    </form>
+    
+	<br>
+	<footer><p align="center">Docbox &copy 2011. All Rights Reserved.  </p></footer>
+	 </body></html>
+    
+    
+    

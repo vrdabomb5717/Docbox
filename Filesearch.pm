@@ -10,7 +10,7 @@ package Filesearch;
 use strict;
 use warnings;
 use Text::Extract::Word;
-use RTF::TEXT::Converter;
+#use RTF::TEXT::Converter;
 
 #search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
 
@@ -81,24 +81,24 @@ sub search
 
     
     #search for all RTF files
-    $files = `find "$homepath" -type f -name '*.rtf' -print`;
-    @filenames = split(/\n/, $files);
+    #$files = `find "$homepath" -type f -name '*.rtf' -print`;
+    #@filenames = split(/\n/, $files);
     
-    foreach my $line (@filenames)
-    {
+    #foreach my $line (@filenames)
+    #{
 		#$line =~ s/\///;
 		#$line = "/" . "$line";
 
 		#extract text of RTF file, search for $query, and if search returns true, push file into @results
-		my $text;
-		my $object = RTF::TEXT::Converter->new(output => \$text);
-		$object->parse_string($line);
+		#my $text;
+		#my $object = RTF::TEXT::Converter->new(output => \$text);
+		#$object->parse_string($line);
 
-		if($text =~ /"$query"/)
-		{
-	    	push(@results, $line);
-		}
-    }
+		#if($text =~ /"$query"/)
+		#{
+	    #	push(@results, $line);
+		#}
+    #}
 
 
     return @results;    
