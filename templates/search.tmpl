@@ -18,8 +18,9 @@
     </p>
     
     <form action="search.pl.cgi?uid=<TMPL_VAR NAME="userid">" method="post">
-    <p> <strong>Search Query : </strong><input type="textarea" name="query"> <br>
-        <strong>Personal/Public Files: </strong>  
+    <p> <strong>Search Query : </strong><input type="textarea" name="query" size="30"> <br>
+    
+    <strong>Personal/Public Files: </strong>  
                 <select name="scope">
                 <option>Personal</option>
                 <option>Public</option>
@@ -29,6 +30,9 @@
                 <select name="searchtype">
                 <option>Filenames</option>
                 <option>Documents</option>
+                <option>Comments</option>
+                <option>Tags</option>
+                <option>File Type</option>
                 </select> <br>
             <input type="submit" value="Run Search">
     

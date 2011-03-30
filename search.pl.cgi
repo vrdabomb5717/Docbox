@@ -22,6 +22,7 @@ use UserDB; # use for validating user.
 use HTML::Template; # for creating html from template files. 
 use PublicDB;  # use public file database
 use Genstat; 
+use Filesearch; 
 
 my $q = CGI->new();
 my $uid = $q->param('uid'); # user id (token) of current user.
@@ -189,24 +190,23 @@ sub search {
 			
 		}
 		
-	} else{ ## Do Deep Level Document Search ###### UNTESTED CODE ########
+	} else{ ## Do Deep Level Document Search 
 		
-		HTML->Error("Complete Operation", " -- Code for Deep Level Search is Incomplete"); ## Don't Run the code below YET
-		exit;
 		
 		if($search_scope eq 'Personal'){ ## Search in Personal Files
 			my $dbfile = "Files/$user/.user.db"; # set path to user db file
-			my $hash_ref_all = Genstat->doc_search($dbfile, $query); # get (double) hash ref to query results. Arguments are:  $dbfile, $query		
+			my $homepath = "Files/$user"; # set user home path
+			my @results = Filesearch->search($query, $homepath); 	# arguments are query, $homepath. Returns full file path to files. 
 			
 			## HTML Format the search results in a table
-			while( my ($id, $row_hash_ref) =  each(%$hash_ref_all)){ 
-				 
+			foreach my $path (@results){ 
+				
+				my $row_hash_ref = Genstat->getFileByPath($dbfile, $path); # Get File record details. Arguments are $dbfile, $path
 				$fn = $row_hash_ref->{'filename'};
 				$fp = $row_hash_ref->{'filepath'};
 				$size = $row_hash_ref->{'size'};
 				$tm = $row_hash_ref->{'timemodified'};
-						
-				 
+					
 				## Get FilePath ID
 				my $fid = $row_hash_ref->{'id'};
 				 
@@ -218,7 +218,6 @@ sub search {
 					$dir = '';
 				}
 				
-				 
 				#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
 		        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
 		    	
@@ -249,13 +248,13 @@ sub search {
 			}	 
 				 
 		 	# call param to fill in the loop with the loop data by reference.
-			$template->param(list_loop => \@list);	
-			
+			$template->param(list_loop => \@list);		
+				
 		}
 		else { ## Search  in Public Files
 			
 			my $dbfile = "Files/$user/.user.db"; # set path to user db file
-			my $hash_ref_all = PublicDB->doc_search($query); # get (double) hash ref to query results. Arguments are:  $query
+			my $hash_ref_all = Genstat->get_public(); # get (double) hash ref to query results. Arguments are:  $dbfile
 				
 			my $fp; # file path
 			my $fn;  # file name
@@ -274,6 +273,13 @@ sub search {
 				 
 				## Get FilePath ID
 				my $fid = $row_hash_ref->{'id'};
+		
+				## Check if File Contains query, if not skip to next iteration
+				my $result;
+				#$result = Filesearch($fp, $query); 213;# TO BE CHANGEd
+				if($result == 0){	
+					next; # go to next iteration
+				}
 		
 				#my ($dev,$ino,$mode,$nlink,$uniqueid,$gid,$rdev,$size,
 		        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;

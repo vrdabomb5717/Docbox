@@ -589,6 +589,34 @@ sub top30
 }
 
 
+# Returns File Record Details, given a file Path
+sub getFileByPath{
+	
+	my ($self, $dbfile, $path) = @_;
+	Genstat->connect($dbfile); #connect to specific user db
+	
+	# SELECT * FROM files WHERE password='$passwordhex'
+	my $query = "SELECT * FROM files WHERE filepath=:1";
+	
+	my $sth = $dbh->prepare("$query");
+	$sth->execute("$path");
+
+	# Retrieve hash reference to result from running query.
+	# This will be defined if the query returned more than 0 results.
+	my $href = $sth->fetchrow_hashref;
+	
+	if(defined($href))
+	{
+		return $href; # return a hash ref.  
+	}
+	else
+	{
+		return undef; # there is no file with that path 
+	}	
+}
+
+
+
 # Returns full file path, given a file ID
 sub getFilePathByID{
 	
