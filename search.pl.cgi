@@ -211,7 +211,7 @@ sub search {
 					next; 
 				}
 				
-				my $row_hash_ref = Genstat->getFileByPath($dbfile, $path); # Get File record details. Arguments are $dbfile, $path
+				my $row_hash_ref = Genstat->getFileRecord($dbfile, $path); # Get File record details. Arguments are $dbfile, $path
 				$fn = $row_hash_ref->{'filename'};
 				$fp = $row_hash_ref->{'filepath'};
 				$size = $row_hash_ref->{'size'};
