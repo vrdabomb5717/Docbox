@@ -254,7 +254,7 @@ We made reasonable progress over the past month. About once a week, we would mee
 Overall, project development was not without hitches, but we worked well together and worked quickly and efficiently towards realizing our goal. One of us, however, would rather shoot himself in the foot than work with Perl for websites ever again.
 
 **Security Issues**
-Our main security issues are the easiness for spoofing users, since we are not using HTTPS and thus you can just listen in on the server's private communications and get a user's private information. The backend is not encrypted, which means that if the server is compromised, the attacker can get people's usernames and passwords if they know where to look. The other major issue is the possiblity of SQL injections. Since our backend is so heavily dependent on SQLite databases, SQL injection attacks that modify records or drop tables could have a devastating effect on the site.
+Our main security issues are the easiness for spoofing users, since we are not using HTTPS and thus you can just listen in on the server's private communications and get a user's private information. Even worse, without HTTPS, we can just send the URL from one browser and spoof the user without even trying. The backend is not encrypted, which means that if the server is compromised, the attacker can get people's usernames and passwords if they know where to look. The other major issue is the possiblity of SQL injections. Since our backend is so heavily dependent on SQLite databases, SQL injection attacks that modify records or drop tables could have a devastating effect on the site.
 
 
 **Bugs and Development Issues**
