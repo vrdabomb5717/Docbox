@@ -47,6 +47,8 @@ if($public){
 	HTML->Error("Parse", "$fid") if(!defined($fid)); # Make sure fid is defined
 	my $dbfile = "Files/$user/.user.db"; #get path to user's database
 	$filepath = Genstat->getFilePathByID($dbfile,$fid);
+	$template->param(private => 1); # show private details
+	
 } 
 
 
