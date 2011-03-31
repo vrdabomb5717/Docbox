@@ -103,6 +103,9 @@ sub listStats {
 	 	push(@list, \%row);
 		
 	}
+	# add prev link 
+	my $prev = $ENV{'HTTP_REFERER'}; 
+	$template->param(prevlink => $prev);
 	 
  	# call param to fill in the loop with the loop data by reference.
 	$template->param(list_loop => \@list);	
