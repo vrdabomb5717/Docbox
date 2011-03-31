@@ -74,10 +74,10 @@ sub download{
 	my $filename = $_[1]; # get filename
 	
 	if(-d $filepath){ # if directory
-		`tar -cvf temp.tar $filepath`; # zip directory into tar
-		my $dfile = "temp.tar";
+		`tar -czvf temp.tar.gz $filepath`; # zip directory into tar
+		my $dfile = "temp.tar.gz";
 		open(FH, $dfile) || die Error('open',$dfile); # opens file for reading.
-		$filename = "$filename.tar"; # append .tar extension to filename so that this is the name of file being downloaded.	
+		$filename = "$filename.tar.gz"; # append .tar extension to filename so that this is the name of file being downloaded.	
 	  
 	} else{
 		open(FH, $filepath) || die Error('open',$filepath); # opens file for reading.
