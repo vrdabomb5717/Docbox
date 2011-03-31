@@ -27,7 +27,6 @@ use Log;
 
 
  
-
 my $q = CGI->new();
 my $uid = $q->param('uid'); # user id (token) of current user.
 my $dir = $q->param('dir'); # get current directory relative to the User's Home Directory.  
@@ -87,11 +86,15 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 	        #$atime,$mtime,$ctime,$blksize,$blocks) = stat $fh;
 	    	
 			my $mtimesecs = (stat($filepath))[9]; # modified time in secs since epoch
+			my $ctimesecs = (stat($filepath))[10]; # created time in secs since epoch
 	    	my $size  = (stat($filepath))[7]; # file size
 	    	
 	    	my ($sec,$min,$hour,$mday,$mon,$year) = localtime($mtimesecs); # get detailled time info 
 		    $year += 1900; #get proper year, since we start from 1900. 
 		    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
+			($sec,$min,$hour,$mday,$mon,$year) = localtime($ctimesecs);
+			$year += 1900; #get proper year, since we start from 1900. 
+			my $ctime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011.
 			
 			#convert size to kilobytes to 2 decimal places:
 			$size =  $size/1024;
@@ -119,7 +122,8 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 					date => $mtime,
 					size => $size,
 					querystring => $querystring,
-					download_query => $downloadquery
+					download_query => $downloadquery,
+					createdate => $ctime
 					);
 		
 			# put this row into the loop by reference             
@@ -129,8 +133,7 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 		
 	# call param to fill in the loop with the loop data by reference.
 	$template->param(dir_loop => \@list);
-	
-	
+		
 }
 
 
@@ -165,10 +168,15 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 	    	
 			my $mtimesecs = (stat($filepath))[9]; # modified time in secs since epoch
 	    	my $size  = (stat($filepath))[7]; # file size
+	    	my $ctimesecs = (stat($filepath))[10]; # created time in secs since epoch
 	    	
 	    	my ($sec,$min,$hour,$mday,$mon,$year) = localtime($mtimesecs); # get detailled time info 
 		    $year += 1900; #get proper year, since we start from 1900. 
 		    my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
+			
+			($sec,$min,$hour,$mday,$mon,$year) = localtime($ctimesecs);
+			$year += 1900; #get proper year, since we start from 1900. 
+			my $ctime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011.
 			
 			#convert size to kilobytes to 2 decimal places:
 			$size =  $size/1024;
@@ -193,6 +201,10 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 			}else{
 				$public = "Yes";
 			}
+			# get tags and comments
+			my $tags = $hash_ref->{tags};
+			my $comments = $hash_ref->{comments};
+			
 			# set query string for editfile script. 
 			my $querystring = "editfile.pl.cgi\?uid=$uid\&filename=$file\&dir=$dir" . "\&fid=$fid"; ## Don't Change DIR key value
 			
@@ -205,7 +217,10 @@ sub listFiles{ # Producs HTML Output of a Listing of user's file in their root d
 					querystring => $querystring,
 					fid => $fid,
 					download_query => $downloadquery,
-					public => $public
+					public => $public,
+					comments => $comments,
+					tags => $tags,
+					createdate => $ctime
 					);
 		
 			# put this row into the loop by reference             
@@ -262,6 +277,8 @@ foreach my $filepath (@files){
     $year += 1900; #get proper year, since we start from 1900. 
     my $mtime = "$hour:$min:$sec $abbr[$mon] $mday $year"; #E.g.  07:12:43 Oct 12 2011. 
 	
+	
+			
 	#convert size to kilobytes to 2 decimal places:
 	$size =  int($size/1024);
 	$size = sprintf("%.2f", $size); # round to 2 dps. 
