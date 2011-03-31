@@ -4,7 +4,7 @@ Authors: Varun Ravishankar and Jervis Muindi
 vr2263 and jjm2190
 
 Repository: https://bitbucket.org/vrdabomb5717/docbox
-
+CLIC: http://web3157.cs.columbia.edu/~jjm2190/public/project/
 **Files included:**
 
 *.project*
