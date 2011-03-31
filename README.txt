@@ -3,6 +3,7 @@ Operation: Project Docbox
 Authors: Varun Ravishankar and Jervis Muindi
 vr2263 and jjm2190
 
+Repository: https://bitbucket.org/vrdabomb5717/docbox
 
 **Files included:**
 
@@ -247,4 +248,20 @@ Template HTMl pages for all the pages that appear on the website.
 
 
 
+**Progress and Project Realization**
+We made reasonable progress over the past month. About once a week, we would meet up to discuss potential issues and progress, and would make sure that we kept abreast of whatever the other was doing. However, midterms made sure that progress slowed in the middle and only sped up near launch day. We used Mercurial and Bitbucket as source control, which allowed us to keep our code in sync and have a high turnover for code reviews. Our biggest problem was that we did not test the backend code adequately enough, and so we both spent some time debugging the backend until it worked. This meant that, at the time of writing, the UI does not implement some of the features that were written on the backend, since once code is written to update part of the database, it is easy to write functions that will update the rest of the fields separately as well. For example, we do not have a profile page nor UI to update personal info, nor did we have a way to edit the tags and comments fields.
 
+Overall, project development was not without hitches, but we worked well together and worked quickly and efficiently towards realizing our goal. One of us, however, would rather shoot himself in the foot than work with Perl for websites ever again.
+
+**Security Issues**
+Our main security issues are the easiness for spoofing users, since we are not using HTTPS and thus you can just listen in on the server's private communications and get a user's private information. The backend is not encrypted, which means that if the server is compromised, the attacker can get people's usernames and passwords if they know where to look. The other major issue is the possiblity of SQL injections. Since our backend is so heavily dependent on SQLite databases, SQL injection attacks that modify records or drop tables could have a devastating effect on the site.
+
+
+**Bugs and Development Issues**
+The biggest bug we had was RTF file searching. Normally, such files can be searched by grep on the backend, but for multiword searches, such tricks don't work. This is because RTF files are like HTML files in that they can have control words and escape sequences in them, and thus words that are individually marked can screw grep up. Instead, we used a module to get the RTF's text and then add it to our database, but the first module failed to work properly. We found another module that worked as planned, but CPAN and installing modules on the server caused us to remove this functionality from the site. We also had development issues with getting the server to cooperate when things went wrong, and log errors correctly rather than fail silently with the default error screen.
+
+On the backend, we had problems with the speed of adding files and searching large quantities of them. Adding files is simple, but we keep track of the count of each word in a separate table per file, which must be generated whenever a file is added. Getting the strings for a file is easy, but this can generate hundreds of individual words. We must then do 100s of inserts into the database, slowing everything down. This is also done when a file is renamed, since we used filepath as a UNIQUE key and this cannot be changed after is is added to the db. This means that grouping, copying, and renaming is slow.
+
+Searching is not as fast as we would like either. We call grep -r to search through all of the user's files, which can potentially be slow if there are many files. This could have been sped up by using a database meant for searching text, like Apache Lucene. This database would index file contents, and unless the file changed, optimize the contents for quick searches. However, we cannot count on the files being kept constant, especially in file storage situations, and we did not have time to learn how to make a search engine, so this development idea had to fall to the wayside.
+
+We had problems separating Perl from HTML and CGI, where we had to find a way to write HTML files so that they could be changed easily, rather than having Perl do it. We also had trouble with the UI; anything more than a basic UI seems to require fudging around with either Perl CGI or using advanced CSS and Javascript, more skills than we possess. This means that the UI looks like it was designed by a 5 year old, and look ugly as sin; however, the UI is functional and works. 
