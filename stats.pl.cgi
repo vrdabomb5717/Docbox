@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 
 # Statistics
-# Shows all available public files.  
+# Shows statistics about the users' files and about the website in general, like number of files, users, 
+#and average file size.
 # Authors: Jervis
 # March 26, 2011
 
