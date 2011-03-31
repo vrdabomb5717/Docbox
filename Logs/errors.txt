@@ -69,3 +69,12 @@ Files/user/source.rtf exists does not exist in user user Database. File System m
 Files/user/testfile.txt exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 16:30:03 2011
 Files/user/Untitled.rtf exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 16:30:03 2011
 Files/user/works.txt exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 16:30:03 2011
+Files/user/110.jpg exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/Columbia Internet Download Speed FATEST.png exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/Document.rtf exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/rtf.txt exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/s.txt exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/source.rtf exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/testfile.txt exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/Untitled.rtf exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011
+Files/user/works.txt exists does not exist in user user Database. File System may potentially be out of sync with Database.  IP = 0:0:0:0:0:0:0:1. Wed Mar 30 21:37:00 2011

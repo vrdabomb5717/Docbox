@@ -3,6 +3,12 @@
 body, input,textarea,select, .normal
 { font-family: "lucida grande", "Segoe UI", arial, verdana, "lucida sans unicode", tahoma, sans-serif; font-size: 14pt;  font-weight: normal;}
 
+
+a:link    {color:blue;}
+a:visited {color:blue;}
+
+
+
 p.error
 {
     color: red;

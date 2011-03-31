@@ -41,6 +41,7 @@ my $fid = $q->param('fid');
 if($public){
 	HTML->Error("Parse", "$fid") if(!defined($fid)); # Make sure fid is defined
 	$filepath = PublicDB->getFilePathByID($fid);
+	$user = PublicDB->getOwner($filepath); # so that correct db is accessed to do file stats.  
 	
 } else { ##use the file id to determine full file path 
 	HTML->Error("Parse", "$fid") if(!defined($fid)); # Make sure fid is defined
