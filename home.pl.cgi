@@ -104,8 +104,8 @@ sub listDirs{ # Producs HTML Output of a Listing of user's file in their root di
 			#my $querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
 			my $querystring ;
 			if($dir eq ''){ # if no directory specified, then $file handle will be link to directory
-				 #$querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
-				 $querystring = "home.pl.cgi\?uid=$uid\&filename=$file";
+				 $querystring = "home.pl.cgi\?uid=$uid\&filename=$file\&dir=$file";
+				 #$querystring = "home.pl.cgi\?uid=$uid\&filename=$file";
 
 			}
 			else{ # if there is a dir path specified, already, use that as basis for opening this directory. This allows us to do directory tree traversal. 
