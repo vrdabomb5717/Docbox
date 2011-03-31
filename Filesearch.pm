@@ -5,16 +5,16 @@
 #Author: Varun Ravishankar
 #26th March 2011
 
+
+
+package Filesearch;
 BEGIN{
 	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
 }
-
-package Filesearch;
-
 use strict;
 use warnings;
 use Text::Extract::Word;
-use File::Extract::RTF;
+#use File::Extract::RTF; ##Breaks SIte in CLIC
 
 #search for a query given the path to search at. Searches text files, PDFs, Word documents, RTF files, and anything else grep might inadverdently recognize.
 
@@ -85,23 +85,23 @@ sub search
 
     
     #search for all RTF files
-    $files = `find "$homepath" -type f -name '*.rtf' -print`;
-    @filenames = split(/\n/, $files);
+    #$files = `find "$homepath" -type f -name '*.rtf' -print`;
+    #@filenames = split(/\n/, $files);
     
-    foreach my $line (@filenames)
-    {
+    #foreach my $line (@filenames)
+    #{
 		#$line =~ s/\///;
 		#$line = "/" . "$line";
 
 		#extract text of RTF file, search for $query, and if search returns true, push file into @results
-		my $object = File::Extract::RTF->extract("$line");
-		my $text = $object->text();
+		#my $object = File::Extract::RTF->extract("$line");
+		#my $text = $object->text();
 
-		if($text =~ /$query/i)
-		{
-	    	push(@results, $line);
-		}
-    }
+		#if($text =~ /$query/i)
+		#{
+	    #	push(@results, $line);
+		#}
+    #}
 
 	my %seen = ();
 	my @unique = grep { ! $seen{ $_ }++ } @results;
@@ -160,13 +160,13 @@ sub searchFile
 	elsif($kind eq "rtf")
 	{
 			#extract text of RTF file, search for $query, and if search returns true, push file into @results
-			my $object = File::Extract::RTF->extract("$filepath");
-			my $text = $object->text();
+			#my $object = File::Extract::RTF->extract("$filepath");
+			#my $text = $object->text();
 			
-			if($text =~ /$query/i)
-			{
-		    	return 1;
-			}
+			#if($text =~ /$query/i)
+			#{
+		   # 	return 1;
+		#	}
 			
 	}
 	

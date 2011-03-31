@@ -11,19 +11,19 @@
 # * Make sure RTF support works, and that renaming files works as planned.
 
 
+
+
+package Genstat;
 BEGIN{
 	unshift(@INC, "/home/jjm2190/perl5/lib/perl5"); #Load Locally installed modules. Needed for site to function in CLIC. Don't use lib - it doesn't work. 
 }
-
-package Genstat;
-
 use strict;
 use warnings;
 use DBI;
 use Digest::SHA qw(sha1 sha1_hex sha1_base64); # import SHA1
 use PublicDB;
 use Text::Extract::Word;
-use File::Extract::RTF;
+#use File::Extract::RTF;
 
 my $dbh; #declare db handle.  
 
@@ -158,16 +158,16 @@ sub addFile
 	elsif($kind eq "rtf")
 	{
 		#open RTF file and read data into $text
-		my $object = File::Extract::RTF->extract("$filepath");
-		my $text = $object->text();
+		#my $object = File::Extract::RTF->extract("$filepath");
+		#my $text = $object->text();
 		
-		my @splitted = getWordCount($text); 
+		#my @splitted = getWordCount($text); 
 
-        foreach my $line(@splitted)
-        {
-			my @counts = split(' ', $line);
-            $sth->execute($counts[0], $counts[1]);
-        }
+        #foreach my $line(@splitted)
+        #{
+		#	my @counts = split(' ', $line);
+        #    $sth->execute($counts[0], $counts[1]);
+        #}
 	}
 	else
 	{
