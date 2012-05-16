@@ -56,13 +56,13 @@ Directory that contains the CSS files for the website.
 Basic schema for the SQL databases we created.
 
 *download.pl.cgi*
-Downloads the given file to the user's browser. 
+Downloads the given file to the user's browser.
 
 *editfile.pl.cgi*
 Edit file, allowing user to copy, delete, rename, and download.
 
 *email.pl.cgi*
-Emails user a password reset link.  
+Emails user a password reset link.
 
 *filelist.html*
 HTML page that is displayed to test the file listing.
@@ -266,4 +266,7 @@ Searching is not as fast as we would like either. We call grep -r to search thro
 
 We had problems separating Perl from HTML and CGI, where we had to find a way to write HTML files so that they could be changed easily, rather than having Perl do it. We also had trouble with the UI; anything more than a basic UI seems to require fudging around with either Perl CGI or using advanced CSS and Javascript, more skills than we possess. This means that the UI looks like it was designed by a 5 year old, and look ugly as sin; however, the UI is functional and works.
 
-We had implemented a go up one level directory button but in testing this on CLIC we ran into issue with it displaying properly this specific feature is currently unusuable. However, users can use forward and back buttons of the browsers to get around this issue.    
+We had implemented a go up one level directory button but in testing this on CLIC we ran into issue with it displaying properly this specific feature is currently unusuable. However, users can use forward and back buttons of the browsers to get around this issue.
+
+**License**
+All source code is licensed under the Simplified BSD license (2-clause BSD). All documentation is licensed under the FreeBSD Documentation License.
