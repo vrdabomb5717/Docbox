@@ -18,8 +18,12 @@
     </p>
     <p align="center"> <h3> File Stastistics </h3> </p>
     
+    
+<TMPL_IF NAME="private">
     <p align="center"> <strong> Your File Count : </strong> <TMPL_VAR NAME="userfilecount"> </p>
     <p align="center"> <strong> Your Average File Size : </strong> <TMPL_VAR NAME="averagefilesize"> KB </p>
+ </TMPL_IF>
+    
     <p align="center"> <strong> Total Number of Site Users : </strong> <TMPL_VAR NAME="totalusers"> </p>
     
     <p align="center"> The Top 30 Words in this file are shown below </p> 

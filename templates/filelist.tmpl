@@ -29,8 +29,14 @@
   <tr>
     <th>File Name</th>
     <th>Date Modified</th>
+    
+    <th>Date Created</th>
+    
     <th>File Size (KB)</th>
+    <th>Comments</th>
+    <th>Tags</th>
     <th>Public </th>
+    
     <th> Link(s) </th>
   </tr>
  
@@ -53,7 +59,10 @@
         <img alt="" height="28" src="images/dir.png" width="32" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="dirname"> </a> 
         </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
+        <td align="center">  <TMPL_VAR NAME="createdate">  </td> <!-- Date Created-->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
+        <td align="center">  N/A </td> <!-- Comments -->
+        <td align="center">  N/A </td> <!-- Tags -->
         <td align="center">  ---- </td> <!--public?  --->
         <td align="left"> 
             <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download Directory" title="Download <TMPL_VAR NAME="dirname">" height="25" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
@@ -73,7 +82,10 @@
          <input type="checkbox" name="selectedfiles" value="<TMPL_VAR NAME="fid">">
         <img alt="" height="27" src="images/file.png" width="28" align="middle"> <a href="<TMPL_VAR NAME="querystring">"> <TMPL_VAR NAME="filename">  </a> </td>
         <td align="center">  <TMPL_VAR NAME="date">  </td> <!-- Date Modified -->
+        <td align="center">  <TMPL_VAR NAME="createdate">  </td> <!-- Date Created-->
         <td align="center">  <TMPL_VAR NAME="size"> </td> <!-- File Size -->
+         <td align="center">  <TMPL_VAR NAME="comments"> </td> <!-- Comments -->
+        <td align="center">  <TMPL_VAR NAME="tags"> </td> <!-- Tags -->
         <td align="center">  <TMPL_VAR NAME="public"> </td> <!-- public -->
         <td align="left"> 
             <a href="<TMPL_VAR NAME="download_query">"> <img alt="Download File" title="Download <TMPL_VAR NAME="filename">" height="26" src="images/download.png" width="25" align="middle"> </a> <!-- Download Image icon -->
